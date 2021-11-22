@@ -214,7 +214,6 @@ export const bondAsset = createAsyncThunk(
       txHash: null,
     };
     try {
-      console.log("debug", value, valueInWei.toString(), maxPremium);
       bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress);
 
       dispatch(

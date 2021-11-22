@@ -114,13 +114,15 @@ export const calculateUserBondDetails = createAsyncThunk(
     // let balanceVal = ethers.utils.formatEther(balance);
     // balanceVal should NOT be converted to a number. it loses decimal precision
     let deciamls = 18;
+    let balanceVal;
     if (bond.decimals) {
       deciamls = bond.decimals;
+      balanceVal = ethers.utils.formatUnits(balance, "mwei");
     }
     if (bond.isLP) {
       deciamls = 18;
     }
-    const balanceVal = balance / Math.pow(10, deciamls);
+    balanceVal = ethers.utils.formatEther(balance);
     return {
       bond: bond.name,
       displayName: bond.displayName,
