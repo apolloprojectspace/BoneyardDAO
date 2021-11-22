@@ -63,7 +63,7 @@ function ClaimBonds({ activeBonds }) {
       {numberOfBonds > 0 && (
         <Zoom in={true}>
           <Paper className="hec-card claim-bonds-card">
-            <CardHeader title="Your Bonds (1,1)" />
+            <CardHeader title="Your Bonds" />
             <Box>
               {!isSmallScreen && (
                 <TableContainer>
