@@ -41,7 +41,7 @@ export function ClaimBondTableData({ userBond }) {
 
   async function onRedeem({ autostake }) {
     let currentBond = bonds.find(bnd => bnd.name === bondName);
-    if (currentbond.isFour && vestingPeriod() !== "Fully Vested") {
+    if (currentBond.isFour && vestingPeriod() !== "Fully Vested") {
       dispatch(info("4,4 bonds can only be claimed after they are fully vested."));
     } else {
       await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));

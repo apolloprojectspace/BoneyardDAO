@@ -160,7 +160,7 @@ export const calcBondDetails = createAsyncThunk(
 
     // Calculate bonds purchased
     let purchased = await bond.getTreasuryBalance(networkID, provider);
-    if (bond.decimals == 6) {
+    if (bond.decimals) {
       bondPrice = bondPrice / Math.pow(10, 6);
       bondDiscount = bondDiscount / Math.pow(10, 12) - 1;
     } else {
@@ -192,7 +192,7 @@ export const bondAsset = createAsyncThunk(
     const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
     // parseUnits takes String => BigNumber
     let valueInWei = ethers.utils.parseUnits(value.toString(), "ether");
-    if (bond.decimals == 6) {
+    if (bond.decimals && !bond.isLP) {
       valueInWei = valueInWei.div(Math.pow(10, 12));
     }
     let balance;
@@ -214,6 +214,7 @@ export const bondAsset = createAsyncThunk(
       txHash: null,
     };
     try {
+      console.log("debug", value, valueInWei.toString(), maxPremium);
       bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress);
 
       dispatch(

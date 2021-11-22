@@ -8,7 +8,7 @@ import { ReactComponent as Telegram } from "../../assets/icons/telegram.svg";
 export default function Social() {
   return (
     <div className="social-row">
-      <Link href="https://github.com/HectorDAO-HEC" target="_blank">
+      <Link href="https://github.com/Hector-DAO" target="_blank">
         <SvgIcon color="primary" component={GitHub} />
       </Link>
 

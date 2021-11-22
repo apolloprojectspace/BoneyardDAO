@@ -33,14 +33,6 @@ import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { hec_dai } from "./helpers/AllBonds";
 
-// 😬 Sorry for all the console logging
-const DEBUG = false;
-
-// 🛰 providers
-if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
-// 🔭 block explorer URL
-// const blockExplorer = targetNetwork.blockExplorer;
-
 const drawerWidth = 280;
 const transitionDuration = 969;
 

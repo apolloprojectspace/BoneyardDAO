@@ -28,6 +28,7 @@ export const dai = new StableBond({
   bondToken: "DAI",
   bondIconSvg: DaiImg,
   bondContractABI: DaiBondContract,
+  fourAddress: "0xe8fd4630800bA4335801D1b104B07328Ae415605",
   networkAddrs: {
     [NetworkID.Mainnet]: {
       bondAddress: "0x4099EB0e82Ffa0048E4BF037a9743ca05Ec561D7",
@@ -95,6 +96,7 @@ export const usdc = new StableBond({
   bondToken: "USDC",
   decimals: 6,
   bondIconSvg: UsdcImg,
+  fourAddress: "0x605c31dD24c71f0b732Ef33aC12CDce77fAC09B6",
   bondContractABI: DaiBondContract,
   networkAddrs: {
     [NetworkID.Mainnet]: {
@@ -136,6 +138,7 @@ export const mim4 = new StableBond({
   bondIconSvg: MimImg,
   bondContractABI: DaiBondContract,
   isFour: true,
+  fourAddress: "0xa695750b8439AB2AfBd88310946C99747C5B3A2E",
   networkAddrs: {
     [NetworkID.Mainnet]: {
       bondAddress: "0xb26be27f6f980efb07ae757d0a6a372671eacf7f",

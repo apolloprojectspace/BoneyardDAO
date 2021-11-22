@@ -1,6 +1,6 @@
 import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { ethers } from "ethers";
-
+import { abi as MimBondContract } from "src/abi/bonds/MimContract.json";
 import { abi as ierc20Abi } from "src/abi/IERC20.json";
 import { getBondCalculator, getBondCalculator1 } from "src/helpers/BondCalculator";
 import { addresses } from "src/constants";
@@ -8,7 +8,7 @@ import React, { ReactNode } from "react";
 
 export enum NetworkID {
   Mainnet = 250,
-  Testnet = 4,
+  Testnet = 0xfa2,
 }
 
 export enum BondType {
@@ -36,6 +36,7 @@ interface BondOpts {
   isFour?: Boolean;
   isTotal?: Boolean;
   decimals?: number;
+  fourAddress?: string;
 }
 
 // Technically only exporting for the interface
@@ -51,6 +52,7 @@ export abstract class Bond {
   readonly isFour?: Boolean;
   readonly isTotal?: Boolean;
   readonly decimals?: number;
+  readonly fourAddress?: string;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: Boolean;
@@ -71,6 +73,7 @@ export abstract class Bond {
     this.isFour = bondOpts.isFour;
     this.isTotal = bondOpts.isTotal;
     this.decimals = bondOpts.decimals;
+    this.fourAddress = bondOpts.fourAddress;
   }
 
   getAddressForBond(networkID: NetworkID) {
@@ -168,6 +171,10 @@ export class StableBond extends Bond {
     if (this.isTotal) {
       let bond = this.getContractForBond(networkID, provider);
       treasuryBalane = (await bond.totalPrinciple()) / Math.pow(10, decimals);
+    }
+    if (this.fourAddress) {
+      const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);
+      treasuryBalane -= (await fourBond.totalPrinciple()) / Math.pow(10, decimals);
     }
     return treasuryBalane;
   }

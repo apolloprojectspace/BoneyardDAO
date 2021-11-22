@@ -117,6 +117,9 @@ export const calculateUserBondDetails = createAsyncThunk(
     if (bond.decimals) {
       deciamls = bond.decimals;
     }
+    if (bond.isLP) {
+      deciamls = 18;
+    }
     const balanceVal = balance / Math.pow(10, deciamls);
     return {
       bond: bond.name,
