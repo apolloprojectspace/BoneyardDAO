@@ -87,6 +87,8 @@ export const loadAppDetails = createAsyncThunk(
     const total = await hecContract.totalSupply();
     const totalSupply = total / 1000000000;
     const marketCap = marketPrice * circSupply;
+    const marketPriceString = marketPrice ? "$" + marketPrice.toFixed(2) : "";
+    document.title = `HectorDAO - ${marketPriceString}`;
     if (!provider) {
       console.error("failed to connect to provider, please connect your wallet");
       return {
