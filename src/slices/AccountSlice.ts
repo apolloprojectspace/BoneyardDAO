@@ -110,19 +110,14 @@ export const calculateUserBondDetails = createAsyncThunk(
       balance = 0;
     allowance = await reserveContract.allowance(address, bond.getAddressForBond(networkID));
     balance = await reserveContract.balanceOf(address);
-    // formatEthers takes BigNumber => String
-    // let balanceVal = ethers.utils.formatEther(balance);
-    // balanceVal should NOT be converted to a number. it loses decimal precision
-    let deciamls = 18;
     let balanceVal;
+    balanceVal = ethers.utils.formatEther(balance);
     if (bond.decimals) {
-      deciamls = bond.decimals;
       balanceVal = ethers.utils.formatUnits(balance, "mwei");
     }
     if (bond.isLP) {
-      deciamls = 18;
+      balanceVal = ethers.utils.formatEther(balance);
     }
-    balanceVal = ethers.utils.formatEther(balance);
     return {
       bond: bond.name,
       displayName: bond.displayName,

@@ -96,9 +96,6 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
       maxQ = bond.maxBondPrice * bond.bondPrice.toString();
     } else {
       maxQ = bond.balance;
-      // if (bond.name == "hec_usdc_lp" || bond.isFour) {
-      //   maxQ = (parseFloat(maxQ) - 0.0000000000005).toFixed(14);
-      // }
     }
     if (maxQ < 0) {
       maxQ = 0;
