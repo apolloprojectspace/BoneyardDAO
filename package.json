@@ -42,6 +42,7 @@
     "axios": "^0.21.1",
     "bnc-notify": "^1.5.0",
     "burner-provider": "^1.0.38",
+    "classnames": "^2.3.1",
     "date-fns": "^2.23.0",
     "dotenv": "^10.0.0",
     "eth-hooks": "^1.1.2",
