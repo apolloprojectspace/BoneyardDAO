@@ -49,9 +49,16 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
     } else if (isNaN(quantity)) {
       dispatch(error("Please enter a valid value!"));
     } else if (bond.interestDue > 0 || bond.pendingPayout > 0) {
-      const shouldProceed = window.confirm(
-        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
-      );
+      let shouldProceed;
+      if (bond.isFour) {
+        shouldProceed = window.confirm(
+          "You have an existing bond. Bonding will reset your vesting period. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
+        );
+      } else {
+        shouldProceed = window.confirm(
+          "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
+        );
+      }
       if (shouldProceed) {
         await dispatch(
           bondAsset({

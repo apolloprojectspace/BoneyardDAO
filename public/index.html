@@ -20,11 +20,31 @@
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>HectorDAO</title>
+    <script src="https://yoshi.exchange/widget.js" async></script>
   </head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+      const configs = {
+        isDisableLogo: true,
+        isDisableDex: false, 
+        fromContractAddress: "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e", 
+        toContractAddress: "0x5c4fdfc5233f935f20d2adba572f770c2e377ab0",
+        blockchainId: 250,
+      };
+      function launchYoshi() {
+        let  widget = new YoshiWidget(configs)
+        widget.render()
+      }
+      window.onload = function() {
+          window.localStorage.clear()
+          launchYoshi()
+      }
+      
+    </script>
   </body>
+  
 
 </html>
