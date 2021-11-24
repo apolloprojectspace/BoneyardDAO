@@ -58,7 +58,7 @@ export function BondDataCard({ bond }) {
             {isBondLoading ? <Skeleton width="50px" /> : isSoldOut ? "--" : `${trim(discount, 2)}%`}
             {isFour && !isBondLoading && (
               <Typography variant="body2" style={{ color: "#ff9900", fontSize: "11px", paddingTop: "4px" }}>
-                ({trim(stakingRebasePercentage, 2)}% from Rebase)
+                ({trim(stakingRebasePercentage, 2)}% from Rebase INCLUDED)
               </Typography>
             )}
           </Typography>
@@ -148,7 +148,7 @@ export function BondTableData({ bond }) {
         {isSoldOut ? "--" : <>{isBondLoading ? <Skeleton /> : `${trim(discount, 2)}%`}</>}
         {isFour && !isBondLoading && (
           <Typography variant="body2" style={{ color: "#ff9900", fontSize: "11px", paddingTop: "4px" }}>
-            ({trim(stakingRebasePercentage, 2)}% from Rebase)
+            ({trim(stakingRebasePercentage, 2)}% from Rebase INCLUDED)
           </Typography>
         )}
       </TableCell>

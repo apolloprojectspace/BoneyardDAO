@@ -43,6 +43,11 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
     return prettifySeconds(seconds, "day");
   };
 
+  const stakingRebase = useSelector(state => {
+    return state.app.stakingRebase;
+  });
+  const stakingRebasePercentage = stakingRebase * 1200;
+  let discount = bond.bondDiscount * 100;
   async function onBond() {
     if (quantity === "") {
       dispatch(error("Please enter a value!"));
@@ -147,6 +152,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   if (bond.isFour) {
     reward = "sHEC";
     displayName = bond.displayName + " (4, 4)";
+    discount += stakingRebasePercentage;
   } else {
     reward = "HEC";
     displayName = bond.displayName;
@@ -256,11 +262,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
           <div className="data-row">
             <Typography>ROI</Typography>
             <Typography>
-              {isSoldOut ? (
-                "--"
-              ) : (
-                <>{isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.bondDiscount * 100, 4) || "0"} %`}</>
-              )}
+              {isSoldOut ? "--" : <>{isBondLoading ? <Skeleton width="100px" /> : `${trim(discount, 4) || "0"} %`}</>}
             </Typography>
           </div>
 
