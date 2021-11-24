@@ -104,8 +104,8 @@ export const usdc = new StableBond({
       reserveAddress: "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xF651283543fB9D61A91f318b78385d187D300738",
-      reserveAddress: "0x2F7249cb599139e560f0c81c269Ab9b04799E453",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
 });
@@ -125,8 +125,8 @@ export const usdc4 = new StableBond({
       reserveAddress: "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xF651283543fB9D61A91f318b78385d187D300738",
-      reserveAddress: "0x2F7249cb599139e560f0c81c269Ab9b04799E453",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
 });
@@ -145,8 +145,8 @@ export const mim4 = new StableBond({
       reserveAddress: "0x82f0B8B456c1A451378467398982d4834b6829c1",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xF651283543fB9D61A91f318b78385d187D300738",
-      reserveAddress: "0x2F7249cb599139e560f0c81c269Ab9b04799E453",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
 });
@@ -164,8 +164,8 @@ export const mim = new StableBond({
       reserveAddress: "0x82f0B8B456c1A451378467398982d4834b6829c1",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xF651283543fB9D61A91f318b78385d187D300738",
-      reserveAddress: "0x2F7249cb599139e560f0c81c269Ab9b04799E453",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
 });
@@ -182,8 +182,8 @@ export const hec_dai = new LPBond({
       reserveAddress: "0xbc0eecdA2d8141e3a26D2535C57cadcb1095bca9",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xcF449dA417cC36009a1C6FbA78918c31594B9377",
-      reserveAddress: "0x8D5a22Fb6A1840da602E56D1a260E56770e0bCE2",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
   lpUrl:
@@ -203,8 +203,8 @@ export const hec_dai_v2 = new LPBond({
       reserveAddress: "0xbc0eecdA2d8141e3a26D2535C57cadcb1095bca9",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xcF449dA417cC36009a1C6FbA78918c31594B9377",
-      reserveAddress: "0x8D5a22Fb6A1840da602E56D1a260E56770e0bCE2",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
   lpUrl:
@@ -225,8 +225,8 @@ export const hec_usdc = new LPBond({
       reserveAddress: "0xd661952749f05acc40503404938a91af9ac1473b",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xcF449dA417cC36009a1C6FbA78918c31594B9377",
-      reserveAddress: "0x8D5a22Fb6A1840da602E56D1a260E56770e0bCE2",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
   lpUrl:

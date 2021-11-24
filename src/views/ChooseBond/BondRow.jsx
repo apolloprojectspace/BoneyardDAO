@@ -15,14 +15,16 @@ export function BondDataCard({ bond }) {
   const btnVarient = isSoldOut ? "contained" : "outlined";
   let displayName = bond.displayName;
   let isFour = false;
-  if (bond.isFour) {
-    displayName += " (4, 4)";
-    isFour = true;
-  }
+  let discount = bond.bondDiscount * 100;
   const stakingRebase = useSelector(state => {
     return state.app.stakingRebase;
   });
-  const stakingRebasePercentage = trim(stakingRebase * 1200, 2);
+  const stakingRebasePercentage = stakingRebase * 1200;
+  if (bond.isFour) {
+    displayName += " (4, 4)";
+    isFour = true;
+    discount += stakingRebasePercentage;
+  }
   return (
     <Slide direction="up" in={true}>
       <Paper id={`${bond.name}--bond`} className="bond-data-card hec-card">
@@ -52,11 +54,11 @@ export function BondDataCard({ bond }) {
 
         <div className="data-row">
           <Typography>ROI</Typography>
-          <Typography>
-            {isBondLoading ? <Skeleton width="50px" /> : isSoldOut ? "--" : `${trim(bond.bondDiscount * 100, 2)}%`}
+          <Typography style={{ textAlign: "right" }}>
+            {isBondLoading ? <Skeleton width="50px" /> : isSoldOut ? "--" : `${trim(discount, 2)}%`}
             {isFour && !isBondLoading && (
               <Typography variant="body2" style={{ color: "#ff9900", fontSize: "11px", paddingTop: "4px" }}>
-                + {stakingRebasePercentage}% Rebase
+                ({trim(stakingRebasePercentage, 2)}% from Rebase)
               </Typography>
             )}
           </Typography>
@@ -104,14 +106,16 @@ export function BondTableData({ bond }) {
   const btnVarient = isSoldOut ? "contained" : "outlined";
   let displayName = bond.displayName;
   let isFour = false;
-  if (bond.isFour) {
-    displayName += " (4, 4)";
-    isFour = true;
-  }
   const stakingRebase = useSelector(state => {
     return state.app.stakingRebase;
   });
-  const stakingRebasePercentage = trim(stakingRebase * 1200, 2);
+  const stakingRebasePercentage = stakingRebase * 1200;
+  let discount = bond.bondDiscount * 100;
+  if (bond.isFour) {
+    displayName += " (4, 4)";
+    isFour = true;
+    discount += stakingRebasePercentage;
+  }
   return (
     <TableRow id={`${bond.name}--bond`}>
       <TableCell align="left" className="bond-name-cell">
@@ -141,10 +145,10 @@ export function BondTableData({ bond }) {
         </Typography>
       </TableCell>
       <TableCell align="left">
-        {isSoldOut ? "--" : <>{isBondLoading ? <Skeleton /> : `${trim(bond.bondDiscount * 100, 2)}%`}</>}
+        {isSoldOut ? "--" : <>{isBondLoading ? <Skeleton /> : `${trim(discount, 2)}%`}</>}
         {isFour && !isBondLoading && (
           <Typography variant="body2" style={{ color: "#ff9900", fontSize: "11px", paddingTop: "4px" }}>
-            + {stakingRebasePercentage}% Rebase
+            ({trim(stakingRebasePercentage, 2)}% from Rebase)
           </Typography>
         )}
       </TableCell>

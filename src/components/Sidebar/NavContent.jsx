@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
@@ -18,6 +19,10 @@ function NavContent() {
   const address = useAddress();
   const { bonds } = useBonds();
   const { chainID } = useWeb3Context();
+  const stakingRebase = useSelector(state => {
+    return state.app.stakingRebase;
+  });
+  const stakingRebasePercentage = stakingRebase * 1200;
 
   const checkPage = useCallback((match, location, page) => {
     const currentPath = location.pathname.replace("/", "");
@@ -117,7 +122,13 @@ function NavContent() {
                             {bond.isSoldOut ? (
                               "Sold Out"
                             ) : (
-                              <>{bond.bondDiscount && trim(bond.bondDiscount * 100, 2)}%</>
+                              <>
+                                {bond.bondDiscount &&
+                                  (bond.isFour
+                                    ? trim(bond.bondDiscount * 100 + stakingRebasePercentage, 2)
+                                    : trim(bond.bondDiscount * 100, 2))}
+                                %
+                              </>
                             )}
                           </span>
                         </Typography>

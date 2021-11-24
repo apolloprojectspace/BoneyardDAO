@@ -1,4 +1,5 @@
 import { ethers, BigNumber } from "ethers";
+import { useSelector } from "react-redux";
 import { contractForRedeemHelper } from "../helpers";
 import { getBalances, calculateUserBondDetails, loadAccountDetails } from "./AccountSlice";
 import { findOrLoadMarketPrice } from "./AppSlice";
@@ -117,7 +118,6 @@ export const calcBondDetails = createAsyncThunk(
 
     try {
       bondPrice = await bondContract.bondPriceInUSD();
-      // bondDiscount = (marketPrice * Math.pow(10, 9) - bondPrice) / bondPrice; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
       bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
     } catch (e) {
       console.log("error getting bondPriceInUSD", e);
