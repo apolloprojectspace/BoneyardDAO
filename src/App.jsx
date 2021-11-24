@@ -2,6 +2,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { useEffect, useState, useCallback } from "react";
 import { Route, Redirect, Switch, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
 import { useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -211,11 +212,17 @@ function App() {
       };
     }
   }, [walletChecked]);
+
   return (
     <ThemeProvider theme={themeMode}>
       <CssBaseline />
       {/* {isAppLoading && <LoadingSplash />} */}
-      <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
+      <div
+        className={classNames("app", theme, {
+          tablet: isSmallerScreen && !isSmallScreen,
+          mobile: isSmallScreen,
+        })}
+      >
         <Messages />
         <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
         <nav className={classes.drawer}>
