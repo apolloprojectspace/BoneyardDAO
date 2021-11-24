@@ -261,8 +261,13 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
 
           <div className="data-row">
             <Typography>ROI</Typography>
-            <Typography>
+            <Typography align="right">
               {isSoldOut ? "--" : <>{isBondLoading ? <Skeleton width="100px" /> : `${trim(discount, 4) || "0"} %`}</>}
+              {bond.isFour && !isBondLoading && (
+                <Typography variant="body2" style={{ color: "#ff9900", fontSize: "11px", paddingTop: "4px" }}>
+                  ({trim(stakingRebasePercentage, 2)}% from Rebase INCLUDED)
+                </Typography>
+              )}
             </Typography>
           </div>
 

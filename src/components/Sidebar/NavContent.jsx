@@ -110,31 +110,50 @@ function NavContent() {
 
               <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
-                  <Typography variant="body2">Bond discounts</Typography>
-                  {bonds.map((bond, i) => (
-                    <Link component={NavLink} to={`/bonds/${bond.name}`} key={i} className={"bond"}>
-                      {!bond.bondDiscount ? (
-                        <Skeleton variant="text" width={"150px"} />
-                      ) : (
-                        <Typography variant="body2">
-                          {bond.isFour ? bond.displayName + " (4, 4)" : bond.displayName}
-                          <span className="bond-pair-roi">
-                            {bond.isSoldOut ? (
-                              "Sold Out"
-                            ) : (
-                              <>
-                                {bond.bondDiscount &&
-                                  (bond.isFour
-                                    ? trim(bond.bondDiscount * 100 + stakingRebasePercentage, 2)
-                                    : trim(bond.bondDiscount * 100, 2))}
-                                %
-                              </>
-                            )}
-                          </span>
-                        </Typography>
-                      )}
-                    </Link>
-                  ))}
+                  <Typography variant="body2">Bond ROI (5 days)</Typography>
+                  {bonds
+                    .filter(bond => !bond.isFour)
+                    .map((bond, i) => (
+                      <Link component={NavLink} to={`/bonds/${bond.name}`} key={i} className={"bond"}>
+                        {!bond.bondDiscount ? (
+                          <Skeleton variant="text" width={"150px"} />
+                        ) : (
+                          <Typography variant="body2">
+                            {bond.isFour ? bond.displayName + " (4, 4)" : bond.displayName}
+                            <span className="bond-pair-roi">
+                              {bond.isSoldOut ? (
+                                "Sold Out"
+                              ) : (
+                                <>{bond.bondDiscount && trim(bond.bondDiscount * 100, 2)}%</>
+                              )}
+                            </span>
+                          </Typography>
+                        )}
+                      </Link>
+                    ))}
+                  <Typography variant="body2" style={{ paddingTop: "16px" }}>
+                    Bond ROI (4 days)
+                  </Typography>
+                  {bonds
+                    .filter(bond => bond.isFour)
+                    .map((bond, i) => (
+                      <Link component={NavLink} to={`/bonds/${bond.name}`} key={i} className={"bond"}>
+                        {!bond.bondDiscount ? (
+                          <Skeleton variant="text" width={"150px"} />
+                        ) : (
+                          <Typography variant="body2">
+                            {bond.isFour ? bond.displayName + " (4, 4)" : bond.displayName}
+                            <span className="bond-pair-roi">
+                              {bond.isSoldOut ? (
+                                "Sold Out"
+                              ) : (
+                                <>{bond.bondDiscount && trim(bond.bondDiscount * 100 + stakingRebasePercentage, 2)}%</>
+                              )}
+                            </span>
+                          </Typography>
+                        )}
+                      </Link>
+                    ))}
                 </div>
               </div>
             </div>
