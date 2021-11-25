@@ -29,7 +29,7 @@ const lightTheme = {
   secondaryButtonHoverBG: "rgba(54, 56, 64, 1)",
   outlinedPrimaryButtonHoverBG: "#F8CC82",
   outlinedPrimaryButtonHoverColor: "#333333",
-  outlinedSecondaryButtonHoverBG: "#FCFCFC",
+  outlinedSecondaryButtonHoverBG: "#bf7d3e",
   outlinedSecondaryButtonHoverColor: "#333333",
   containedSecondaryButtonHoverBG: "#33333333",
   graphStrokeColor: "rgba(37, 52, 73, .2)",
@@ -226,14 +226,14 @@ export const light = responsiveFontSizes(
             color: lightTheme.color,
             backgroundColor: lightTheme.paperBg,
             "&:hover": {
-              color: "#FCFCFC",
+              color: "#bf7d3e",
               backgroundColor: `${lightTheme.containedSecondaryButtonHoverBG} !important`,
             },
             "@media (hover:none)": {
               color: lightTheme.color,
               backgroundColor: lightTheme.paperBg,
               "&:hover": {
-                color: "#FCFCFC",
+                color: "#bf7d3e",
                 backgroundColor: `${lightTheme.containedSecondaryButtonHoverBG} !important`,
               },
             },

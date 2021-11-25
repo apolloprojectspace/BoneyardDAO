@@ -32,7 +32,7 @@ import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
 import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
-import { hec_dai } from "./helpers/AllBonds";
+import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
 
 const drawerWidth = 280;
 const transitionDuration = 969;
@@ -89,7 +89,7 @@ function App() {
   const isAppLoading = useSelector(state => state.app.loading);
   const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   let { bonds } = useBonds();
-  bonds = bonds.concat(hec_dai);
+  bonds = bonds.concat([hec_dai, usdc4, mim4, dai4]);
   async function loadDetails(whichDetails) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)

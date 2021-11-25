@@ -36,7 +36,8 @@ interface BondOpts {
   isFour?: Boolean;
   isTotal?: Boolean;
   decimals?: number;
-  fourAddress?: string;
+  fourAddress?: string[];
+  oldfourAddress?: string;
 }
 
 // Technically only exporting for the interface
@@ -52,7 +53,8 @@ export abstract class Bond {
   readonly isFour?: Boolean;
   readonly isTotal?: Boolean;
   readonly decimals?: number;
-  readonly fourAddress?: string;
+  readonly fourAddress?: string[];
+  readonly oldfourAddress?: string;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: Boolean;
@@ -74,6 +76,7 @@ export abstract class Bond {
     this.isTotal = bondOpts.isTotal;
     this.decimals = bondOpts.decimals;
     this.fourAddress = bondOpts.fourAddress;
+    this.oldfourAddress = bondOpts.oldfourAddress;
   }
 
   getAddressForBond(networkID: NetworkID) {
@@ -166,15 +169,21 @@ export class StableBond extends Bond {
     if (this.decimals) {
       decimals = this.decimals;
     }
-    let treasuryBalane;
+    let treasuryBalane = 0;
     treasuryBalane = tokenAmount / Math.pow(10, decimals);
     if (this.isTotal) {
       let bond = this.getContractForBond(networkID, provider);
       treasuryBalane = (await bond.totalPrinciple()) / Math.pow(10, decimals);
     }
+    if (this.oldfourAddress) {
+      let bond = new ethers.Contract(this.oldfourAddress, MimBondContract, provider);
+      treasuryBalane += (await bond.totalPrinciple()) / Math.pow(10, decimals);
+    }
     if (this.fourAddress) {
-      const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);
-      treasuryBalane -= (await fourBond.totalPrinciple()) / Math.pow(10, decimals);
+      this.fourAddress.map(async function (address) {
+        const fourBond = new ethers.Contract(address, MimBondContract, provider);
+        treasuryBalane -= (await fourBond.totalPrinciple()) / Math.pow(10, decimals);
+      });
     }
     return treasuryBalane;
   }

@@ -11,33 +11,38 @@ import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import { useWeb3Context, useBonds } from "src/hooks";
 import { isPendingTxn, txnButtonTextGeneralPending } from "src/slices/PendingTxnsSlice";
-import { hec_dai } from "src/helpers/AllBonds";
+import { hec_dai, mim4, usdc4, dai4 } from "src/helpers/AllBonds";
 
 export function ClaimBondTableData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
-  bonds = bonds.concat(hec_dai);
+  bonds = bonds.concat([hec_dai, mim4, usdc4, dai4]);
+  console.log("debug", bonds);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];
   const bondName = bond.bond;
   let displayName = bond.displayName;
-  if (bond.isFour) {
-    displayName += " (4, 4)";
-  }
-  const isAppLoading = useSelector(state => state.app.loading ?? true);
-
   const currentBlock = useSelector(state => {
     return state.app.currentBlock;
   });
+  const vestingPeriod = () => {
+    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock);
+  };
+  let className = "";
+  let varientVal = "outlined";
+  if (bond.isFour) {
+    displayName += " (4, 4)";
+    if (vestingPeriod() !== "Fully Vested") {
+      varientVal = "contained";
+      className = "claim-disable";
+    }
+  }
+  const isAppLoading = useSelector(state => state.app.loading ?? true);
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
   });
-
-  const vestingPeriod = () => {
-    return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock);
-  };
 
   async function onRedeem({ autostake }) {
     let currentBond = bonds.find(bnd => bnd.name === bondName);
@@ -65,8 +70,9 @@ export function ClaimBondTableData({ userBond }) {
       </TableCell>
       <TableCell align="right">
         <Button
-          variant="outlined"
+          variant={varientVal}
           color="primary"
+          className={className}
           disabled={isPendingTxn(pendingTransactions, "redeem_bond_" + bondName)}
           onClick={() => onRedeem({ autostake: false })}
         >
@@ -81,7 +87,8 @@ export function ClaimBondTableData({ userBond }) {
 
 export function ClaimBondCardData({ userBond }) {
   const dispatch = useDispatch();
-  const { bonds } = useBonds();
+  let { bonds } = useBonds();
+  bonds = bonds.concat([hec_dai, mim4, usdc4, dai4]);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];
@@ -94,14 +101,27 @@ export function ClaimBondCardData({ userBond }) {
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
   });
-
+  let displayName = bond.displayName;
+  let className = "";
+  let varientVal = "outlined";
   const vestingPeriod = () => {
     return prettyVestingPeriod(currentBlock, bond.bondMaturationBlock);
   };
+  if (bond.isFour) {
+    displayName += " (4, 4)";
+    if (vestingPeriod() !== "Fully Vested") {
+      varientVal = "contained";
+      className = "claim-disable";
+    }
+  }
 
   async function onRedeem({ autostake }) {
     let currentBond = bonds.find(bnd => bnd.name === bondName);
-    await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
+    if (currentBond.isFour && vestingPeriod() !== "Fully Vested") {
+      dispatch(info("4,4 bonds can only be claimed after they are fully vested."));
+    } else {
+      await dispatch(redeemBond({ address, bond: currentBond, networkID: chainID, provider, autostake }));
+    }
   }
 
   return (
@@ -109,7 +129,7 @@ export function ClaimBondCardData({ userBond }) {
       <Box className="bond-pair">
         <BondLogo bond={bond} />
         <Box className="bond-name">
-          <Typography>{bond.displayName ? trim(bond.displayName, 4) : <Skeleton width={100} />}</Typography>
+          <Typography>{bond.displayName ? trim(displayName, 4) : <Skeleton width={100} />}</Typography>
         </Box>
       </Box>
 
@@ -129,8 +149,9 @@ export function ClaimBondCardData({ userBond }) {
       </div>
       <Box display="flex" justifyContent="space-around" alignItems="center" className="claim-bond-card-buttons">
         <Button
-          variant="outlined"
+          variant={varientVal}
           color="primary"
+          className={className}
           disabled={isPendingTxn(pendingTransactions, "redeem_bond_" + bondName)}
           onClick={() => onRedeem({ autostake: false })}
         >
