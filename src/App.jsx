@@ -33,6 +33,7 @@ import { girth as gTheme } from "./themes/girth.js";
 import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
+import Wrap from "./views/Wrap/Wrap";
 
 const drawerWidth = 280;
 const transitionDuration = 969;
@@ -245,6 +246,10 @@ function App() {
 
             <Route path="/stake">
               <Stake />
+            </Route>
+
+            <Route path="/wrap">
+              <Wrap />
             </Route>
 
             <Route path="/bonds">

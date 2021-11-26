@@ -5,6 +5,7 @@ import { ReactComponent as InfoIcon } from "../../assets/icons/info-fill.svg";
 import { ReactComponent as ArrowUpIcon } from "../../assets/icons/arrow-up.svg";
 import { ReactComponent as shecTokenImg } from "../../assets/tokens/SHEC.svg";
 import { ReactComponent as hecTokenImg } from "../../assets/tokens/HEC.svg";
+import { NavLink } from "react-router-dom";
 
 import "./hecmenu.scss";
 import { dai } from "src/helpers/AllBonds";
@@ -106,6 +107,12 @@ function HecMenu() {
                       <Typography align="left">
                         Buy on SpiritSwap <SvgIcon component={ArrowUpIcon} htmlColor="#A3A3A3" />
                       </Typography>
+                    </Button>
+                  </Link>
+
+                  <Link component={NavLink} to="/wrap" style={{ textDecoration: "none" }}>
+                    <Button size="large" variant="contained" color="secondary" fullWidth>
+                      <Typography align="left">Wrap sHEC</Typography>
                     </Button>
                   </Link>
                 </Box>
