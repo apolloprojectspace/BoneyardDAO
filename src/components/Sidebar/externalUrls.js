@@ -19,12 +19,7 @@ const externalUrls = [
     icon: <SvgIcon viewBox="0 0 155 172" color="primary" component={SpiritSwapIcon} />,
   },
   {
-    title: "Hector Lend",
-    label: "(Coming soon)",
-    icon: <MonetizationOnOutlined viewBox="0 0 20 24" />,
-  },
-  {
-    title: "Hector Borrow",
+    title: "Hector Bank",
     label: "(Coming soon)",
     icon: <MonetizationOnOutlined viewBox="0 0 20 24" />,
   },
