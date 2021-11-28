@@ -96,8 +96,8 @@ export const ftm = new CustomBond({
       reserveAddress: "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
     },
     [NetworkID.Testnet]: {
-      bondAddress: "0xca7b90f8158A4FAA606952c023596EE6d322bcf0",
-      reserveAddress: "0xc778417e063141139fce010982780140aa0cd5ab",
+      bondAddress: "",
+      reserveAddress: "",
     },
   },
   customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {

@@ -247,7 +247,6 @@ function App() {
             <Route path="/stake">
               <Stake />
             </Route>
-
             <Route path="/wrap">
               <Wrap />
             </Route>

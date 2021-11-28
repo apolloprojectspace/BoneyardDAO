@@ -62,12 +62,59 @@ function ChooseBond() {
     <>
       <div id="choose-bond-view">
         {!isAccountLoading && !_.isEmpty(accountBonds) && <ClaimBonds activeBonds={accountBonds} />}
+        <Zoom in={true}>
+          <Paper className="hec-card">
+            <Box className="card-header">
+              <Typography variant="h5">Bond (4,4)</Typography>
+              <RebaseTimer />
+            </Box>
 
+            {!isSmallScreen && (
+              <Grid container item>
+                <TableContainer>
+                  <Table aria-label="Available bonds">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">Bond</TableCell>
+                        <TableCell align="left">Price</TableCell>
+                        <TableCell align="left">ROI (4 days)</TableCell>
+                        <TableCell align="right">Purchased</TableCell>
+                        <TableCell align="right"></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {bonds
+                        .filter(bond => bond.isFour)
+                        .map(bond => (
+                          <BondTableData key={bond.name} bond={bond} />
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            )}
+          </Paper>
+        </Zoom>
+
+        {isSmallScreen && (
+          <Box className="hec-card-container">
+            <Grid container item spacing={2}>
+              {bonds
+                .filter(bond => bond.isFour)
+                .map(bond => (
+                  <Grid item xs={12} key={bond.name}>
+                    <BondDataCard key={bond.name} bond={bond} />
+                  </Grid>
+                ))}
+            </Grid>
+          </Box>
+        )}
+      </div>
+      <div id="choose-bond-view">
         <Zoom in={true}>
           <Paper className="hec-card">
             <Box className="card-header">
               <Typography variant="h5">Bond (1,1)</Typography>
-              <RebaseTimer />
             </Box>
 
             <Grid container item xs={12} style={{ margin: "10px 0px 20px" }} className="bond-hero">
@@ -135,54 +182,6 @@ function ChooseBond() {
             <Grid container item spacing={2}>
               {bonds
                 .filter(bond => !bond.isFour)
-                .map(bond => (
-                  <Grid item xs={12} key={bond.name}>
-                    <BondDataCard key={bond.name} bond={bond} />
-                  </Grid>
-                ))}
-            </Grid>
-          </Box>
-        )}
-      </div>
-      <div id="choose-bond-view">
-        <Zoom in={true}>
-          <Paper className="hec-card">
-            <Box className="card-header">
-              <Typography variant="h5">Bond (4,4)</Typography>
-            </Box>
-
-            {!isSmallScreen && (
-              <Grid container item>
-                <TableContainer>
-                  <Table aria-label="Available bonds">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Bond</TableCell>
-                        <TableCell align="left">Price</TableCell>
-                        <TableCell align="left">ROI (4 days)</TableCell>
-                        <TableCell align="right">Purchased</TableCell>
-                        <TableCell align="right"></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {bonds
-                        .filter(bond => bond.isFour)
-                        .map(bond => (
-                          <BondTableData key={bond.name} bond={bond} />
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
-            )}
-          </Paper>
-        </Zoom>
-
-        {isSmallScreen && (
-          <Box className="hec-card-container">
-            <Grid container item spacing={2}>
-              {bonds
-                .filter(bond => bond.isFour)
                 .map(bond => (
                   <Grid item xs={12} key={bond.name}>
                     <BondDataCard key={bond.name} bond={bond} />

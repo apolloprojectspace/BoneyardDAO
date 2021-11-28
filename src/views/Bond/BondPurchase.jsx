@@ -270,6 +270,18 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
               )}
             </Typography>
           </div>
+          {bond.isFour && (
+            <div className="data-row">
+              <Typography>Purchase Discount</Typography>
+              <Typography align="right">
+                {isSoldOut ? (
+                  "--"
+                ) : (
+                  <>{isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.bondDiscount * 100, 4) || "0"} %`}</>
+                )}
+              </Typography>
+            </div>
+          )}
 
           <div className="data-row">
             <Typography>Debt Ratio</Typography>

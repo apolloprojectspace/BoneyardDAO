@@ -21,12 +21,14 @@ import TabPanel from "../../components/TabPanel";
 import InfoTooltip from "../../components/InfoTooltip/InfoTooltip.jsx";
 import { ReactComponent as InfoIcon } from "../../assets/icons/info-fill.svg";
 import { trim, formatCurrency } from "../../helpers";
+import { changeApproval, changeWrap } from "../../slices/WrapThunk";
 import "../Stake/stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
 import { error } from "../../slices/MessagesSlice";
 import { ethers } from "ethers";
+import "./wrap.scss";
 
 function a11yProps(index) {
   return {
@@ -64,10 +66,10 @@ function Wrap() {
   });
 
   const sHecBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.sHec;
+    return state.account.balances && state.account.balances.shec;
   });
   const wsHecBalance = useSelector(state => {
-    return state.account.balances && state.account.balances.wsHec;
+    return state.account.balances && state.account.balances.wshec;
   });
   const wrapAllowance = useSelector(state => {
     return state.account.wrapping && state.account.wrapping.hecWrap;
@@ -183,7 +185,7 @@ function Wrap() {
                         Current Index
                       </Typography>
                       <Typography variant="h4">
-                        {currentIndex ? <>{trim(currentIndex, 1)} HEC</> : <Skeleton width="150px" />}
+                        {currentIndex ? <>{trim(currentIndex, 2)} HEC</> : <Skeleton width="150px" />}
                       </Typography>
                     </div>
                   </Grid>
@@ -239,7 +241,7 @@ function Wrap() {
                                 <>
                                   First time wrapping <b>sHEC</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>sHEC</b> for wrapping.
+                                  Please approve Hector Dao to use your <b>sHEC</b> for wrapping.
                                 </>
                               )}
                             </Typography>
@@ -289,7 +291,7 @@ function Wrap() {
                             color="primary"
                             disabled={isPendingTxn(pendingTransactions, "approve_wrapping")}
                             onClick={() => {
-                              onSeekApproval("sHEC");
+                              onSeekApproval("shec");
                             }}
                           >
                             {txnButtonText(pendingTransactions, "approve_wrapping", "Approve")}

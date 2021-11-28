@@ -36,6 +36,10 @@ export const txnButtonText = (pendingTransactions: IPendingTxn[], type: string, 
   return isPendingTxn(pendingTransactions, type) ? "Pending..." : defaultText;
 };
 
+export const getWrappingTypeText = (action: string) => {
+  return action.toLowerCase() === "wrap" ? `Wrapping HEC` : `Unwrapping sHEC`;
+};
+
 export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], type: string, defaultText: string) => {
   return pendingTransactions.length >= 1 ? "Pending..." : defaultText;
 };
