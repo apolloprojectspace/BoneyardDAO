@@ -17,7 +17,6 @@ export function ClaimBondTableData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
   bonds = bonds.concat([hec_dai, mim4, usdc4, dai4]);
-  console.log("debug", bonds);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];
@@ -58,7 +57,9 @@ export function ClaimBondTableData({ userBond }) {
       <TableCell align="left" className="bond-name-cell">
         <BondLogo bond={bond} />
         <div className="bond-name">
-          <Typography variant="body1">{displayName ? trim(displayName, 4) : <Skeleton width={100} />}</Typography>
+          <Typography variant="body1" style={{ fontSize: "16px" }}>
+            {displayName ? trim(displayName, 4) : <Skeleton width={100} />}
+          </Typography>
         </div>
       </TableCell>
       <TableCell align="center">

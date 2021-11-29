@@ -68,6 +68,38 @@ function ChooseBond() {
               <Typography variant="h5">Bond (4,4)</Typography>
               <RebaseTimer />
             </Box>
+            <Grid container item xs={12} style={{ margin: "10px 0px 20px" }} className="bond-hero">
+              <Grid item xs={6}>
+                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    Treasury Balance
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? (
+                      <Skeleton width="180px" />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0,
+                      }).format(treasuryBalance)
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={6} className={`hec-price`}>
+                <Box textAlign={`${isVerySmallScreen ? "right" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    HEC Price
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
 
             {!isSmallScreen && (
               <Grid container item>
@@ -116,39 +148,6 @@ function ChooseBond() {
             <Box className="card-header">
               <Typography variant="h5">Bond (1,1)</Typography>
             </Box>
-
-            <Grid container item xs={12} style={{ margin: "10px 0px 20px" }} className="bond-hero">
-              <Grid item xs={6}>
-                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
-                  <Typography variant="h5" color="textSecondary">
-                    Treasury Balance
-                  </Typography>
-                  <Typography variant="h4">
-                    {isAppLoading ? (
-                      <Skeleton width="180px" />
-                    ) : (
-                      new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                        maximumFractionDigits: 0,
-                        minimumFractionDigits: 0,
-                      }).format(treasuryBalance)
-                    )}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} className={`hec-price`}>
-                <Box textAlign={`${isVerySmallScreen ? "right" : "center"}`}>
-                  <Typography variant="h5" color="textSecondary">
-                    HEC Price
-                  </Typography>
-                  <Typography variant="h4">
-                    {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
 
             {!isSmallScreen && (
               <Grid container item>

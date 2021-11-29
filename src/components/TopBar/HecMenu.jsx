@@ -30,6 +30,7 @@ const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
         decimals = 18;
       case "HEC":
         tokenPath = HecImg;
+        decimals = 9;
         break;
       default:
         tokenPath = SHecImg;

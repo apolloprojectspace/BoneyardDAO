@@ -1,10 +1,10 @@
 import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { abi as MimBondContract } from "src/abi/bonds/MimContract.json";
 import { abi as ierc20Abi } from "src/abi/IERC20.json";
 import { getBondCalculator, getBondCalculator1 } from "src/helpers/BondCalculator";
 import { addresses } from "src/constants";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 
 export enum NetworkID {
   Mainnet = 250,
@@ -36,7 +36,7 @@ interface BondOpts {
   isFour?: Boolean;
   isTotal?: Boolean;
   decimals?: number;
-  fourAddress?: string[];
+  fourAddress?: string;
   oldfourAddress?: string;
 }
 
@@ -53,7 +53,7 @@ export abstract class Bond {
   readonly isFour?: Boolean;
   readonly isTotal?: Boolean;
   readonly decimals?: number;
-  readonly fourAddress?: string[];
+  readonly fourAddress?: string;
   readonly oldfourAddress?: string;
 
   // The following two fields will differ on how they are set depending on bond type
@@ -127,20 +127,29 @@ export class LPBond extends Bond {
     const token = this.getContractForReserve(networkID, provider);
     const tokenAddress = this.getAddressForReserve(networkID);
     let bondCalculator;
-    if (this.name == "hec_usdc_lp") {
-      bondCalculator = getBondCalculator1(networkID, provider);
-    } else {
+    if (this.name == "hec_dai_lp_v1") {
       bondCalculator = getBondCalculator(networkID, provider);
+    } else {
+      bondCalculator = getBondCalculator1(networkID, provider);
     }
-    const tokenAmount = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    let decimals = 18;
+    if (this.decimals) {
+      decimals = this.decimals;
+    }
+    let tokenAmount = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    if (this.isTotal) {
+      let bond = this.getContractForBond(networkID, provider);
+      tokenAmount = await bond.totalPrinciple();
+    }
+    if (this.fourAddress) {
+      const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);
+      const val = await fourBond.totalPrinciple();
+      tokenAmount = BigNumber.from(tokenAmount).sub(val);
+    }
     const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount);
     const markdown = await bondCalculator.markdown(tokenAddress);
     let tokenUSD;
-    if (this.name == "hec_usdc_lp") {
-      tokenUSD = (valuation / Math.pow(10, 9)) * (markdown / Math.pow(10, 6));
-    } else {
-      tokenUSD = (valuation / Math.pow(10, 9)) * (markdown / Math.pow(10, 18));
-    }
+    tokenUSD = (valuation / Math.pow(10, 9)) * (markdown / Math.pow(10, decimals));
     return tokenUSD;
   }
 }
@@ -169,23 +178,23 @@ export class StableBond extends Bond {
     if (this.decimals) {
       decimals = this.decimals;
     }
-    let treasuryBalane = 0;
-    treasuryBalane = tokenAmount / Math.pow(10, decimals);
+    let balance = tokenAmount / Math.pow(10, decimals);
     if (this.isTotal) {
       let bond = this.getContractForBond(networkID, provider);
-      treasuryBalane = (await bond.totalPrinciple()) / Math.pow(10, decimals);
+      balance = (await bond.totalPrinciple()) / Math.pow(10, decimals);
     }
     if (this.oldfourAddress) {
       let bond = new ethers.Contract(this.oldfourAddress, MimBondContract, provider);
-      treasuryBalane += (await bond.totalPrinciple()) / Math.pow(10, decimals);
+      if (this.isTotal)
+        balance += (await bond.totalPrinciple()) / Math.pow(10, decimals);
+      else
+        balance -= (await bond.totalPrinciple()) / Math.pow(10, decimals);
     }
     if (this.fourAddress) {
-      this.fourAddress.map(async function (address) {
-        const fourBond = new ethers.Contract(address, MimBondContract, provider);
-        treasuryBalane -= (await fourBond.totalPrinciple()) / Math.pow(10, decimals);
-      });
-    }
-    return treasuryBalane;
+      const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);
+      balance -= (await fourBond.totalPrinciple()) / Math.pow(10, decimals);
+    };
+    return balance;
   }
 }
 

@@ -89,10 +89,10 @@ export const calcBondDetails = createAsyncThunk(
     const bondContract = bond.getContractForBond(networkID, provider);
     // const bondCalcContract = getBondCalculator(networkID, provider);
     let bondCalcContract;
-    if (bond.name == "hec_usdc_lp" || bond.name == "hec_dai_lp") {
-      bondCalcContract = getBondCalculator1(networkID, provider);
-    } else {
+    if (bond.name == "hec_dai_lp_v1") {
       bondCalcContract = getBondCalculator(networkID, provider);
+    } else {
+      bondCalcContract = getBondCalculator1(networkID, provider);
     }
 
     const terms = await bondContract.terms();
