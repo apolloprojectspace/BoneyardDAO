@@ -5,6 +5,7 @@ import Social from "./Social";
 import externalUrls from "./externalUrls";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
+import { ReactComponent as GlobeIcon } from "../../assets/icons/globe.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as WrapIcon } from "../../assets/icons/wrap.svg";
 import { ReactComponent as HectorIcon } from "../../assets/icons/hector-nav-header.svg";
@@ -34,6 +35,9 @@ function NavContent() {
       return true;
     }
     if (currentPath.indexOf("wrap") >= 0 && page === "wrap") {
+      return true;
+    }
+    if (currentPath.indexOf("calculator") >= 0 && page === "calculator") {
       return true;
     }
     if ((currentPath.indexOf("bonds") >= 0 || currentPath.indexOf("choose_bond") >= 0) && page === "bonds") {
@@ -127,7 +131,7 @@ function NavContent() {
                 </Typography>
               </Link>
 
-              <div className="dapp-menu-data discounts">
+              {/* <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
                   <Typography variant="body2">Bond ROI (4 days)</Typography>
                   {bonds
@@ -174,7 +178,21 @@ function NavContent() {
                       </Link>
                     ))}
                 </div>
-              </div>
+              </div> */}
+              <Link
+                component={NavLink}
+                id="calc-nav"
+                to="/calculator"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "calculator");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={GlobeIcon} viewBox="0 0 24 24"/>
+                  Calculator
+                </Typography>
+              </Link>
             </div>
           </div>
         </div>

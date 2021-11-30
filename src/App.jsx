@@ -34,6 +34,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
+import Calculator from "./views/Calculator/index";
 
 const drawerWidth = 280;
 const transitionDuration = 969;
@@ -249,6 +250,9 @@ function App() {
             </Route>
             <Route path="/wrap">
               <Wrap />
+            </Route>
+            <Route path="/calculator">
+              <Calculator />
             </Route>
 
             <Route path="/bonds">
