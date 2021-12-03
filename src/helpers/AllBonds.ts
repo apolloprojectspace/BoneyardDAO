@@ -18,7 +18,7 @@ import { abi as ReserveHecUsdcContract } from "src/abi/reserves/HecUsdc.json";
 
 import { abi as EthBondContract } from "src/abi/bonds/FtmContract.json";
 
-import { abi as ierc20Abi } from "src/abi/IERC20.json";
+import ierc20Abi from "src/abi/ERC20.json";
 
 // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 //   and include that in the definition of a bond

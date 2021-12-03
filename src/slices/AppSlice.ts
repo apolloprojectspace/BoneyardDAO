@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as HectorStakingv2 } from "../abi/HectorStakingv2.json";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import ierc20Abi from "../abi/ERC20.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
 import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
 import apollo from "../lib/apolloClient.js";

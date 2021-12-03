@@ -1,6 +1,6 @@
 import { ethers, BigNumber } from "ethers";
 import { addresses } from "../constants";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import ierc20Abi from "../abi/ERC20.json";
 import { abi as HectorStaking } from "../abi/HectorStakingv2.json";
 import { abi as StakingHelper } from "../abi/StakingHelper.json";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";

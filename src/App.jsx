@@ -34,8 +34,11 @@ import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
+import { RariProvider } from "./fuse-sdk/helpers/RariContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Borrow from "./views/Borrow/Borrow";
 
-const drawerWidth = 280;
+const drawerWidth = 300;
 const transitionDuration = 969;
 
 const useStyles = makeStyles(theme => ({
@@ -69,6 +72,8 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
   },
 }));
+
+const queryClient = new QueryClient();
 
 function App() {
   // useSegmentAnalytics();
@@ -124,7 +129,7 @@ function App() {
     loadProvider => {
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
       bonds.map(bond => {
-        dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
+        dispatch(calculateUserBondDetails({ address, bond, provider: loadProvider, networkID: chainID }));
       });
     },
     [connected],
@@ -215,59 +220,67 @@ function App() {
   }, [walletChecked]);
 
   return (
-    <ThemeProvider theme={themeMode}>
-      <CssBaseline />
-      {/* {isAppLoading && <LoadingSplash />} */}
-      <div
-        className={classNames("app", theme, {
-          tablet: isSmallerScreen && !isSmallScreen,
-          mobile: isSmallScreen,
-        })}
-      >
-        <Messages />
-        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
-        <nav className={classes.drawer}>
-          {isSmallerScreen ? (
-            <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-          ) : (
-            <Sidebar />
-          )}
-        </nav>
+    <QueryClientProvider client={queryClient}>
+      <RariProvider provider={provider}>
+        <ThemeProvider theme={themeMode}>
+          <CssBaseline />
+          {/*{isAppLoading && <LoadingSplash />}*/}
+          <div
+            className={classNames("app", theme, {
+              tablet: isSmallerScreen && !isSmallScreen,
+              mobile: isSmallScreen,
+            })}
+          >
+            <Messages />
+            <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+            <nav className={classes.drawer}>
+              {isSmallerScreen ? (
+                <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+              ) : (
+                <Sidebar />
+              )}
+            </nav>
 
-        <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-          <Switch>
-            <Route exact path="/dashboard">
-              <TreasuryDashboard />
-            </Route>
+            <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+              <Switch>
+                <Route exact path="/dashboard">
+                  <TreasuryDashboard />
+                </Route>
 
-            <Route exact path="/">
-              <Redirect to="/stake" />
-            </Route>
+                <Route exact path="/">
+                  <Redirect to="/stake" />
+                </Route>
 
-            <Route path="/stake">
-              <Stake />
-            </Route>
+                <Route path="/stake">
+                  <Stake />
+                </Route>
 
-            <Route path="/wrap">
-              <Wrap />
-            </Route>
+                <Route path="/wrap">
+                  <Wrap />
+                </Route>
 
-            <Route path="/bonds">
-              {bonds.map(bond => {
-                return (
-                  <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                    <Bond bond={bond} />
-                  </Route>
-                );
-              })}
-              <ChooseBond />
-            </Route>
+                <Route path="/bonds">
+                  {bonds.map(bond => {
+                    return (
+                      <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
+                        <Bond bond={bond} />
+                      </Route>
+                    );
+                  })}
+                  <ChooseBond />
+                </Route>
 
-            <Route component={NotFound} />
-          </Switch>
-        </div>
-      </div>
-    </ThemeProvider>
+                <Route path="/bank">
+                  <Borrow poolId={6} />
+                </Route>
+
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </div>
+        </ThemeProvider>
+      </RariProvider>
+    </QueryClientProvider>
   );
 }
 
