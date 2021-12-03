@@ -207,13 +207,15 @@ function TreasuryDashboard() {
                     "treasuryDaiMarketValue",
                     "treasuryUsdcMarketValue",
                     "treasuryMIMMarketValue",
+                    "treasuryFRAXRiskFreeValue",
                     "treasuryWFTMMarketValue",
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
                     ["#768299", "#98B3E9"],
-                    ["#DC30EB", "#EA98F1"],
-                    ["#8BFF4D", "#4C8C2A"],
+                    ["#8351ff", "#b151ff"],
+                    ["#c6c6c6", "#545454"],
+                    ["#22d5e7", "#18919d"],
                   ]}
                   headerText="Market Value of Treasury Assets"
                   headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
@@ -232,13 +234,13 @@ function TreasuryDashboard() {
                   type="stack"
                   data={data}
                   format="currency"
-                  dataKey={["treasuryDaiRiskFreeValue", "treasuryUsdcRiskFreeValue", "treasuryMIMRiskFreeValue"]}
+                  dataKey={["treasuryDaiRiskFreeValue", "treasuryUsdcRiskFreeValue", "treasuryMIMRiskFreeValue", "treasuryFRAXRiskFreeValue"]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
                     ["#768299", "#98B3E9"],
-                    ["#ff758f", "#c9184a"],
-                    ["#000", "#fff"],
-                    ["#000", "#fff"],
+                    ["#8351ff", "#b151ff"],
+                    ["#c6c6c6", "#545454"],
+                    ["#22d5e7", "#18919d"],
                   ]}
                   headerText="Risk Free Value of Treasury Assets"
                   headerSubText={`${data && formatCurrency(data[0].treasuryRiskFreeValue)}`}
