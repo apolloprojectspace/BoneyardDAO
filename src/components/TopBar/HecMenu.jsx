@@ -5,6 +5,7 @@ import { ReactComponent as InfoIcon } from "../../assets/icons/info-fill.svg";
 import { ReactComponent as ArrowUpIcon } from "../../assets/icons/arrow-up.svg";
 import { ReactComponent as shecTokenImg } from "../../assets/tokens/SHEC.svg";
 import { ReactComponent as hecTokenImg } from "../../assets/tokens/HEC.svg";
+import { ReactComponent as wshecTokenImg } from "../../assets/tokens/wsHEC.svg";
 import { NavLink } from "react-router-dom";
 
 import "./hecmenu.scss";
@@ -13,24 +14,29 @@ import { useWeb3Context } from "../../hooks/web3Context";
 
 import HecImg from "src/assets/tokens/HEC.svg";
 import SHecImg from "src/assets/tokens/SHEC.svg";
+import wsHecImg from "src/assets/tokens/wsHEC.svg";
 
 const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
   if (window.ethereum) {
     const host = window.location.origin;
     // NOTE (appleseed): 33T token defaults to sHEC logo since we don't have a 33T logo yet
-    let tokenPath;
+    let tokenPath, decimals;
     // if (tokenSymbol === "HEC") {
 
     // } ? HecImg : SHecImg;
     switch (tokenSymbol) {
+      case "wsHEC":
+        tokenPath = wsHecImg;
+        decimals = 18;
       case "HEC":
         tokenPath = HecImg;
+        decimals = 9;
         break;
       default:
         tokenPath = SHecImg;
+        decimals = 9;
     }
     const imageURL = `${host}/${tokenPath}`;
-
     try {
       await window.ethereum.request({
         method: "wallet_watchAsset",
@@ -39,7 +45,7 @@ const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
           options: {
             address: tokenAddress,
             symbol: tokenSymbol,
-            decimals: TOKEN_DECIMALS,
+            decimals: decimals,
             image: imageURL,
           },
         },
@@ -58,6 +64,7 @@ function HecMenu() {
   const networkID = chainID;
 
   const SHEC_ADDRESS = addresses[networkID].SHEC_ADDRESS;
+  const WSHEC_ADDRESS = addresses[networkID].WSHEC_ADDRESS;
   const HEC_ADDRESS = addresses[networkID].HEC_ADDRESS;
   const USDC_ADDRESS = addresses[networkID].USDC_ADDRESS;
 
@@ -137,6 +144,14 @@ function HecMenu() {
                           style={{ height: "25px", width: "25px" }}
                         />
                         <Typography variant="body1">sHEC</Typography>
+                      </Button>
+                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("wsHEC", WSHEC_ADDRESS)}>
+                        <SvgIcon
+                          component={wshecTokenImg}
+                          viewBox="0 0 100 100"
+                          style={{ height: "25px", width: "25px" }}
+                        />
+                        <Typography variant="body1">wsHEC</Typography>
                       </Button>
                     </Box>
                   </Box>

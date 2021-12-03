@@ -1,4 +1,4 @@
-import { useStyles } from "react";
+import { useState } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Slide from "@material-ui/core/Slide";
@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function HecSnackbar({ message, duration, severity }) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [open, setOpen] = useState(true);
 
   const handleClose = (event, reason) => {
@@ -27,17 +27,16 @@ function HecSnackbar({ message, duration, severity }) {
     }
     setOpen(false);
   };
-
   return (
-    <Slide direction="up">
-      <div className={classes.root}>
+    // <Slide direction="up">
+      // <div className={"root"}>
         <Snackbar open={open} autoHideDuration={duration}>
           <Alert onClose={handleClose} severity={severity}>
             {message}
           </Alert>
         </Snackbar>
-      </div>
-    </Slide>
+      // </div>
+    // </Slide>
   );
 }
 

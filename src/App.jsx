@@ -37,6 +37,7 @@ import Wrap from "./views/Wrap/Wrap";
 import { RariProvider } from "./fuse-sdk/helpers/RariContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Borrow from "./views/Borrow/Borrow";
+import Calculator from "./views/Calculator/index";
 
 const drawerWidth = 300;
 const transitionDuration = 969;
@@ -96,6 +97,7 @@ function App() {
   const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   let { bonds } = useBonds();
   bonds = bonds.concat([hec_dai, usdc4, mim4, dai4]);
+
   async function loadDetails(whichDetails) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -224,7 +226,7 @@ function App() {
       <RariProvider provider={provider}>
         <ThemeProvider theme={themeMode}>
           <CssBaseline />
-          {/*{isAppLoading && <LoadingSplash />}*/}
+          {/* {isAppLoading && <LoadingSplash />} */}
           <div
             className={classNames("app", theme, {
               tablet: isSmallerScreen && !isSmallScreen,
@@ -254,9 +256,11 @@ function App() {
                 <Route path="/stake">
                   <Stake />
                 </Route>
-
                 <Route path="/wrap">
                   <Wrap />
+                </Route>
+                <Route path="/calculator">
+                  <Calculator />
                 </Route>
 
                 <Route path="/bonds">

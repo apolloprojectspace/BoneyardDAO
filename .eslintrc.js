@@ -15,12 +15,7 @@ module.exports = {
   plugins: ["prettier"],
   
   rules: {
-    "prettier/prettier":  [
-      'error',
-      {
-        'endOfLine': 'auto',
-      }
-    ],
+    "prettier/prettier":  0,
     "import/prefer-default-export": "off",
     "prefer-destructuring": "off",
     "prefer-template": "off",

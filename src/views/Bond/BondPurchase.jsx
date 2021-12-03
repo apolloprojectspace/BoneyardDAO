@@ -144,7 +144,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   const isAllowanceDataLoading = bond.allowance == null;
 
   let balance = trim(bond.balance, 4);
-  if (bond.name == "hec_usdc_lp") {
+  if (bond.name == "hec_usdc_lp" || bond.name == "usdc_lp_4") {
     balance = new Intl.NumberFormat("en-US", { notation: "scientific" }).format(bond.balance);
   }
   let reward;
@@ -270,6 +270,18 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
               )}
             </Typography>
           </div>
+          {bond.isFour && (
+            <div className="data-row">
+              <Typography>Purchase Discount</Typography>
+              <Typography align="right">
+                {isSoldOut ? (
+                  "--"
+                ) : (
+                  <>{isBondLoading ? <Skeleton width="100px" /> : `${trim(bond.bondDiscount * 100, 4) || "0"} %`}</>
+                )}
+              </Typography>
+            </div>
+          )}
 
           <div className="data-row">
             <Typography>Debt Ratio</Typography>

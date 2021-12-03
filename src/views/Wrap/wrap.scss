@@ -1,0 +1,11 @@
+.wrap-sHEC, .wrap-index, .wrap-wsHEC {
+                  flex: 1 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+}
+.HEC-input {
+                  width: 100%;
+}

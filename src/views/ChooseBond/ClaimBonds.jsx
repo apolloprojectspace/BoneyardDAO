@@ -28,6 +28,7 @@ function ClaimBonds({ activeBonds }) {
   const { bonds } = useBonds();
 
   const [numberOfBonds, setNumberOfBonds] = useState(0);
+  const [numberOf1Bonds, setNumberOf1Bonds] = useState(0);
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
 
   const pendingTransactions = useSelector(state => {
@@ -55,7 +56,9 @@ function ClaimBonds({ activeBonds }) {
 
   useEffect(() => {
     let bondCount = Object.keys(activeBonds).length;
+    let bond1Count = Object.keys(activeBonds.filter(bond=> !bond.isFour)).length;
     setNumberOfBonds(bondCount);
+    setNumberOf1Bonds(bond1Count);
   }, [activeBonds]);
 
   return (
@@ -109,7 +112,7 @@ function ClaimBonds({ activeBonds }) {
                       {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", "Claim all")}
                     </Button>
 
-                    <Button
+                    {numberOf1Bonds > 0 && <Button
                       variant="contained"
                       color="primary"
                       id="claim-all-and-stake-btn"
@@ -125,7 +128,7 @@ function ClaimBonds({ activeBonds }) {
                         "redeem_all_bonds_autostake",
                         "Claim all and Stake",
                       )}
-                    </Button>
+                    </Button>}
                   </>
                 )}
               </Box>

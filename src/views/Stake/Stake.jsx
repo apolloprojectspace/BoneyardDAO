@@ -25,9 +25,10 @@ import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
-import { error } from "../../slices/MessagesSlice";
+import { error, info } from "../../slices/MessagesSlice";
 import { ethers, BigNumber } from "ethers";
 import { useFusePoolData } from "../../fuse-sdk/hooks/useFusePoolData";
+import { hecToast } from "src/lib/hecToast";
 
 function a11yProps(index) {
   return {

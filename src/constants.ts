@@ -42,5 +42,24 @@ export const addresses: IAddresses = {
     BONDINGCALC_ADDRESS1: "0x783A734D5C65e44D3CC0C74e331C4d4F23407E64",
     TREASURY_ADDRESS: "0xCB54EA94191B280C296E6ff0E37c7e76Ad42dC6A",
     REDEEM_HELPER_ADDRESS: "0xe78D7ECe7969d26Ae39b2d86BbC04Ae32784daF2",
+    WSHEC_ADDRESS: "0x94CcF60f700146BeA8eF7832820800E2dFa92EdA",
   },
+};
+export const messages = {
+  please_connect: "Please connect your wallet to the Avalanche network to use Wonderland.",
+  please_connect_wallet: "Please connect your wallet.",
+  try_mint_more: (value: string) => `You're trying to mint more than the maximum payout available! The maximum mint payout is ${value} CROP.`,
+  before_minting: "Before minting, enter a value.",
+  existing_mint:
+      "You have an existing mint. Minting will reset your vesting period and forfeit any pending claimable rewards. We recommend claiming rewards first or using a fresh wallet. Do you still wish to proceed?",
+  before_stake: "Before staking, enter a value.",
+  before_unstake: "Before un staking, enter a value.",
+  tx_successfully_send: "Your transaction was successfully",
+  your_balance_updated: "Your balance was successfully updated",
+  nothing_to_claim: "You have nothing to claim",
+  something_wrong: "Something went wrong",
+  switch_to_avalanche: "Switch to the Avalanche network?",
+  slippage_too_small: "Slippage too small",
+  slippage_too_big: "Slippage too big",
+  your_balance_update_soon: "Your balance will update soon",
 };

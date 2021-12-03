@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { addresses } from "../constants";
 import ierc20Abi from "../abi/ERC20.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
+import { abi as wsHEC } from "../abi/wsHec.json";
 import { setAll } from "../helpers";
 
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
@@ -15,11 +16,15 @@ export const getBalances = createAsyncThunk(
     const hecBalance = await hecContract.balanceOf(address);
     const shecContract = new ethers.Contract(addresses[networkID].SHEC_ADDRESS as string, ierc20Abi, provider);
     const shecBalance = await shecContract.balanceOf(address);
-
+    const wshecContract = new ethers.Contract(addresses[networkID].WSOHM_ADDRESS as string, wsHEC, provider);
+    const wshecBalance = await wshecContract.balanceOf(address);
+    const wshecAsShec = await wshecContract.wsHECTosHEC(wshecBalance);
     return {
       balances: {
         hec: ethers.utils.formatUnits(hecBalance, "gwei"),
         shec: ethers.utils.formatUnits(shecBalance, "gwei"),
+        wshec: ethers.utils.formatEther(wshecBalance),
+        wshecAsShec: ethers.utils.formatUnits(wshecAsShec, "gwei"),
       },
     };
   },
@@ -27,7 +32,7 @@ export const getBalances = createAsyncThunk(
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
-  async ({ networkID, provider, address }: IBaseAddressAsyncThunk) => {
+  async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
     let hecBalance = 0;
     let shecBalance = 0;
     let oldshecBalance = 0;
@@ -46,10 +51,16 @@ export const loadAccountDetails = createAsyncThunk(
     const shecContract = new ethers.Contract(addresses[networkID].SHEC_ADDRESS as string, sHECv2, provider);
     shecBalance = await shecContract.balanceOf(address);
     unstakeAllowance = await shecContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+    const wrapAllowance = await shecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
 
     const oldshecContract = new ethers.Contract(addresses[networkID].OLD_SHEC_ADDRESS as string, sHECv2, provider);
     oldshecBalance = await oldshecContract.balanceOf(address);
     oldunstakeAllowance = await oldshecContract.allowance(address, addresses[networkID].OLD_STAKING_ADDRESS);
+
+    const wshecContract = new ethers.Contract(addresses[networkID].WSHEC_ADDRESS as string, wsHEC, provider);
+    const unwrapAllowance = await wshecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
+    const wshecBalance = await wshecContract.balanceOf(address);
+    const wshecAsShec = await wshecContract.wsHECTosHEC(wshecBalance);
 
     return {
       balances: {
@@ -57,11 +68,16 @@ export const loadAccountDetails = createAsyncThunk(
         hec: ethers.utils.formatUnits(hecBalance, "gwei"),
         shec: ethers.utils.formatUnits(shecBalance, "gwei"),
         oldshec: ethers.utils.formatUnits(oldshecBalance, "gwei"),
+        wshec: ethers.utils.formatEther(wshecBalance),
       },
       staking: {
         hecStake: +stakeAllowance,
         hecUnstake: +unstakeAllowance,
         oldhecUnstake: +oldunstakeAllowance,
+      },
+      wrapping: {
+        hecWrap: +wrapAllowance,
+        hecUnwrap: +unwrapAllowance,
       },
       bonding: {
         daiAllowance: daiBondAllowance,
@@ -140,13 +156,20 @@ interface IAccountSlice {
     shec: string;
     dai: string;
     oldshec: string;
+    wshec: string;
+    wshecAsShec: string;
+  };
+  wrapping: {
+    shecWrap: number;
+    wshecUnwrap: number;
   };
   loading: boolean;
 }
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { hec: "", shec: "", dai: "", oldshec: "" },
+  balances: { hec: "", shec: "", dai: "", oldshec: "", wshec: "", wshecAsShec: "" },
+  wrapping: { shecWrap: 0, wshecUnwrap: 0 },
 };
 
 const accountSlice = createSlice({
