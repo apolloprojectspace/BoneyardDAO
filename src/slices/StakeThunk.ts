@@ -174,7 +174,7 @@ export const changeStake = createAsyncThunk(
         dispatch(clearPendingTxn(stakeTx.hash));
       }
     }
-    await sleep(10);
+    await sleep(7);
     dispatch(info(messages.your_balance_update_soon));
     await sleep(15);
     await dispatch(loadAccountDetails({ address, networkID, provider }));

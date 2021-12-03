@@ -194,7 +194,7 @@ function App() {
         bonds.map(bond => {
           dispatch(calcBondDetails({ bond, value: null, provider, networkID: chainID }));
         });
-      }, 1000 * 60);
+      }, 1000 * 30);
       return () => {
         clearInterval(updateAppDetailsInterval);
       };
@@ -208,7 +208,7 @@ function App() {
         bonds.map(bond => {
           dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
         });
-      }, 1000 * 60 * 10);
+      }, 1000 * 30 * 10);
       return () => {
         clearInterval(updateAccountDetailInterval);
       };

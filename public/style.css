@@ -266,8 +266,8 @@
 	border: 1px solid #FF9900;
 	-webkit-box-sizing: border-box;
 	        box-sizing: border-box;
-	-webkit-box-shadow: 7px 11px 63px rgba(255, 153, 0, 0.1);
-	        box-shadow: 7px 11px 63px rgba(255, 153, 0, 0.1);
+	-webkit-box-shadow: 7px 11px 20px rgba(255, 153, 0, 0.1);
+	        box-shadow: 7px 11px 20px rgba(255, 153, 0, 0.1);
 	border-radius: 10px;
 }
 
