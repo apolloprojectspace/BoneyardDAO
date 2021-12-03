@@ -42,6 +42,10 @@ const messagesSlice = createSlice({
     info(state, action: PayloadAction<string>) {
       createMessage(state, "info", "Information", action.payload);
     },
+    // Creates an information message
+    success(state, action: PayloadAction<string>) {
+      createMessage(state, "success", "Success", action.payload);
+    },
     // Closes a message
     close(state, action: PayloadAction<Message>) {
       state.items = state.items.map(message => {
@@ -60,6 +64,6 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { error, info, close, handle_obsolete } = messagesSlice.actions;
+export const { error, info, success, close, handle_obsolete } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

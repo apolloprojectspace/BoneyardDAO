@@ -37,7 +37,6 @@ const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
         decimals = 9;
     }
     const imageURL = `${host}/${tokenPath}`;
-    console.log("debug", decimals);
     try {
       await window.ethereum.request({
         method: "wallet_watchAsset",

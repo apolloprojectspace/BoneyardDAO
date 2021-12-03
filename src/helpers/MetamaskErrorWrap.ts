@@ -29,5 +29,5 @@ export const metamaskErrorWrap = (err: any, dispatch: Dispatch) => {
         }
     }
 
-    return dispatch(error({ text }));
+    return dispatch(error(text));
 };

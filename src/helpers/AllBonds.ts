@@ -8,6 +8,7 @@ import { ReactComponent as UsdcImg } from "src/assets/tokens/USDC.svg";
 import { ReactComponent as MimImg } from "src/assets/tokens/MIM.svg";
 import { ReactComponent as FraxImg } from "src/assets/tokens/FRAX.svg";
 import { ReactComponent as HecUsdcImg } from "src/assets/tokens/HEC-USDC.svg";
+import { ReactComponent as HecFraxImg } from "src/assets/tokens/HEC-FRAX.svg";
 
 import { abi as BondHecDaiContract } from "src/abi/bonds/HecDaiContract.json";
 import { abi as HecUsdcContract } from "src/abi/bonds/HecUsdcContract.json";
@@ -65,7 +66,7 @@ export const dai4 = new StableBond({
 
 export const dai4_v2 = new StableBond({
   name: "dai4_v2",
-  displayName: "DAI v2",
+  displayName: "DAI",
   bondToken: "DAI",
   bondIconSvg: DaiImg,
   isFour: true,
@@ -157,7 +158,7 @@ export const usdc4 = new StableBond({
 
 export const usdc4_v2 = new StableBond({
   name: "usdc4_v2",
-  displayName: "USDC v2",
+  displayName: "USDC",
   bondToken: "USDC",
   bondIconSvg: UsdcImg,
   bondContractABI: MimBondContract,
@@ -198,7 +199,7 @@ export const mim4 = new StableBond({
 
 export const mim4_v2 = new StableBond({
   name: "mim4_v2",
-  displayName: "MIM v2",
+  displayName: "MIM",
   bondToken: "MIM",
   bondIconSvg: MimImg,
   bondContractABI: MimBondContract,
@@ -297,7 +298,7 @@ export const hec_dai = new LPBond({
 
 export const hec_dai_v2 = new LPBond({
   name: "hec_dai_lp",
-  displayName: "HEC-DAI LP v2",
+  displayName: "HEC-DAI LP",
   bondToken: "DAI",
   bondIconSvg: HecDaiimg,
   bondContractABI: BondHecDaiContract,
@@ -338,6 +339,50 @@ export const hec_dai_4 = new LPBond({
   },
   lpUrl:
     "https://spookyswap.finance/add/0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0/0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+});
+export const hec_frax = new LPBond({
+  name: "hec_frax",
+  displayName: "HEC-FRAX LP",
+  bondToken: "FRAX",
+  bondIconSvg: HecFraxImg,
+  isTotal: true,
+  bondContractABI: MimBondContract,
+  reserveContract: ReserveHecDaiContract,
+  networkAddrs: {
+    [NetworkID.Mainnet]: {
+      bondAddress: "0xde02631d898acd1bb8ff928c0f0ffa0cf29ab374",
+      reserveAddress: "0x0f8D6953F58C0dd38077495ACA64cbd1c76b7501",
+    },
+    [NetworkID.Testnet]: {
+      bondAddress: "",
+      reserveAddress: "",
+    },
+  },
+  lpUrl:
+    "https://spookyswap.finance/add/0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0/0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
+});
+
+export const hec_frax4 = new LPBond({
+  name: "hec_frax4",
+  displayName: "HEC-FRAX LP",
+  bondToken: "FRAX",
+  bondIconSvg: HecFraxImg,
+  isTotal: true,
+  isFour: true,
+  bondContractABI: MimBondContract,
+  reserveContract: ReserveHecDaiContract,
+  networkAddrs: {
+    [NetworkID.Mainnet]: {
+      bondAddress: "0x09eb3B10a13DD705C17ced39c35aeEA0D419D0BB",
+      reserveAddress: "0x0f8D6953F58C0dd38077495ACA64cbd1c76b7501",
+    },
+    [NetworkID.Testnet]: {
+      bondAddress: "",
+      reserveAddress: "",
+    },
+  },
+  lpUrl:
+    "https://spookyswap.finance/add/0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0/0xdc301622e621166bd8e82f2ca0a26c13ad0be355",
 });
 
 export const hec_usdc = new LPBond({
@@ -406,6 +451,8 @@ export const allBonds = [
   hec_usdc_4,
   frax,
   frax4,
+  hec_frax,
+  hec_frax4,
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };

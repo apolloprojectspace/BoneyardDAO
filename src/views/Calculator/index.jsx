@@ -196,7 +196,7 @@ function Calculator() {
                                 </Box>
                                 <Box className="calculator-days-slider-wrap">
                                     <Typography >{`${days} day${days > 1 ? "s" : ""}`}</Typography>
-                                    <Slider className="calculator-days-slider" min={1} max={365} value={days} onChange={(e, newValue: any) => setDays(newValue)} />
+                                    <Slider className="calculator-days-slider" min={1} max={365} value={days} onChange={(e, newValue) => setDays(newValue)} />
                                 </Box>
                                 <Box className="calculator-user-data">
                                     <Box className="data-row">

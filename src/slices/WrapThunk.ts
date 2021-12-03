@@ -1,13 +1,14 @@
 import { ethers, BigNumber } from "ethers";
-import { addresses } from "../constants";
+import { addresses, messages } from "../constants";
 import { abi as ierc20ABI } from "../abi/IERC20.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
 import { clearPendingTxn, fetchPendingTxns, getWrappingTypeText } from "./PendingTxnsSlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAccountSuccess, getBalances } from "./AccountSlice";
-import { error, info } from "../slices/MessagesSlice";
+import { fetchAccountSuccess, loadAccountDetails } from "./AccountSlice";
+import { error, info, success } from "../slices/MessagesSlice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
-import { segmentUA } from "../helpers/userAnalyticHelpers";
+import { sleep } from "src/helpers/Sleep";
+import { metamaskErrorWrap } from "src/helpers/MetamaskErrorWrap";
 
 interface IUAData {
   address: string;
@@ -49,7 +50,6 @@ export const changeApproval = createAsyncThunk(
     let approveTx;
     let wrapAllowance = await shecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
     let unwrapAllowance = await wshecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
-    console.log("debug", "change", wrapAllowance.toString(), unwrapAllowance.toString());
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, wrapAllowance, unwrapAllowance)) {
@@ -84,16 +84,17 @@ export const changeApproval = createAsyncThunk(
         dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
         await approveTx.wait();
+        dispatch(success(messages.tx_successfully_send));
       }
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
-      return;
+    } catch (e: any) {
+      return metamaskErrorWrap(e, dispatch);
     } finally {
       if (approveTx) {
         dispatch(clearPendingTxn(approveTx.hash));
       }
     }
 
+    await sleep(2);
     // go get fresh allowances
     wrapAllowance = await shecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
     unwrapAllowance = await wshecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
@@ -140,24 +141,19 @@ export const changeWrap = createAsyncThunk(
       uaData.txHash = wrapTx.hash;
       dispatch(fetchPendingTxns({ txnHash: wrapTx.hash, text: getWrappingTypeText(action), type: pendingTxnType }));
       await wrapTx.wait();
+      dispatch(success(messages.tx_successfully_send));
     } catch (e: unknown) {
-      uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to wrap more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
-      } else {
-        dispatch(error(rpcError.message));
-      }
-      return;
+      return metamaskErrorWrap(e, dispatch);
     } finally {
       if (wrapTx) {
-        segmentUA(uaData);
 
         dispatch(clearPendingTxn(wrapTx.hash));
       }
     }
-    dispatch(getBalances({ address, networkID, provider }));
+    await sleep(10);
+    dispatch(info(messages.your_balance_update_soon));
+    await sleep(15);
+    await dispatch(loadAccountDetails({ address, networkID, provider }));
+    dispatch(info(messages.your_balance_updated));
   },
 );

@@ -74,7 +74,7 @@
 }
 
 .app.light .branding-header .wallet-link {
-	color: #FF9900;
+	color: #bf7d3e;
 }
 
 .app.light .MuiTypography-body2 {
@@ -348,6 +348,10 @@
 	font-size: 10px;
 	line-height: 12px;
 	color: #FFFFFF;
+}
+.app.light .claim-disable {
+	color: #253449!important;
+	background-color: #3939391f!important;	
 }
 .claim-disable {
 	color: rgba(255, 255, 255, 0.3)!important;

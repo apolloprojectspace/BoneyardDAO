@@ -160,7 +160,7 @@ export function ClaimBondCardData({ userBond }) {
             {txnButtonTextGeneralPending(pendingTransactions, "redeem_bond_" + bondName, "Claim")}
           </Typography>
         </Button>
-        <Button variant="outlined" color="primary" onClick={() => onRedeem({ autostake: true })}>
+        {!bond.isFour && <Button variant="outlined" color="primary" onClick={() => onRedeem({ autostake: true })}>
           <Typography variant="h5">
             {txnButtonTextGeneralPending(
               pendingTransactions,
@@ -168,7 +168,7 @@ export function ClaimBondCardData({ userBond }) {
               "Claim and Stake",
             )}
           </Typography>
-        </Button>
+        </Button>}
       </Box>
     </Box>
   );
