@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect, useMemo, ReactNode } fr
 import Fuse from "../index";
 import { initFuseWithProviders } from "./web3Providers";
 import { Provider, StaticJsonRpcProvider } from "@ethersproject/providers";
-import { useAddress } from "../../hooks";
+import { useAddress, useWeb3Context } from "../../hooks";
 
 export interface RariContextData {
   fuse: Fuse;
@@ -16,8 +16,9 @@ export const EmptyAddress = "0x0000000000000000000000000000000000000000";
 export const RariContext = createContext<RariContextData | undefined>(undefined);
 
 // TODO Use real provider
-export const RariProvider = ({ provider: _provider, children }: { provider: Provider; children: ReactNode }) => {
+export const RariProvider = ({ children }: { children: ReactNode }) => {
   const address = useAddress();
+  // const { provider } = useWeb3Context();
 
   const provider = new StaticJsonRpcProvider("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
 

@@ -1,31 +1,33 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Grid, Typography, TableRow, TableCell, Avatar, Tooltip, IconButton, Switch } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
 
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-
-import LinkIcon from "@material-ui/icons/Link";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import "./borrow.scss";
 import { AssetSupplyRow } from "./AssetSupplyRow";
-import { Asset, shortUsdFormatter } from "./Borrow";
+import { shortUsdFormatter } from "./Borrow";
 import { formatCurrency } from "../../helpers";
 import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useTokenData } from "../../fuse-sdk/hooks/useTokenData";
 import { convertMantissaToAPY } from "../../fuse-sdk/helpers/apyUtils";
+import { Mode } from "../../fuse-sdk/helpers/fetchMaxAmount";
+import { PoolModal } from "./Modal/PoolModal";
 
 export function AssetBorrowRow({
   comptrollerAddress,
-  asset,
+  assets,
+  index,
+  onClick
 }: {
-  asset: USDPricedFuseAsset;
+  assets: USDPricedFuseAsset[];
+  index: number;
   comptrollerAddress: string;
+  onClick: ()=> void
 }) {
+  const asset = assets[index];
   const tokenData = useTokenData(asset.underlyingToken);
   const borrowAPR = convertMantissaToAPY(asset.borrowRatePerBlock, 365);
-
   return (
-    <TableRow hover>
+    <TableRow hover onClick={onClick}>
       <TableCell>
         <Grid spacing={1} container alignItems="center">
           <Grid item>

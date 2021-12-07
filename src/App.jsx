@@ -74,8 +74,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const queryClient = new QueryClient();
-
 function App() {
   // useSegmentAnalytics();
   const dispatch = useDispatch();
@@ -222,69 +220,65 @@ function App() {
   }, [walletChecked]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RariProvider provider={provider}>
-        <ThemeProvider theme={themeMode}>
-          <CssBaseline />
-          {/* {isAppLoading && <LoadingSplash />} */}
-          <div
-            className={classNames("app", theme, {
-              tablet: isSmallerScreen && !isSmallScreen,
-              mobile: isSmallScreen,
-            })}
-          >
-            <Messages />
-            <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
-            <nav className={classes.drawer}>
-              {isSmallerScreen ? (
-                <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-              ) : (
-                <Sidebar />
-              )}
-            </nav>
+    <ThemeProvider theme={themeMode}>
+      <CssBaseline />
+      {/* {isAppLoading && <LoadingSplash />} */}
+      <div
+        className={classNames("app", theme, {
+          tablet: isSmallerScreen && !isSmallScreen,
+          mobile: isSmallScreen,
+        })}
+      >
+        <Messages />
+        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+        <nav className={classes.drawer}>
+          {isSmallerScreen ? (
+            <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+          ) : (
+            <Sidebar />
+          )}
+        </nav>
 
-            <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-              <Switch>
-                <Route exact path="/dashboard">
-                  <TreasuryDashboard />
-                </Route>
+        <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+          <Switch>
+            <Route exact path="/dashboard">
+              <TreasuryDashboard />
+            </Route>
 
-                <Route exact path="/">
-                  <Redirect to="/stake" />
-                </Route>
+            <Route exact path="/">
+              <Redirect to="/stake" />
+            </Route>
 
-                <Route path="/stake">
-                  <Stake />
-                </Route>
-                <Route path="/wrap">
-                  <Wrap />
-                </Route>
-                <Route path="/calculator">
-                  <Calculator />
-                </Route>
+            <Route path="/stake">
+              <Stake />
+            </Route>
+            <Route path="/wrap">
+              <Wrap />
+            </Route>
+            <Route path="/calculator">
+              <Calculator />
+            </Route>
 
-                <Route path="/bonds">
-                  {bonds.map(bond => {
-                    return (
-                      <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                        <Bond bond={bond} />
-                      </Route>
-                    );
-                  })}
-                  <ChooseBond />
-                </Route>
+            <Route path="/bonds">
+              {bonds.map(bond => {
+                return (
+                  <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
+                    <Bond bond={bond} />
+                  </Route>
+                );
+              })}
+              <ChooseBond />
+            </Route>
 
-                <Route path="/bank">
-                  <Borrow poolId={6} />
-                </Route>
+            <Route path="/bank">
+              <Borrow poolId={6} />
+            </Route>
 
-                <Route component={NotFound} />
-              </Switch>
-            </div>
-          </div>
-        </ThemeProvider>
-      </RariProvider>
-    </QueryClientProvider>
+            <Route component={NotFound} />
+          </Switch>
+        </div>
+      </div>
+    </ThemeProvider>
   );
 }
 

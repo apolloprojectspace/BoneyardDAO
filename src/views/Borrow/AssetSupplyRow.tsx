@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Grid,
   Typography,
@@ -23,15 +23,23 @@ import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useTokenData } from "../../fuse-sdk/hooks/useTokenData";
 import { convertMantissaToAPY } from "../../fuse-sdk/helpers/apyUtils";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
+import { Mode } from "../../fuse-sdk/helpers/fetchMaxAmount";
+import { PoolModal } from "./Modal/PoolModal";
 
 export function AssetSupplyRow({
   comptrollerAddress,
-  asset,
+  assets,
+  index,
+  onClick,
 }: {
-  asset: USDPricedFuseAsset;
+  assets: USDPricedFuseAsset[];
   comptrollerAddress: string;
+  index: number;
+  onClick?: () => void;
 }) {
+  const asset = assets[index];
   const tokenData = useTokenData(asset.underlyingToken);
+  // TODO Chain id
   const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "1");
   const scanner = chainId === 1 ? "https://etherscan.io/token" : "https://polygonscan.com/token";
   const isStakedHEC =
@@ -40,7 +48,7 @@ export function AssetSupplyRow({
   const supplyAPY = convertMantissaToAPY(asset.supplyRatePerBlock, 365);
 
   return (
-    <TableRow hover>
+    <TableRow hover onClick={onClick}>
       <TableCell>
         <Grid spacing={1} container alignItems="center">
           <Grid item>

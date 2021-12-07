@@ -1,14 +1,10 @@
-import { Grid, LinearProgress, Tooltip, Typography, Paper } from "@material-ui/core";
-import React, { useEffect } from "react";
-import { makeStyles, createStyles, withStyles, Theme } from "@material-ui/core/styles";
+import { Grid, LinearProgress, Tooltip, Typography } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import { formatCurrency } from "../../helpers";
-import { Asset } from "./Borrow";
-import { useBorrowLimit } from "../../fuse-sdk/hooks/useBorrowLimit";
-import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 
 interface Props {
-  assets: USDPricedFuseAsset[];
+  maxBorrow: number;
   borrowUSD: number;
 }
 
@@ -30,26 +26,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export function CollateralRatioBar({ assets, borrowUSD }: Props) {
-  const maxBorrow = useBorrowLimit(assets);
-
+export function CollateralRatioBar({ maxBorrow, borrowUSD }: Props) {
   const ratio = (borrowUSD / maxBorrow) * 100;
   const classes = useStyles();
 
   return (
     <Grid item container spacing={2} alignItems="center" className="collateralRatioBar">
       <Grid item>
-        <Tooltip title={"Keep this bar from filling up to avoid being liquidated!"}>
+        <Tooltip title={<Typography variant="h6">Keep this bar from filling up to avoid being liquidated!</Typography>}>
           <Typography variant="h6">Borrow Limit</Typography>
         </Tooltip>
       </Grid>
       <Grid item>
-        <Tooltip title={"This is how much you have borrowed."}>
+        <Tooltip title={<Typography variant="h6">This is how much you have borrowed.</Typography>}>
           <Typography variant="h5">{formatCurrency(borrowUSD, 2)}</Typography>
         </Tooltip>
       </Grid>
       <Grid item className="progress">
-        <Tooltip title={`You're using ${ratio.toFixed(1)}% of your ${formatCurrency(maxBorrow, 2)} borrow limit.`}>
+        <Tooltip
+          title={
+            <Typography variant="h6">{`You're using ${ratio.toFixed(1)}% of your ${formatCurrency(
+              maxBorrow,
+              2,
+            )} borrow limit.`}</Typography>
+          }
+        >
           <LinearProgress
             value={ratio}
             classes={{
@@ -62,7 +63,11 @@ export function CollateralRatioBar({ assets, borrowUSD }: Props) {
         </Tooltip>
       </Grid>
       <Grid item>
-        <Tooltip title={"If your borrow amount reaches this value, you will be liquidated."}>
+        <Tooltip
+          title={
+            <Typography variant="h6">If your borrow amount reaches this value, you will be liquidated.</Typography>
+          }
+        >
           <Typography variant="h5">{formatCurrency(maxBorrow, 2)}</Typography>
         </Tooltip>
       </Grid>

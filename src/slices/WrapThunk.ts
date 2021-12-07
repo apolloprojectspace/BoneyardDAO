@@ -1,12 +1,12 @@
 import { ethers, BigNumber } from "ethers";
 import { addresses, messages } from "../constants";
-import { abi as ierc20ABI } from "../abi/IERC20.json";
+import ierc20ABI from "../abi/ERC20.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
 import { clearPendingTxn, fetchPendingTxns, getWrappingTypeText } from "./PendingTxnsSlice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, loadAccountDetails } from "./AccountSlice";
 import { error, info, success } from "../slices/MessagesSlice";
-import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
+import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk } from "./interfaces";
 import { sleep } from "src/helpers/Sleep";
 import { metamaskErrorWrap } from "src/helpers/MetamaskErrorWrap";
 

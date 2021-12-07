@@ -1,7 +1,7 @@
 import { Typography, Paper, Grid } from "@material-ui/core";
 import React, { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Asset, shortUsdFormatter } from "./Borrow";
+import { shortUsdFormatter } from "./Borrow";
 import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useExtraPoolInfo } from "../../fuse-sdk/hooks/useExtraPoolInfo";
 

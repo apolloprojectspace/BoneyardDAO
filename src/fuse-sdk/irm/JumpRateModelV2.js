@@ -78,20 +78,20 @@ export default class JumpRateModelV2 {
     if (!this.initialized) throw new Error("Interest rate model class not initialized.");
 
     if (utilizationRate.lte(this.kink)) {
-      return utilizationRate.mul(this.multiplierPerBlock).div(1e18).add(this.baseRatePerBlock);
+      return utilizationRate.mul(this.multiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(this.baseRatePerBlock);
     } else {
-      const normalRate = this.kink.mul(this.multiplierPerBlock).div(1e18).add(this.baseRatePerBlock);
+      const normalRate = this.kink.mul(this.multiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(this.baseRatePerBlock);
       const excessUtil = utilizationRate.sub(this.kink);
-      return excessUtil.mul(this.jumpMultiplierPerBlock).div(1e18).add(normalRate);
+      return excessUtil.mul(this.jumpMultiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(normalRate);
     }
   }
 
   getSupplyRate(utilizationRate) {
     if (!this.initialized) throw new Error("Interest rate model class not initialized.");
 
-    const oneMinusReserveFactor = ethers.BigNumber.from(1e18).sub(this.reserveFactorMantissa);
+    const oneMinusReserveFactor = ethers.BigNumber.from(10).pow(18).sub(this.reserveFactorMantissa);
     const borrowRate = this.getBorrowRate(utilizationRate);
-    const rateToPool = borrowRate.mul(oneMinusReserveFactor).div(1e18);
-    return utilizationRate.mul(rateToPool).div(1e18);
+    const rateToPool = borrowRate.mul(oneMinusReserveFactor).div(ethers.BigNumber.from(10).pow(18));
+    return utilizationRate.mul(rateToPool).div(ethers.BigNumber.from(10).pow(18));
   }
 }

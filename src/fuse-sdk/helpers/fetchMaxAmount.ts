@@ -29,13 +29,13 @@ export async function fetchMaxAmount(mode: Mode, fuse: Fuse, address: string, as
   }
 
   if (mode === Mode.BORROW) {
-    const maxBorrow = await fuse.contracts.FusePoolLensSecondary.getMaxBorrow(address, asset.cToken);
+    const maxBorrow = await fuse.contracts.FusePoolLensSecondary.callStatic.getMaxBorrow(address, asset.cToken);
 
     return ethers.BigNumber.from(maxBorrow).mul(0.75);
   }
 
   if (mode === Mode.WITHDRAW) {
-    const maxRedeem = await fuse.contracts.FusePoolLensSecondary.getMaxRedeem(address, asset.cToken);
+    const maxRedeem = await fuse.contracts.FusePoolLensSecondary.callStatic.getMaxRedeem(address, asset.cToken);
 
     return ethers.BigNumber.from(maxRedeem);
   }
