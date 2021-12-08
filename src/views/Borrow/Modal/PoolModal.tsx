@@ -9,6 +9,7 @@ interface Props {
   defaultMode: Mode;
   asset: USDPricedFuseAsset;
   comptrollerAddress: string;
+  borrowLimit: number;
 }
 export function PoolModal(props: Props) {
   const [mode, setMode] = useState(props.defaultMode);
@@ -29,6 +30,7 @@ export function PoolModal(props: Props) {
                 asset={props.asset}
                 mode={mode}
                 setMode={setMode}
+                borrowLimit={props.borrowLimit}
               />
             </Paper>
           </Fade>

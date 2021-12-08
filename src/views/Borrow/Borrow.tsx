@@ -132,6 +132,7 @@ export default function Borrow({ poolId }: { poolId: number }) {
           comptrollerAddress={comptrollerAddress}
           asset={selectedAsset}
           onClose={handleClose}
+          borrowLimit={maxBorrow}
         />
       ) : null}
     </div>

@@ -7,18 +7,18 @@ import { useBorrowLimit } from "../../../fuse-sdk/hooks/useBorrowLimit";
 
 export const StatsColumn = ({
   mode,
-  assets,
-  index,
+  asset,
   amount,
   symbol,
   enableAsCollateral,
+  borrowLimit,
 }: {
   mode: Mode;
-  assets: USDPricedFuseAsset[];
-  index: number;
+  asset: USDPricedFuseAsset;
   amount: number;
   symbol: string;
   enableAsCollateral: boolean;
+  borrowLimit: number;
 }) => {
   //const { rari, fuse } = useRari();
   // TODO
@@ -137,10 +137,8 @@ export const StatsColumn = ({
   //   },
   // );
 
-  const asset = assets[index];
   const updatedAsset = updatedAssets ? updatedAssets[index] : null;
 
-  const borrowLimit = useBorrowLimit(assets);
   const updatedBorrowLimit = useBorrowLimit(
     updatedAssets ?? [],
     enableAsCollateral

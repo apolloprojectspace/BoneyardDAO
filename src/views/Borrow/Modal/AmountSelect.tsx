@@ -120,12 +120,14 @@ export function AmountSelect({
   asset,
   mode,
   setMode,
+  borrowLimit,
   comptrollerAddress,
 }: {
   onClose: () => any;
   asset: USDPricedFuseAsset;
   mode: Mode;
   setMode: (mode: Mode) => any;
+  borrowLimit: number;
   comptrollerAddress: string;
 }) {
   const { fuse } = useRari();
@@ -429,12 +431,12 @@ export function AmountSelect({
           </Grid>
 
           <StatsColumn
-            symbol={tokenData?.symbol ?? assets[index].underlyingSymbol}
+            symbol={tokenData?.symbol ?? asset.underlyingSymbol}
             amount={amount ? parseInt(amount.toNumber().toFixed(0)) : 0}
-            assets={assets}
-            index={index}
+            asset={asset}
             mode={mode}
             enableAsCollateral={enableAsCollateral}
+            borrowLimit={borrowLimit}
           />
 
           {showEnableAsCollateral ? (
