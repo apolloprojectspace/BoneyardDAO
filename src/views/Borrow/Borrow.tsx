@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   Grid,
   Paper,
@@ -43,11 +43,11 @@ export default function Borrow({ poolId }: { poolId: number }) {
     comptroller: comptrollerAddress,
     assets = [],
   } = data ?? {};
-  const suppliedAssets = assets.filter(asset => asset.supplyBalanceUSD > 1);
-  const nonSuppliedAssets = assets.filter(asset => asset.supplyBalanceUSD < 1);
+  const suppliedAssets = useMemo(() => assets.filter(asset => asset.supplyBalanceUSD > 1), [assets]);
+  const nonSuppliedAssets = useMemo(() => assets.filter(asset => asset.supplyBalanceUSD < 1), [assets]);
 
-  const borrowedAssets = assets.filter(asset => asset.borrowBalanceUSD > 1);
-  const nonBorrowedAssets = assets.filter(asset => asset.borrowBalanceUSD < 1);
+  const borrowedAssets = useMemo(() => assets.filter(asset => asset.borrowBalanceUSD > 1), [assets]);
+  const nonBorrowedAssets = useMemo(() => assets.filter(asset => asset.borrowBalanceUSD < 1), [assets]);
 
   const maxBorrow = useBorrowLimit(assets);
 
@@ -56,16 +56,9 @@ export default function Borrow({ poolId }: { poolId: number }) {
       ? "0%"
       : (((totalBorrowedUSD ?? 0) / totalSuppliedUSD) * 100).toFixed(2) + "%";
 
-  const [openWithIndex, setOpenWithIndex] = useState<number | null>(null);
-  const [selectedAssets, setSelectedAssets] = useState<USDPricedFuseAsset[]>([]);
-  const handleOpen = useCallback((index, assets) => {
-    setOpenWithIndex(index);
-    setSelectedAssets(assets);
-  }, []);
-  const handleClose = useCallback(() => {
-    setOpenWithIndex(null);
-    setSelectedAssets([]);
-  }, []);
+  const [selectedAsset, setSelectedAsset] = useState<USDPricedFuseAsset | null>(null);
+  const handleOpen = useCallback(asset => setSelectedAsset(asset), []);
+  const handleClose = useCallback(() => setSelectedAsset(null), []);
 
   return (
     <div id="borrow-view">
@@ -133,14 +126,14 @@ export default function Borrow({ poolId }: { poolId: number }) {
           </Paper>
         </Grid>
       </Grid>
-      <PoolModal
-        defaultMode={Mode.SUPPLY}
-        comptrollerAddress={comptrollerAddress}
-        assets={selectedAssets}
-        index={openWithIndex !== null ? openWithIndex : 0}
-        isOpen={openWithIndex !== null}
-        onClose={handleClose}
-      />
+      {selectedAsset ? (
+        <PoolModal
+          defaultMode={Mode.SUPPLY}
+          comptrollerAddress={comptrollerAddress}
+          asset={selectedAsset}
+          onClose={handleClose}
+        />
+      ) : null}
     </div>
   );
 }
@@ -156,7 +149,7 @@ function SupplyList({
   totalSupplyBalanceUSD: number;
   suppliedAssets: USDPricedFuseAsset[];
   nonSuppliedAssets: USDPricedFuseAsset[];
-  onClick: (index: number, assets: USDPricedFuseAsset[]) => void;
+  onClick: (asset: USDPricedFuseAsset) => void;
 }) {
   return (
     <>
@@ -171,23 +164,21 @@ function SupplyList({
             </TableRow>
           </TableHead>
           <TableBody>
-            {suppliedAssets.map((asset, index) => (
+            {suppliedAssets.map(asset => (
               <AssetSupplyRow
                 comptrollerAddress={comptrollerAddress}
                 key={asset.underlyingToken}
-                assets={suppliedAssets}
-                index={index}
-                onClick={() => onClick(index, suppliedAssets)}
+                asset={asset}
+                onClick={onClick}
               />
             ))}
 
-            {nonSuppliedAssets.map((asset, index) => (
+            {nonSuppliedAssets.map(asset => (
               <AssetSupplyRow
                 comptrollerAddress={comptrollerAddress}
                 key={asset.underlyingToken}
-                assets={nonSuppliedAssets}
-                index={index}
-                onClick={() => onClick(index, nonSuppliedAssets)}
+                asset={asset}
+                onClick={onClick}
               />
             ))}
           </TableBody>
@@ -208,10 +199,8 @@ function BorrowList({
   borrowedAssets: USDPricedFuseAsset[];
   nonBorrowedAssets: USDPricedFuseAsset[];
   totalBorrowBalanceUSD: number;
-  onClick: (index: number, assets: USDPricedFuseAsset[]) => void;
+  onClick: (asset: USDPricedFuseAsset) => void;
 }) {
-  const isSmallScreen = useMediaQuery("(max-width: 600px)");
-
   return (
     <>
       <Typography variant="h5"> Your Borrow Balance: {formatCurrency(totalBorrowBalanceUSD, 2)}</Typography>
@@ -226,24 +215,22 @@ function BorrowList({
             </TableRow>
           </TableHead>
           <TableBody>
-            {borrowedAssets.map((asset, index) => (
+            {borrowedAssets.map(asset => (
               <AssetBorrowRow
                 comptrollerAddress={comptrollerAddress}
                 key={asset.underlyingToken}
-                assets={borrowedAssets}
-                index={index}
-                onClick={() => onClick(index, borrowedAssets)}
+                asset={asset}
+                onClick={onClick}
               />
             ))}
 
-            {nonBorrowedAssets.map((asset, index) =>
+            {nonBorrowedAssets.map(asset =>
               asset.isPaused ? null : (
                 <AssetBorrowRow
                   comptrollerAddress={comptrollerAddress}
                   key={asset.underlyingToken}
-                  assets={nonBorrowedAssets}
-                  index={index}
-                  onClick={() => onClick(index, nonBorrowedAssets)}
+                  asset={asset}
+                  onClick={onClick}
                 />
               ),
             )}

@@ -5,11 +5,9 @@ import { Mode } from "../../../fuse-sdk/helpers/fetchMaxAmount";
 import { AmountSelect } from "./AmountSelect";
 
 interface Props {
-  isOpen: boolean;
   onClose: () => any;
   defaultMode: Mode;
-  index: number;
-  assets: USDPricedFuseAsset[];
+  asset: USDPricedFuseAsset;
   comptrollerAddress: string;
 }
 export function PoolModal(props: Props) {
@@ -17,19 +15,18 @@ export function PoolModal(props: Props) {
 
   useEffect(() => {
     setMode(props.defaultMode);
-  }, [props.isOpen, props.defaultMode]);
+  }, [props.defaultMode]);
 
-  return props.isOpen ? (
+  return (
     <Fade in mountOnEnter unmountOnExit>
       <div id="bond-view">
-        <Backdrop open={props.isOpen} className="pool-modal">
+        <Backdrop open className="pool-modal">
           <Fade in>
             <Paper className="hec-card hec-modal">
               <AmountSelect
                 comptrollerAddress={props.comptrollerAddress}
                 onClose={props.onClose}
-                assets={props.assets}
-                index={props.index}
+                asset={props.asset}
                 mode={mode}
                 setMode={setMode}
               />
@@ -38,5 +35,5 @@ export function PoolModal(props: Props) {
         </Backdrop>
       </div>
     </Fade>
-  ) : null;
+  );
 }

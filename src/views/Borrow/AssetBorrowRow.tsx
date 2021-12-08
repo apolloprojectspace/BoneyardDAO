@@ -14,20 +14,17 @@ import { PoolModal } from "./Modal/PoolModal";
 
 export function AssetBorrowRow({
   comptrollerAddress,
-  assets,
-  index,
-  onClick
+  asset,
+  onClick,
 }: {
-  assets: USDPricedFuseAsset[];
-  index: number;
+  asset: USDPricedFuseAsset;
   comptrollerAddress: string;
-  onClick: ()=> void
+  onClick: (asset: USDPricedFuseAsset) => void;
 }) {
-  const asset = assets[index];
   const tokenData = useTokenData(asset.underlyingToken);
   const borrowAPR = convertMantissaToAPY(asset.borrowRatePerBlock, 365);
   return (
-    <TableRow hover onClick={onClick}>
+    <TableRow hover onClick={() => onClick(asset)}>
       <TableCell>
         <Grid spacing={1} container alignItems="center">
           <Grid item>

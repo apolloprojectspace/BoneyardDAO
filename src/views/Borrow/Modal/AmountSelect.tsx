@@ -14,6 +14,8 @@ import {
   OutlinedInput,
   InputAdornment,
   Box,
+  Link,
+  SvgIcon,
 } from "@material-ui/core";
 import { BigNumber } from "ethers";
 import { useState } from "react";
@@ -26,6 +28,8 @@ import { TokenNameAndMaxButton } from "./TokenNameAndMaxButton";
 import { StatsColumn } from "./StatsColumn";
 import { DialogTitle } from "./DialogTitle";
 import { useQuery } from "react-query";
+import { useWeb3Context } from "src/hooks";
+import { ReactComponent as ArrowUp } from "../../../assets/icons/arrow-up.svg";
 
 enum UserAction {
   NO_ACTION,
@@ -113,22 +117,19 @@ export enum CTokenErrorCodes {
 
 export function AmountSelect({
   onClose,
-  assets,
-  index,
+  asset,
   mode,
   setMode,
   comptrollerAddress,
 }: {
   onClose: () => any;
-  assets: USDPricedFuseAsset[];
-  index: number;
+  asset: USDPricedFuseAsset;
   mode: Mode;
   setMode: (mode: Mode) => any;
   comptrollerAddress: string;
 }) {
-  const asset = assets[index];
-
-  const { address, fuse } = useRari();
+  const { fuse } = useRari();
+  const { scanner, address } = useWeb3Context();
 
   //   const toast = useToast();
 
@@ -140,7 +141,7 @@ export function AmountSelect({
 
   const [amount, _setAmount] = useState<BigNumber | null>(() => BigNumber.from(0));
 
-  const showEnableAsCollateral = true; //!asset.membership && mode === Mode.SUPPLY;
+  const showEnableAsCollateral = !asset.membership && mode === Mode.SUPPLY;
   const [enableAsCollateral, setEnableAsCollateral] = useState(showEnableAsCollateral);
 
   //   const { t } = useTranslation();
@@ -394,6 +395,11 @@ export function AmountSelect({
             <Typography variant="h5" component="span">
               {!isSmallScreen && asset.underlyingName.length < 25 ? asset.underlyingName : asset.underlyingSymbol}
             </Typography>
+            <Link href={`${scanner}/token/${asset.underlyingToken}`} target="_blank">
+              <Typography variant="body2">
+                View contract <SvgIcon className={"view-contract-icon"} component={ArrowUp} />
+              </Typography>
+            </Link>
           </Grid>
         </Grid>
       </DialogTitle>
