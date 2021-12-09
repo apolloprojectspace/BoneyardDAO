@@ -17,19 +17,22 @@ import {
   Link,
   SvgIcon,
 } from "@material-ui/core";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useState } from "react";
 import { USDPricedFuseAsset } from "../../../fuse-sdk/helpers/fetchFusePoolData";
 import { useRari } from "../../../fuse-sdk/helpers/RariContext";
-import { useTokenData } from "../../../fuse-sdk/hooks/useTokenData";
+import { ETH_TOKEN_DATA, useTokenData } from "../../../fuse-sdk/hooks/useTokenData";
 import { fetchMaxAmount, Mode } from "../../../fuse-sdk/helpers/fetchMaxAmount";
 import { TabBar } from "./TabBar";
 import { TokenNameAndMaxButton } from "./TokenNameAndMaxButton";
 import { StatsColumn } from "./StatsColumn";
 import { DialogTitle } from "./DialogTitle";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useWeb3Context } from "src/hooks";
 import { ReactComponent as ArrowUp } from "../../../assets/icons/arrow-up.svg";
+import { useDispatch } from "react-redux";
+import { error } from "../../../slices/MessagesSlice";
+import { createComptroller } from "src/fuse-sdk/helpers/createComptroller";
 
 enum UserAction {
   NO_ACTION,
@@ -57,64 +60,6 @@ export enum CTokenErrorCodes {
   UTILIZATION_ABOVE_MAX,
 }
 
-// export async function testForCTokenErrorAndSend(txObject: any, caller: string, failMessage: string) {
-//   let response = await txObject.call({ from: caller });
-
-//   // For some reason `response` will be `["0"]` if no error but otherwise it will return a string of a number.
-//   if (response[0] !== "0") {
-//     response = parseInt(response);
-
-//     let err;
-
-//     if (response >= 1000) {
-//       const comptrollerResponse = response - 1000;
-
-//       let msg = ComptrollerErrorCodes[comptrollerResponse];
-
-//       if (msg === "BORROW_BELOW_MIN") {
-//         msg = "As part of our guarded launch, you cannot borrow less than 0.05 ETH worth of tokens at the moment.";
-//       }
-
-//       // This is a comptroller error:
-//       err = new Error(failMessage + " Comptroller Error: " + msg);
-//     } else {
-//       // This is a standard token error:
-//       err = new Error(failMessage + " CToken Code: " + CTokenErrorCodes[response]);
-//     }
-
-//     LogRocket.captureException(err);
-//     throw err;
-//   }
-
-//   return txObject.send({ from: caller });
-// }
-
-// const fetchGasForCall = async (call: any, amountBN: BN, fuse: Fuse, address: string) => {
-//   const estimatedGas = fuse.web3.utils.toBN(
-//     (
-//       (await call.estimateGas({
-//         from: address,
-//         // Cut amountBN in half in case it screws up the gas estimation by causing a fail in the event that it accounts for gasPrice > 0 which means there will not be enough ETH (after paying gas)
-//         value: amountBN.div(fuse.web3.utils.toBN(2)),
-//       })) *
-//       // 50% more gas for limit:
-//       1.5
-//     ).toFixed(0),
-//   );
-
-//   // Ex: 100 (in GWEI)
-//   const { standard } = await fetch("https://gasprice.poa.network").then(res => res.json());
-
-//   const gasPrice = fuse.web3.utils.toBN(
-//     // @ts-ignore For some reason it's returning a string not a BN
-//     fuse.web3.utils.toWei(standard.toString(), "gwei"),
-//   );
-
-//   const gasWEI = estimatedGas.mul(gasPrice);
-
-//   return { gasWEI, gasPrice, estimatedGas };
-// };
-
 export function AmountSelect({
   onClose,
   asset,
@@ -123,17 +68,18 @@ export function AmountSelect({
   borrowLimit,
   comptrollerAddress,
 }: {
-  onClose: () => any;
+  onClose: () => void;
   asset: USDPricedFuseAsset;
   mode: Mode;
-  setMode: (mode: Mode) => any;
+  setMode: (mode: Mode) => void;
   borrowLimit: number;
   comptrollerAddress: string;
 }) {
   const { fuse } = useRari();
+  const dispatch = useDispatch();
   const { scanner, address } = useWeb3Context();
 
-  //   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const tokenData = useTokenData(asset.underlyingToken);
 
@@ -143,10 +89,32 @@ export function AmountSelect({
 
   const [amount, _setAmount] = useState<BigNumber | null>(() => BigNumber.from(0));
 
-  const showEnableAsCollateral = !asset.membership && mode === Mode.SUPPLY;
-  const [enableAsCollateral, setEnableAsCollateral] = useState(showEnableAsCollateral);
+  const onToggleCollateral = async () => {
+    const comptroller = createComptroller(comptrollerAddress, fuse);
 
-  //   const { t } = useTranslation();
+    try {
+      if (asset.membership) {
+        await comptroller.exitMarket(asset.cToken);
+      } else {
+        await comptroller.enterMarkets([asset.cToken]);
+      }
+    } catch (e) {
+      if (asset.membership) {
+        dispatch(
+          error(
+            "You cannot disable this asset as collateral as you would not have enough collateral posted to keep your borrow. Try adding more collateral of another type or paying back some of your debt.",
+          ),
+        );
+      } else {
+        dispatch(error("You cannot enable this asset as collateral at this time."));
+      }
+
+      return;
+    }
+
+    queryClient.refetchQueries();
+  };
+
   const updateAmount = (newAmount: string) => {
     if (newAmount.startsWith("-")) {
       return;
@@ -157,7 +125,6 @@ export function AmountSelect({
     try {
       // Try to set the amount to BigNumber(newAmount):
       const bigAmount = BigNumber.from(newAmount);
-      //_setAmount(bigAmount.multipliedBy(10 ** asset.underlyingDecimals));
       _setAmount(bigAmount.mul(10 ** asset.underlyingDecimals));
     } catch (e) {
       // If the number was invalid, set the amount to null to disable confirming:
@@ -168,8 +135,6 @@ export function AmountSelect({
   };
 
   const { data: amountIsValid } = useQuery((amount?.toString() ?? "null") + " " + mode + " isValid", async () => {
-    console.log(amount, amount?.isZero());
-
     if (amount === null || amount.isZero()) {
       return false;
     }
@@ -179,6 +144,7 @@ export function AmountSelect({
 
       return amount.lte(max!.toString());
     } catch (e) {
+      dispatch(error((e as Error).message));
       return false;
     }
   });
@@ -213,155 +179,80 @@ export function AmountSelect({
 
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
-  const length = depositOrWithdrawAlert?.length ?? 0;
+  const onConfirm = async () => {
+    try {
+      setUserAction(UserAction.WAITING_FOR_TRANSACTIONS);
 
-  const onConfirm = () => {};
-  // const onConfirm = async () => {
-  //   try {
-  //     setUserAction(UserAction.WAITING_FOR_TRANSACTIONS);
+      const isETH = asset.underlyingToken === ETH_TOKEN_DATA.address;
+      const isRepayingMax = amount!.eq(asset.borrowBalance) && !isETH && mode === Mode.REPAY;
 
-  //     const isETH = asset.underlyingToken === ETH_TOKEN_DATA.address;
-  //     const isRepayingMax = amount!.eq(asset.borrowBalance) && !isETH && mode === Mode.REPAY;
+      isRepayingMax && console.log("Using max repay!");
 
-  //     isRepayingMax && console.log("Using max repay!");
+      const max = BigNumber.from(2).pow(256).sub(1);
 
-  //     const max = BigNumber.from(2).pow(256).minus(1).toFixed(0);
+      const amountBN = amount;
 
-  // const amountBN = fuse.web3.utils.toBN(amount!.toFixed(0));
+      const cToken = new ethers.Contract(
+        asset.cToken,
+        isETH
+          ? JSON.parse(fuse.compoundContracts["contracts/CEtherDelegate.sol:CEtherDelegate"].abi)
+          : JSON.parse(fuse.compoundContracts["contracts/CErc20Delegate.sol:CErc20Delegate"].abi),
+        fuse.provider,
+      );
 
-  //     const cToken = new fuse.web3.eth.Contract(
-  //       isETH
-  //         ? JSON.parse(fuse.compoundContracts["contracts/CEtherDelegate.sol:CEtherDelegate"].abi)
-  //         : JSON.parse(fuse.compoundContracts["contracts/CErc20Delegate.sol:CErc20Delegate"].abi),
-  //       asset.cToken,
-  //     );
+      if (mode === Mode.SUPPLY || mode === Mode.REPAY) {
+        if (!isETH) {
+          const token = new ethers.Contract(
+            asset.underlyingToken,
+            JSON.parse(fuse.compoundContracts["contracts/EIP20Interface.sol:EIP20Interface"].abi),
+            fuse.provider,
+          );
 
-  //     if (mode === Mode.SUPPLY || mode === Mode.REPAY) {
-  //       if (!isETH) {
-  //         const token = new fuse.web3.eth.Contract(
-  //           JSON.parse(fuse.compoundContracts["contracts/EIP20Interface.sol:EIP20Interface"].abi),
-  //           asset.underlyingToken,
-  //         );
+          const hasApprovedEnough = (await token.allowance(address, cToken.options.address)).gte(amountBN);
 
-  //         const hasApprovedEnough = fuse.web3.utils
-  //           .toBN(await token.methods.allowance(address, cToken.options.address).call())
-  //           .gte(amountBN);
+          if (!hasApprovedEnough) {
+            await token.approve(cToken.options.address, max);
+          }
+        }
 
-  //         if (!hasApprovedEnough) {
-  //           await token.methods.approve(cToken.options.address, max).send({ from: address });
-  //         }
+        if (mode === Mode.SUPPLY) {
+          // If they want to enable as collateral now, enter the market:
+          if (asset.membership) {
+            const comptroller = createComptroller(comptrollerAddress, fuse);
+            // Don't await this, we don't care if it gets executed first!
+            comptroller.enterMarkets([asset.cToken]);
+          }
 
-  //         LogRocket.track("Fuse-Approve");
-  //       }
+          if (isETH) {
+            await cToken.mint({ value: amountBN });
+          } else {
+            await cToken.mint(amountBN);
+          }
+        } else if (mode === Mode.REPAY) {
+          if (isETH) {
+            await cToken.repayBorrow({ value: amountBN });
+          } else {
+            await cToken.repayBorrow(isRepayingMax ? max : amountBN);
+          }
+        }
+      } else if (mode === Mode.BORROW) {
+        await cToken.borrow(amountBN);
+      } else if (mode === Mode.WITHDRAW) {
+        await cToken.redeemUnderlying(amountBN);
+      }
 
-  //       if (mode === Mode.SUPPLY) {
-  //         // If they want to enable as collateral now, enter the market:
-  //         if (enableAsCollateral) {
-  //           const comptroller = createComptroller(comptrollerAddress, fuse);
-  //           // Don't await this, we don't care if it gets executed first!
-  //           comptroller.methods.enterMarkets([asset.cToken]).send({ from: address });
+      queryClient.refetchQueries();
 
-  //           LogRocket.track("Fuse-ToggleCollateral");
-  //         }
+      // Wait 2 seconds for refetch and then close modal.
+      // We do this instead of waiting the refetch because some refetches take a while or error out and we want to close now.
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-  //         if (isETH) {
-  //           const call = cToken.methods.mint();
-
-  //           if (
-  //             // If they are supplying their whole balance:
-  //             amountBN.toString() === (await fuse.web3.eth.getBalance(address))
-  //           ) {
-  //             // Subtract gas for max ETH
-
-  //             const { gasWEI, gasPrice, estimatedGas } = await fetchGasForCall(call, amountBN, fuse, address);
-
-  //             await call.send({
-  //               from: address,
-  //               value: amountBN.sub(gasWEI),
-
-  //               gasPrice,
-  //               gas: estimatedGas,
-  //             });
-  //           } else {
-  //             await call.send({
-  //               from: address,
-  //               value: amountBN,
-  //             });
-  //           }
-  //         } else {
-  //           await testForCTokenErrorAndSend(
-  //             cToken.methods.mint(amountBN),
-  //             address,
-  //             "Cannot deposit this amount right now!",
-  //           );
-  //         }
-
-  //         LogRocket.track("Fuse-Supply");
-  //       } else if (mode === Mode.REPAY) {
-  //         if (isETH) {
-  //           const call = cToken.methods.repayBorrow();
-
-  //           if (
-  //             // If they are repaying their whole balance:
-  //             amountBN.toString() === (await fuse.web3.eth.getBalance(address))
-  //           ) {
-  //             // Subtract gas for max ETH
-
-  //             const { gasWEI, gasPrice, estimatedGas } = await fetchGasForCall(call, amountBN, fuse, address);
-
-  //             await call.send({
-  //               from: address,
-  //               value: amountBN.sub(gasWEI),
-
-  //               gasPrice,
-  //               gas: estimatedGas,
-  //             });
-  //           } else {
-  //             await call.send({
-  //               from: address,
-  //               value: amountBN,
-  //             });
-  //           }
-  //         } else {
-  //           await testForCTokenErrorAndSend(
-  //             cToken.methods.repayBorrow(isRepayingMax ? max : amountBN),
-  //             address,
-  //             "Cannot repay this amount right now!",
-  //           );
-  //         }
-
-  //         LogRocket.track("Fuse-Repay");
-  //       }
-  //     } else if (mode === Mode.BORROW) {
-  //       await testForCTokenErrorAndSend(
-  //         cToken.methods.borrow(amountBN),
-  //         address,
-  //         "Cannot borrow this amount right now!",
-  //       );
-
-  //       LogRocket.track("Fuse-Borrow");
-  //     } else if (mode === Mode.WITHDRAW) {
-  //       await testForCTokenErrorAndSend(
-  //         cToken.methods.redeemUnderlying(amountBN),
-  //         address,
-  //         "Cannot withdraw this amount right now!",
-  //       );
-
-  //       LogRocket.track("Fuse-Withdraw");
-  //     }
-
-  //     queryClient.refetchQueries();
-
-  //     // Wait 2 seconds for refetch and then close modal.
-  //     // We do this instead of waiting the refetch because some refetches take a while or error out and we want to close now.
-  //     await new Promise(resolve => setTimeout(resolve, 2000));
-
-  //     onClose();
-  //   } catch (e) {
-  //     handleGenericError(e, toast);
-  //     setUserAction(UserAction.NO_ACTION);
-  //   }
-  // };
+      onClose();
+    } catch (e) {
+      dispatch(error((e as Error).message));
+      setUserAction(UserAction.NO_ACTION);
+    }
+  };
 
   return userAction === UserAction.WAITING_FOR_TRANSACTIONS ? (
     <>
@@ -435,20 +326,15 @@ export function AmountSelect({
             amount={amount ? parseInt(amount.toNumber().toFixed(0)) : 0}
             asset={asset}
             mode={mode}
-            enableAsCollateral={enableAsCollateral}
+            enableAsCollateral={mode === Mode.SUPPLY}
             borrowLimit={borrowLimit}
           />
 
-          {showEnableAsCollateral ? (
+          {mode === Mode.SUPPLY ? (
             <Grid item>
               <Box display="flex" alignItems="baseline" justifyContent="space-between">
                 <Typography>Enable As Collateral</Typography>
-                <OrangeSwitch
-                  checked={enableAsCollateral}
-                  onChange={() => {
-                    setEnableAsCollateral(past => !past);
-                  }}
-                />
+                <OrangeSwitch checked={asset.membership} onChange={onToggleCollateral} />
               </Box>
             </Grid>
           ) : null}

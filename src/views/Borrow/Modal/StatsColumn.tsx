@@ -4,6 +4,9 @@ import { formatCurrency } from "../../../helpers";
 import { Mode } from "../../../fuse-sdk/helpers/fetchMaxAmount";
 import { convertMantissaToAPR, convertMantissaToAPY } from "../../../fuse-sdk/helpers/apyUtils";
 import { useBorrowLimit } from "../../../fuse-sdk/hooks/useBorrowLimit";
+import { useRari } from "src/fuse-sdk/helpers/RariContext";
+import { useQuery, UseQueryResult } from "react-query";
+import { BigNumber, ethers } from "ethers";
 
 export const StatsColumn = ({
   mode,
@@ -20,133 +23,90 @@ export const StatsColumn = ({
   enableAsCollateral: boolean;
   borrowLimit: number;
 }) => {
-  //const { rari, fuse } = useRari();
-  // TODO
-  let updatedAssets = assets; // undefined;
+  const { fuse } = useRari();
 
-  // const { data: updatedAssets }: UseQueryResult<USDPricedFuseAsset[]> = useQuery(
-  //   mode + " " + index + " " + JSON.stringify(assets) + " " + amount,
-  //   async () => {
-  //     const ethPrice: number = fuse.web3.utils.fromWei(await rari.getEthUsdPriceBN()) as any;
+  const { data: updatedAsset = asset }: UseQueryResult<USDPricedFuseAsset> = useQuery(
+    `${mode} ${JSON.stringify(asset)} ${amount}`,
+    async () => {
+      const ethPrice = Number(ethers.utils.formatEther(await fuse.getEthUsdPriceBN()));
 
-  //     const assetToBeUpdated = assets[index];
+      const interestRateModel = await fuse.getInterestRateModel(asset.cToken);
 
-  //     const interestRateModel = await fuse.getInterestRateModel(assetToBeUpdated.cToken);
+      if (mode === Mode.SUPPLY) {
+        const supplyBalance = Number(asset.supplyBalance) + amount;
+        const totalSupply = Number(asset.totalSupply) + amount;
 
-  //     if (mode === Mode.SUPPLY) {
-  //       const supplyBalance = parseInt(assetToBeUpdated.supplyBalance as any) + amount;
+        return {
+          ...asset,
+          supplyBalance,
+          supplyBalanceUSD: ((supplyBalance * asset.underlyingPrice) / 1e36) * ethPrice,
 
-  //       const totalSupply = parseInt(assetToBeUpdated.totalSupply as any) + amount;
+          totalSupply,
+          supplyRatePerBlock: interestRateModel.getSupplyRate(
+            totalSupply > 0 ? BigNumber.from(10).pow(18).mul(asset.totalBorrow).div(totalSupply) : BigNumber.from(0),
+          ),
+        };
+      } else if (mode === Mode.WITHDRAW) {
+        const supplyBalance = Number(asset.supplyBalance) - amount;
 
-  //       updatedAsset = {
-  //         ...assetToBeUpdated,
+        const totalSupply = Number(asset.totalSupply) - amount;
 
-  //         supplyBalance,
-  //         supplyBalanceUSD: ((supplyBalance * assetToBeUpdated.underlyingPrice) / 1e36) * ethPrice,
+        return {
+          ...asset,
 
-  //         totalSupply,
-  //         supplyRatePerBlock: interestRateModel.getSupplyRate(
-  //           fuse.web3.utils.toBN(
-  //             totalSupply > 0
-  //               ? new BigNumber(assetToBeUpdated.totalBorrow)
-  //                   .dividedBy(totalSupply.toString())
-  //                   .multipliedBy(1e18)
-  //                   .toFixed(0)
-  //               : 0,
-  //           ),
-  //         ),
-  //       };
-  //     } else if (mode === Mode.WITHDRAW) {
-  //       const supplyBalance = parseInt(assetToBeUpdated.supplyBalance as any) - amount;
+          supplyBalance,
+          supplyBalanceUSD: ((supplyBalance * asset.underlyingPrice) / 1e36) * ethPrice,
 
-  //       const totalSupply = parseInt(assetToBeUpdated.totalSupply as any) - amount;
+          totalSupply,
+          supplyRatePerBlock: interestRateModel.getSupplyRate(
+            totalSupply > 0 ? BigNumber.from(10).pow(18).mul(asset.totalBorrow).div(totalSupply) : BigNumber.from(0),
+          ),
+        };
+      } else if (mode === Mode.BORROW) {
+        const borrowBalance = Number(asset.borrowBalance) + amount;
 
-  //       updatedAsset = {
-  //         ...assetToBeUpdated,
+        const totalBorrow = Number(asset.totalBorrow) + amount;
 
-  //         supplyBalance,
-  //         supplyBalanceUSD: ((supplyBalance * assetToBeUpdated.underlyingPrice) / 1e36) * ethPrice,
+        return {
+          ...asset,
 
-  //         totalSupply,
-  //         supplyRatePerBlock: interestRateModel.getSupplyRate(
-  //           fuse.web3.utils.toBN(
-  //             totalSupply > 0
-  //               ? new BigNumber(assetToBeUpdated.totalBorrow)
-  //                   .dividedBy(totalSupply.toString())
-  //                   .multipliedBy(1e18)
-  //                   .toFixed(0)
-  //               : 0,
-  //           ),
-  //         ),
-  //       };
-  //     } else if (mode === Mode.BORROW) {
-  //       const borrowBalance = parseInt(assetToBeUpdated.borrowBalance as any) + amount;
+          borrowBalance,
+          borrowBalanceUSD: ((borrowBalance * asset.underlyingPrice) / 1e36) * ethPrice,
 
-  //       const totalBorrow = parseInt(assetToBeUpdated.totalBorrow as any) + amount;
+          totalBorrow,
+          borrowRatePerBlock: interestRateModel.getBorrowRate(
+            asset.totalSupply > 0
+              ? BigNumber.from(10).pow(18).mul(totalBorrow).div(asset.totalSupply)
+              : BigNumber.from(0),
+          ),
+        };
+      } else if (mode === Mode.REPAY) {
+        const borrowBalance = Number(asset.borrowBalance) - amount;
 
-  //       updatedAsset = {
-  //         ...assetToBeUpdated,
+        const totalBorrow = Number(asset.totalBorrow) - amount;
 
-  //         borrowBalance,
-  //         borrowBalanceUSD: ((borrowBalance * assetToBeUpdated.underlyingPrice) / 1e36) * ethPrice,
+        return {
+          ...asset,
 
-  //         totalBorrow,
-  //         borrowRatePerBlock: interestRateModel.getBorrowRate(
-  //           fuse.web3.utils.toBN(
-  //             assetToBeUpdated.totalSupply > 0
-  //               ? new BigNumber(totalBorrow.toString())
-  //                   .dividedBy(assetToBeUpdated.totalSupply)
-  //                   .multipliedBy(1e18)
-  //                   .toFixed(0)
-  //               : 0,
-  //           ),
-  //         ),
-  //       };
-  //     } else if (mode === Mode.REPAY) {
-  //       const borrowBalance = parseInt(assetToBeUpdated.borrowBalance as any) - amount;
+          borrowBalance,
+          borrowBalanceUSD: ((borrowBalance * asset.underlyingPrice) / 1e36) * ethPrice,
 
-  //       const totalBorrow = parseInt(assetToBeUpdated.totalBorrow as any) - amount;
-
-  //       updatedAsset = {
-  //         ...assetToBeUpdated,
-
-  //         borrowBalance,
-  //         borrowBalanceUSD: ((borrowBalance * assetToBeUpdated.underlyingPrice) / 1e36) * ethPrice,
-
-  //         totalBorrow,
-  //         borrowRatePerBlock: interestRateModel.getBorrowRate(
-  //           fuse.web3.utils.toBN(
-  //             assetToBeUpdated.totalSupply > 0
-  //               ? new BigNumber(totalBorrow.toString())
-  //                   .dividedBy(assetToBeUpdated.totalSupply)
-  //                   .multipliedBy(1e18)
-  //                   .toFixed(0)
-  //               : 0,
-  //           ),
-  //         ),
-  //       };
-  //     }
-
-  //     return assets.map((value, _index) => {
-  //       if (_index === index) {
-  //         return updatedAsset;
-  //       } else {
-  //         return value;
-  //       }
-  //     });
-  //   },
-  // );
-
-  const updatedAsset = updatedAssets ? updatedAssets[index] : null;
-
-  const updatedBorrowLimit = useBorrowLimit(
-    updatedAssets ?? [],
-    enableAsCollateral
-      ? {
-          ignoreIsEnabledCheckFor: asset.cToken,
-        }
-      : undefined,
+          totalBorrow,
+          borrowRatePerBlock: interestRateModel.getBorrowRate(
+            asset.totalSupply > 0
+              ? BigNumber.from(10).pow(18).mul(totalBorrow).div(asset.totalSupply)
+              : BigNumber.from(0),
+          ),
+        };
+      }
+    },
   );
+
+  const updatedBorrowLimit = enableAsCollateral
+    ? updatedAsset.supplyBalanceUSD * (updatedAsset.collateralFactor / 1e18)
+    : borrowLimit -
+      asset.supplyBalanceUSD * (asset.collateralFactor / 1e18) +
+      updatedAsset.supplyBalanceUSD * (updatedAsset.collateralFactor / 1e18);
 
   const isSupplyingOrWithdrawing = mode === Mode.SUPPLY || mode === Mode.WITHDRAW;
 
@@ -160,8 +120,6 @@ export const StatsColumn = ({
   const updatedAPYDiffIsLarge = isSupplyingOrWithdrawing
     ? Math.abs(updatedSupplyAPY - supplyAPY) > 0.1
     : Math.abs(updatedBorrowAPR - borrowAPR) > 0.1;
-
-  // const propertyText = useColorModeValue("black", "gray.300");
 
   return (
     <Grid item>

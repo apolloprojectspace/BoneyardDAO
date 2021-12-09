@@ -213,6 +213,7 @@ export default class Fuse {
   constructor(web3Provider) {
     this.provider = web3Provider;
 
+    // TODO Why???
     this.getEthUsdPriceBN = async function () {
       return (await axios.get("https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=ethereum")).data
         .ethereum.usd;

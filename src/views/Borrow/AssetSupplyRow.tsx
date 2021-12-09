@@ -1,50 +1,28 @@
-import React, { useCallback, useState } from "react";
-import {
-  Grid,
-  Typography,
-  TableRow,
-  TableCell,
-  Avatar,
-  Tooltip,
-  IconButton,
-  Switch,
-  Link,
-  SvgIcon,
-} from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
-
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-
-import LinkIcon from "@material-ui/icons/Link";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import "./borrow.scss";
+import { Grid, Typography, TableRow, TableCell, Avatar, Tooltip } from "@material-ui/core";
 import { formatCurrency } from "../../helpers";
 import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useTokenData } from "../../fuse-sdk/hooks/useTokenData";
 import { convertMantissaToAPY } from "../../fuse-sdk/helpers/apyUtils";
-import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
-import { Mode } from "../../fuse-sdk/helpers/fetchMaxAmount";
-import { PoolModal } from "./Modal/PoolModal";
-import { useWeb3Context } from "src/hooks";
+import { IAppData } from "src/slices/AppSlice";
+import { useSelector } from "react-redux";
 
 export function AssetSupplyRow({
-  comptrollerAddress,
   asset,
   onClick,
 }: {
   asset: USDPricedFuseAsset;
-  comptrollerAddress: string;
   onClick: (asset: USDPricedFuseAsset) => void;
 }) {
   const tokenData = useTokenData(asset.underlyingToken);
-  const { scanner } = useWeb3Context();
+  const stakingAPY = useSelector((state: any) => {
+    return (state.app as IAppData).stakingAPY;
+  });
   const isStakedHEC =
     asset.underlyingToken.toLowerCase() === "0x04F2694C8fcee23e8Fd0dfEA1d4f5Bb8c352111F".toLowerCase();
-  const stakedHECApyData = { supplyApy: 72.63090497083556, supplyWpy: 0.08594200630075033 }; // TODO Get HEC APY
   const supplyAPY = convertMantissaToAPY(asset.supplyRatePerBlock, 365);
 
   return (
-    <TableRow hover onClick={() => onClick(asset)}>
+    <TableRow hover onClick={() => onClick(asset)} className="asset-row">
       <TableCell>
         <Grid spacing={1} container alignItems="center">
           <Grid item>
@@ -64,12 +42,7 @@ export function AssetSupplyRow({
       <TableCell align={"right"}>
         <>
           <Typography>
-            {isStakedHEC
-              ? stakedHECApyData
-                ? (stakedHECApyData.supplyApy * 100).toFixed(3)
-                : "?"
-              : supplyAPY.toFixed(2)}
-            %
+            {isStakedHEC && stakingAPY ? Number((stakingAPY * 100).toFixed(1)).toLocaleString() : supplyAPY.toFixed(2)}%
           </Typography>
 
           <Tooltip

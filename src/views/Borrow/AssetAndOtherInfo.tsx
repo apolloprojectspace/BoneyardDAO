@@ -170,6 +170,7 @@ export function AssetAndOtherInfo({ assets }: { assets: USDPricedFuseAsset[] }) 
                   </Grid>
                 )}
                 <Grid item xs={4}>
+                  {/* TODO Remove? */}
                   <CaptionedStat stat={shortUsdFormatter(selectedAsset.totalBorrowUSD)} caption={"Total Borrowed"} />
                 </Grid>
               </Grid>

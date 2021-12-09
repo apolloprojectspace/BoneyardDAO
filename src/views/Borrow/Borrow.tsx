@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   Grid,
   Paper,
@@ -12,22 +12,14 @@ import {
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 import "./borrow.scss";
 import { AssetSupplyRow } from "./AssetSupplyRow";
 import { formatCurrency } from "../../helpers";
 import { AssetBorrowRow } from "./AssetBorrowRow";
-import { OracleAndInterestRates } from "./OracleAndInterestRates";
 import { AssetAndOtherInfo } from "./AssetAndOtherInfo";
 import { useFusePoolData } from "../../fuse-sdk/hooks/useFusePoolData";
 import { CollateralRatioBar } from "./CollateralRatioBar";
-import { FusePoolData, USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
-import { useDispatch, useSelector } from "react-redux";
-import { StaticJsonRpcProvider } from "@ethersproject/providers";
-import Fuse from "../../fuse-sdk";
-import { initFuseWithProviders } from "../../fuse-sdk/helpers/web3Providers";
-import { useWeb3Context } from "../../hooks";
-import { RootState } from "../../store";
+import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { PoolModal } from "./Modal/PoolModal";
 import { Mode } from "../../fuse-sdk/helpers/fetchMaxAmount";
 import { useBorrowLimit } from "src/fuse-sdk/hooks/useBorrowLimit";
@@ -57,7 +49,11 @@ export default function Borrow({ poolId }: { poolId: number }) {
       : (((totalBorrowedUSD ?? 0) / totalSuppliedUSD) * 100).toFixed(2) + "%";
 
   const [selectedAsset, setSelectedAsset] = useState<USDPricedFuseAsset | null>(null);
-  const handleOpen = useCallback(asset => setSelectedAsset(asset), []);
+  const [defaultMode, setDefaultMode] = useState(Mode.SUPPLY)
+  const handleOpen = useCallback((asset, mode) => {
+    setSelectedAsset(asset)
+    setDefaultMode(mode)
+  }, []);
   const handleClose = useCallback(() => setSelectedAsset(null), []);
 
   return (
@@ -93,7 +89,6 @@ export default function Borrow({ poolId }: { poolId: number }) {
             <Paper className="hec-card hec-card-table">
               {assets.length ? (
                 <SupplyList
-                  comptrollerAddress={comptrollerAddress}
                   totalSupplyBalanceUSD={totalSupplyBalanceUSD}
                   suppliedAssets={suppliedAssets}
                   nonSuppliedAssets={nonSuppliedAssets}
@@ -108,7 +103,6 @@ export default function Borrow({ poolId }: { poolId: number }) {
             <Paper className="hec-card hec-card-table">
               {assets.length ? (
                 <BorrowList
-                  comptrollerAddress={comptrollerAddress}
                   borrowedAssets={borrowedAssets}
                   nonBorrowedAssets={nonBorrowedAssets}
                   totalBorrowBalanceUSD={totalBorrowBalanceUSD}
@@ -128,7 +122,7 @@ export default function Borrow({ poolId }: { poolId: number }) {
       </Grid>
       {selectedAsset ? (
         <PoolModal
-          defaultMode={Mode.SUPPLY}
+          defaultMode={defaultMode}
           comptrollerAddress={comptrollerAddress}
           asset={selectedAsset}
           onClose={handleClose}
@@ -140,18 +134,17 @@ export default function Borrow({ poolId }: { poolId: number }) {
 }
 
 function SupplyList({
-  comptrollerAddress,
   totalSupplyBalanceUSD,
   suppliedAssets,
   nonSuppliedAssets,
   onClick,
 }: {
-  comptrollerAddress: string;
   totalSupplyBalanceUSD: number;
   suppliedAssets: USDPricedFuseAsset[];
   nonSuppliedAssets: USDPricedFuseAsset[];
-  onClick: (asset: USDPricedFuseAsset) => void;
+  onClick: (asset: USDPricedFuseAsset, mode: Mode) => void;
 }) {
+  const handleClick = useCallback(( asset) => onClick(asset, Mode.SUPPLY), [])
   return (
     <>
       <Typography variant="h5">Your Supply Balance: {formatCurrency(totalSupplyBalanceUSD, 2)}</Typography>
@@ -166,21 +159,11 @@ function SupplyList({
           </TableHead>
           <TableBody>
             {suppliedAssets.map(asset => (
-              <AssetSupplyRow
-                comptrollerAddress={comptrollerAddress}
-                key={asset.underlyingToken}
-                asset={asset}
-                onClick={onClick}
-              />
+              <AssetSupplyRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />
             ))}
 
             {nonSuppliedAssets.map(asset => (
-              <AssetSupplyRow
-                comptrollerAddress={comptrollerAddress}
-                key={asset.underlyingToken}
-                asset={asset}
-                onClick={onClick}
-              />
+              <AssetSupplyRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />
             ))}
           </TableBody>
         </Table>
@@ -190,18 +173,17 @@ function SupplyList({
 }
 
 function BorrowList({
-  comptrollerAddress,
   borrowedAssets,
   nonBorrowedAssets,
   totalBorrowBalanceUSD,
   onClick,
 }: {
-  comptrollerAddress: string;
   borrowedAssets: USDPricedFuseAsset[];
   nonBorrowedAssets: USDPricedFuseAsset[];
   totalBorrowBalanceUSD: number;
-  onClick: (asset: USDPricedFuseAsset) => void;
+  onClick: (asset: USDPricedFuseAsset, mode: Mode) => void;
 }) {
+  const handleClick = useCallback(( asset) => onClick(asset, Mode.BORROW), [])
   return (
     <>
       <Typography variant="h5"> Your Borrow Balance: {formatCurrency(totalBorrowBalanceUSD, 2)}</Typography>
@@ -217,23 +199,11 @@ function BorrowList({
           </TableHead>
           <TableBody>
             {borrowedAssets.map(asset => (
-              <AssetBorrowRow
-                comptrollerAddress={comptrollerAddress}
-                key={asset.underlyingToken}
-                asset={asset}
-                onClick={onClick}
-              />
+              <AssetBorrowRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />
             ))}
 
             {nonBorrowedAssets.map(asset =>
-              asset.isPaused ? null : (
-                <AssetBorrowRow
-                  comptrollerAddress={comptrollerAddress}
-                  key={asset.underlyingToken}
-                  asset={asset}
-                  onClick={onClick}
-                />
-              ),
+              asset.isPaused ? null : <AssetBorrowRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />,
             )}
           </TableBody>
         </Table>
