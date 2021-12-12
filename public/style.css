@@ -207,6 +207,7 @@
 
 .app.light .jss2 {
 	background: url(/static/media/light-back.png) no-repeat bottom;
+	background-size: cover;
 }
 
 .app.light .social-row svg path {
@@ -508,6 +509,7 @@
 
 .app.dark .jss2 {
 	background: url(/static/media/light-back.png) no-repeat bottom;
+	background-size: cover;
 }
 
 .app.dark .social-row svg path {

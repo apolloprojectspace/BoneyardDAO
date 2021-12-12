@@ -6,7 +6,7 @@ import { findOrLoadMarketPrice } from "./AppSlice";
 import { error, info, success } from "./MessagesSlice";
 import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getBondCalculator, getBondCalculator1 } from "src/helpers/BondCalculator";
+import { getBondCalculator, getBondCalculator1, getgOHMBondCalculator } from "src/helpers/BondCalculator";
 import { RootState } from "src/store";
 import {
   IApproveBondAsyncThunk,
@@ -97,6 +97,9 @@ export const calcBondDetails = createAsyncThunk(
       bondCalcContract = getBondCalculator(networkID, provider);
     } else {
       bondCalcContract = getBondCalculator1(networkID, provider);
+    }
+    if (bond.name == "gohmlp") {
+      bondCalcContract = getgOHMBondCalculator(networkID, provider);
     }
 
     const terms = await bondContract.terms();

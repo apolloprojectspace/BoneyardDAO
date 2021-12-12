@@ -9,6 +9,7 @@ import { ReactComponent as MimImg } from "src/assets/tokens/MIM.svg";
 import { ReactComponent as FraxImg } from "src/assets/tokens/FRAX.svg";
 import { ReactComponent as HecUsdcImg } from "src/assets/tokens/HEC-USDC.svg";
 import { ReactComponent as HecFraxImg } from "src/assets/tokens/HEC-FRAX.svg";
+import { ReactComponent as HecgOHMImg } from "src/assets/tokens/HEC-gOHM.svg";
 
 import { abi as BondHecDaiContract } from "src/abi/bonds/HecDaiContract.json";
 import { abi as HecUsdcContract } from "src/abi/bonds/HecUsdcContract.json";
@@ -18,7 +19,8 @@ import { abi as MimBondContract } from "src/abi/bonds/MimContract.json";
 import { abi as ReserveHecDaiContract } from "src/abi/reserves/HecDai.json";
 import { abi as ReserveHecUsdcContract } from "src/abi/reserves/HecUsdc.json";
 
-import { abi as EthBondContract } from "src/abi/bonds/FtmContract.json";
+import { abi as FtmBondContract } from "src/abi/bonds/FtmContract.json";
+import { abi as FtmBondContractV2 } from "src/abi/bonds/FtmContractV2.json";
 
 import { abi as ierc20Abi } from "src/abi/IERC20.json";
 
@@ -91,11 +93,40 @@ export const ftm = new CustomBond({
   bondType: BondType.StableAsset,
   bondToken: "WFTM",
   bondIconSvg: wFTMImg,
-  bondContractABI: EthBondContract,
+  bondContractABI: FtmBondContract,
   reserveContract: ierc20Abi, // The Standard ierc20Abi since they're normal tokens
   networkAddrs: {
     [NetworkID.Mainnet]: {
       bondAddress: "0x72De9F0e51cA520379a341318870836FdCaf03B9",
+      reserveAddress: "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
+    },
+    [NetworkID.Testnet]: {
+      bondAddress: "",
+      reserveAddress: "",
+    },
+  },
+  customTreasuryBalanceFunc: async function (this: CustomBond, networkID, provider) {
+    const ethBondContract = this.getContractForBond(networkID, provider);
+    let ethPrice = await ethBondContract.assetPrice();
+    ethPrice = ethPrice / Math.pow(10, 8);
+    const token = this.getContractForReserve(networkID, provider);
+    let ftmAmount = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
+    ftmAmount = ftmAmount / Math.pow(10, 18);
+    return ftmAmount * ethPrice;
+  },
+});
+export const ftmv2 = new CustomBond({
+  name: "ftmv2",
+  displayName: "wFTM",
+  lpUrl: "",
+  bondType: BondType.StableAsset,
+  bondToken: "WFTM",
+  bondIconSvg: wFTMImg,
+  bondContractABI: FtmBondContractV2,
+  reserveContract: ierc20Abi, // The Standard ierc20Abi since they're normal tokens
+  networkAddrs: {
+    [NetworkID.Mainnet]: {
+      bondAddress: "0x97EaE2a5eB6BF0725b2d9AC2D7D5b27a97b0A8d3",
       reserveAddress: "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
     },
     [NetworkID.Testnet]: {
@@ -318,6 +349,27 @@ export const hec_dai_v2 = new LPBond({
     "https://spookyswap.finance/add/0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0/0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
 });
 
+export const gohmlp = new LPBond({
+  name: "gohmlp",
+  displayName: "HEC-gOHM LP",
+  bondToken: "gOHM",
+  bondIconSvg: HecgOHMImg,
+  bondContractABI: MimBondContract,
+  reserveContract: ReserveHecDaiContract,
+  networkAddrs: {
+    [NetworkID.Mainnet]: {
+      bondAddress: "0xde13DD3BCA9CBac23F46e5C587b48320F5f5c483",
+      reserveAddress: "0xEb7942E26368b2052CBbDa2c054482F00436ef7B",
+    },
+    [NetworkID.Testnet]: {
+      bondAddress: "",
+      reserveAddress: "", 
+    },
+  },
+  lpUrl:
+    "https://swap.spiritswap.finance/#/add/0x91fa20244Fb509e8289CA630E5db3E9166233FDc/0x5C4FDfc5233f935f20D2aDbA572F770c2E377Ab0",
+});
+
 export const hec_dai_4 = new LPBond({
   name: "dai_lp4",
   displayName: "HEC-DAI LP",
@@ -440,6 +492,7 @@ export const hec_usdc_4 = new LPBond({
 export const allBonds = [
   hec_dai_v2,
   hec_usdc,
+  gohmlp,
   ftm,
   dai,
   usdc,
@@ -453,6 +506,7 @@ export const allBonds = [
   frax4,
   hec_frax,
   hec_frax4,
+  // ftmv2,
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
