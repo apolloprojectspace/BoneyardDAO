@@ -6,7 +6,7 @@ import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
 import { EnvHelper } from "../helpers/Environment";
 import { NodeHelper } from "src/helpers/NodeHelper";
 import { error } from "src/slices/MessagesSlice";
-import { DEFAULD_NETWORK, messages } from "src/constants";
+import { DEFAULT_NETWORK, messages } from "src/constants";
 import { swithNetwork } from "src/helpers/SwitchNetwork";
 
 /**
@@ -78,7 +78,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [connected, setConnected] = useState(false);
   // NOTE (appleseed): if you are testing on rinkeby you need to set chainId === 4 as the default for non-connected wallet testing...
   // ... you also need to set getTestnetURI() as the default uri state below
-  const [chainID, setChainID] = useState(250);
+  const [chainID, setChainID] = useState(DEFAULT_NETWORK);
   const [othechain, setOtherChain] = useState(0);
   const [address, setAddress] = useState("");
 
@@ -95,7 +95,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
           package: WalletConnectProvider,
           options: {
             rpc: {
-              250: getMainnetURI(),
+              DEFAULT_NETWORK: getMainnetURI(),
             },
           },
         },
@@ -141,9 +141,9 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const _checkNetwork = (otherChainID: number): Boolean => {
     if (chainID !== otherChainID) {
       console.warn("You are switching networks");
-      if (otherChainID === DEFAULD_NETWORK) {
+      if (otherChainID === DEFAULT_NETWORK) {
         setChainID(otherChainID);
-        otherChainID === DEFAULD_NETWORK ? setUri(getMainnetURI()) : setUri(getTestnetURI());
+        otherChainID === DEFAULT_NETWORK ? setUri(getMainnetURI()) : setUri(getTestnetURI());
         return true;
       }
       return false;
@@ -188,7 +188,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
 
   const checkWrongNetwork = async (): Promise<boolean> => {
     console.log("debug", othechain);
-    if (othechain !== DEFAULD_NETWORK) {
+    if (othechain !== DEFAULT_NETWORK) {
           await swithNetwork();
           window.location.reload();
         return true;

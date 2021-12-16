@@ -98,7 +98,7 @@ export const calcBondDetails = createAsyncThunk(
     } else {
       bondCalcContract = getBondCalculator1(networkID, provider);
     }
-    if (bond.name == "gohmlp") {
+    if (bond.name == "gohmlp" || bond.name == "gohmlp4") {
       bondCalcContract = getgOHMBondCalculator(networkID, provider);
     }
 
@@ -176,6 +176,9 @@ export const calcBondDetails = createAsyncThunk(
     if (isSoldOut) {
       bondDiscount = -0.1;
     }
+    // if (bond.name == "gohmlp4") {
+    //   bondQuote = bondQuote * 100;
+    // }
 
     return {
       bond: bond.name,

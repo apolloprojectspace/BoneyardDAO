@@ -132,7 +132,7 @@ export class LPBond extends Bond {
     } else {
       bondCalculator = getBondCalculator1(networkID, provider);
     }
-    if (this.name == "gohmlp") {
+    if (this.name == "gohmlp" || this.name == "gohmlp4") {
       bondCalculator = getgOHMBondCalculator(networkID, provider);
     }
     let decimals = 18;

@@ -23,6 +23,8 @@ import { Skeleton } from "@material-ui/lab";
 import ClaimBonds from "./ClaimBonds";
 import _ from "lodash";
 import { allBondsMap } from "src/helpers/AllBonds";
+import { INVESTMENT } from "src/constants";
+import InfoTooltip from "src/components/InfoTooltip/InfoTooltip";
 
 function ChooseBond() {
   const { bonds } = useBonds();
@@ -69,6 +71,61 @@ function ChooseBond() {
               <RebaseTimer />
             </Box>
             <Grid container item xs={12} style={{ margin: "10px 0px 20px" }} className="bond-hero">
+              {/* <Grid item xs={6} sm={4} md={4} lg={4}>
+                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    Treasury Balance
+                    <InfoTooltip
+                    message={
+                      "Invested Treasury Included"
+                    }
+                  />
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? (
+                      <Skeleton width="180px" />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0,
+                      }).format(treasuryBalance + INVESTMENT)
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
+                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    Invested Treasury
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? (
+                      <Skeleton width="180px" />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0,
+                      }).format(INVESTMENT)
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sm={4} md={4} lg={4} className={`hec-price`}>
+                <Box textAlign={`${isVerySmallScreen ? "right" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    HEC Price
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
+                  </Typography>
+                </Box>
+              </Grid> */}
+
               <Grid item xs={6}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
