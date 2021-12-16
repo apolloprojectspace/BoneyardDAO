@@ -47,6 +47,9 @@ function ChooseBond() {
   const marketPrice = useSelector(state => {
     return state.app.marketPrice;
   });
+  const investments = useSelector(state => {
+    return state.app.investments;
+  });
 
   const treasuryBalance = useSelector(state => {
     if (state.bonding.loading == false) {
@@ -126,7 +129,7 @@ function ChooseBond() {
                 </Box>
               </Grid> */}
 
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
                     Treasury Balance
@@ -146,7 +149,27 @@ function ChooseBond() {
                 </Box>
               </Grid>
 
-              <Grid item xs={6} className={`hec-price`}>
+              <Grid item xs={4}>
+                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
+                  <Typography variant="h5" color="textSecondary">
+                    Investments
+                  </Typography>
+                  <Typography variant="h4">
+                    {isAppLoading ? (
+                      <Skeleton width="180px" />
+                    ) : (
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 0,
+                      }).format(investments)
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={4} className={`hec-price`}>
                 <Box textAlign={`${isVerySmallScreen ? "right" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
                     HEC Price
