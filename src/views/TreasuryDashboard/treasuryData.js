@@ -23,10 +23,11 @@ query {
     treasuryWFTMMarketValue
     treasuryMIMRiskFreeValue
     treasuryMIMMarketValue
+    treasuryFRAXRiskFreeValue
+    treasuryFRAXMarketValue
     currentAPY
     runwayCurrent
     treasuryHecDaiPOL
-    treasuryHecUsdcPOL
   }
 }
 `;
@@ -74,12 +75,17 @@ export const bulletpoints = {
     {
       right: 29,
       top: -12,
-      background: "linear-gradient(180deg, #DC30EB -10%, #EA98F1 100%)",
+      background: "linear-gradient(180deg, #8351ff -10%, #b151ff 100%)",
     },
     {
       right: 29,
       top: -12,
-      background: "linear-gradient(180deg, #4C8C2A -10%, #8BFF4D 100%)",
+      background: "linear-gradient(180deg, #c6c6c6 -10%, #545454 100%)",
+    },
+    {
+      right: 29,
+      top: -12,
+      background: "linear-gradient(180deg, #22d5e7 -10%, #18919d 100%)",
     },
   ],
   holder: [
@@ -143,7 +149,7 @@ export const bulletpoints = {
 
 export const tooltipItems = {
   tvl: ["Total Value Deposited"],
-  coin: ["DAI", "USDC", "MiM", "WFTM"],
+  coin: ["DAI", "USDC", "MiM", "FRAX", "WFTM"],
   apy: ["APY"],
   runway: ["Days"],
   pol: ["SLP Treasury", "Market SLP"],

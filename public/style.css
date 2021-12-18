@@ -208,6 +208,7 @@
 
 .app.light .jss2 {
 	background: url(/static/media/light-back.png) no-repeat bottom;
+	background-size: cover;
 }
 
 .app.light .social-row svg path {
@@ -267,8 +268,8 @@
 	border: 1px solid #FF9900;
 	-webkit-box-sizing: border-box;
 	        box-sizing: border-box;
-	-webkit-box-shadow: 7px 11px 63px rgba(255, 153, 0, 0.1);
-	        box-shadow: 7px 11px 63px rgba(255, 153, 0, 0.1);
+	-webkit-box-shadow: 7px 11px 20px rgba(255, 153, 0, 0.1);
+	        box-shadow: 7px 11px 20px rgba(255, 153, 0, 0.1);
 	border-radius: 10px;
 }
 
@@ -509,6 +510,7 @@
 
 .app.dark .jss2 {
 	background: url(/static/media/light-back.png) no-repeat bottom;
+	background-size: cover;
 }
 
 .app.dark .social-row svg path {

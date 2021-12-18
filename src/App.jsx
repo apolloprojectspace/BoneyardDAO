@@ -192,18 +192,16 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    if (connected) {
-      const updateAppDetailsInterval = setInterval(() => {
-        dispatch(loadAppDetails({ networkID: chainID, provider }));
-        bonds.map(bond => {
-          dispatch(calcBondDetails({ bond, value: null, provider, networkID: chainID }));
-        });
-      }, 1000 * 60);
-      return () => {
-        clearInterval(updateAppDetailsInterval);
-      };
-    }
-  }, [connected]);
+    const updateAppDetailsInterval = setInterval(() => {
+      dispatch(loadAppDetails({ networkID: chainID, provider }));
+      bonds.map(bond => {
+        dispatch(calcBondDetails({ bond, value: null, provider, networkID: chainID }));
+      });
+    }, 1000 * 30);
+    return () => {
+      clearInterval(updateAppDetailsInterval);
+    };
+  }, []);
 
   useEffect(() => {
     if (walletChecked) {
@@ -212,7 +210,7 @@ function App() {
         bonds.map(bond => {
           dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
         });
-      }, 1000 * 60 * 10);
+      }, 1000 * 30 * 10);
       return () => {
         clearInterval(updateAccountDetailInterval);
       };

@@ -2,7 +2,7 @@ import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { abi as MimBondContract } from "src/abi/bonds/MimContract.json";
 import ierc20Abi from "src/abi/ERC20.json";
-import { getBondCalculator, getBondCalculator1 } from "src/helpers/BondCalculator";
+import { getBondCalculator, getBondCalculator1, getgOHMBondCalculator } from "src/helpers/BondCalculator";
 import { addresses } from "src/constants";
 import React, { ReactNode, useState } from "react";
 
@@ -131,6 +131,9 @@ export class LPBond extends Bond {
       bondCalculator = getBondCalculator(networkID, provider);
     } else {
       bondCalculator = getBondCalculator1(networkID, provider);
+    }
+    if (this.name == "gohmlp" || this.name == "gohmlp4") {
+      bondCalculator = getgOHMBondCalculator(networkID, provider);
     }
     let decimals = 18;
     if (this.decimals) {
