@@ -20,6 +20,7 @@ const externalUrls = [
   },
   {
     title: "Hector Bank",
+    url: "/#/bank",
     label: "(Coming soon)",
     icon: <MonetizationOnOutlined viewBox="0 0 20 24" />,
   },
