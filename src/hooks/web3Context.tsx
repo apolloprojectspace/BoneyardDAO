@@ -37,17 +37,6 @@ function getMainnetURI(): string {
   return allURIs[randomIndex];
 }
 
-function getScanner(chainId: number): string {
-  switch (chainId) {
-    case 250: {
-      return "https://ftmscan.com";
-    }
-    default: {
-      return "https://etherscan.io";
-    }
-  }
-}
-
 /*
   Types
 */
@@ -59,8 +48,6 @@ type onChainProvider = {
   address: string;
   connected: Boolean;
   web3Modal: Web3Modal;
-  chainID: number;
-  scanner: string;
 };
 
 export type Web3ContextData = {
@@ -220,9 +207,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     }, 1);
   }, [provider, web3Modal, connected]);
 
-  const scanner = getScanner(chainID);
   const onChainProvider = useMemo(
-
     () => ({ connect, disconnect, hasCachedProvider, provider, connected, address, chainID, web3Modal, uri, checkWrongNetwork, }),
     [connect, disconnect, hasCachedProvider, provider, connected, address, chainID, web3Modal, uri],
   );

@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { addresses } from "../constants";
-import ierc20Abi from "../abi/ERC20.json";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
 import { setAll } from "../helpers";
