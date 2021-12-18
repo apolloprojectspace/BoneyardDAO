@@ -23,11 +23,11 @@ import { Skeleton } from "@material-ui/lab";
 import ClaimBonds from "./ClaimBonds";
 import _ from "lodash";
 import { allBondsMap } from "src/helpers/AllBonds";
-import { INVESTMENT } from "src/constants";
 import InfoTooltip from "src/components/InfoTooltip/InfoTooltip";
 
 function ChooseBond() {
   const { bonds } = useBonds();
+  // console.log("debug", bonds);
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
   const isVerySmallScreen = useMediaQuery("(max-width: 420px)");
 
@@ -46,6 +46,10 @@ function ChooseBond() {
 
   const marketPrice = useSelector(state => {
     return state.app.marketPrice;
+  });
+
+  const investments = useSelector(state => {
+    return state.app.investments;
   });
 
   const treasuryBalance = useSelector(state => {
@@ -71,15 +75,15 @@ function ChooseBond() {
               <RebaseTimer />
             </Box>
             <Grid container item xs={12} style={{ margin: "10px 0px 20px" }} className="bond-hero">
-              {/* <Grid item xs={6} sm={4} md={4} lg={4}>
+              <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
                     Treasury Balance
-                    <InfoTooltip
+                    {/* <InfoTooltip
                     message={
                       "Invested Treasury Included"
                     }
-                  />
+                    /> */}
                   </Typography>
                   <Typography variant="h4">
                     {isAppLoading ? (
@@ -90,7 +94,7 @@ function ChooseBond() {
                         currency: "USD",
                         maximumFractionDigits: 0,
                         minimumFractionDigits: 0,
-                      }).format(treasuryBalance + INVESTMENT)
+                      }).format(treasuryBalance)
                     )}
                   </Typography>
                 </Box>
@@ -98,7 +102,7 @@ function ChooseBond() {
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
-                    Invested Treasury
+                    Investments
                   </Typography>
                   <Typography variant="h4">
                     {isAppLoading ? (
@@ -109,7 +113,7 @@ function ChooseBond() {
                         currency: "USD",
                         maximumFractionDigits: 0,
                         minimumFractionDigits: 0,
-                      }).format(INVESTMENT)
+                      }).format(investments)
                     )}
                   </Typography>
                 </Box>
@@ -124,9 +128,9 @@ function ChooseBond() {
                     {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
                   </Typography>
                 </Box>
-              </Grid> */}
+              </Grid>
 
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
                     Treasury Balance
@@ -155,7 +159,7 @@ function ChooseBond() {
                     {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
                   </Typography>
                 </Box>
-              </Grid>
+              </Grid> */}
             </Grid>
 
             {!isSmallScreen && (

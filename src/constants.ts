@@ -8,8 +8,6 @@ export const TOKEN_DECIMALS = 9;
 
 export const DEFAULT_NETWORK = 250;
 
-export const INVESTMENT = 20000;
-
 interface IAddresses {
   [key: number]: { [key: string]: string };
 }

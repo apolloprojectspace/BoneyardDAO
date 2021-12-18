@@ -78,7 +78,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [connected, setConnected] = useState(false);
   // NOTE (appleseed): if you are testing on rinkeby you need to set chainId === 4 as the default for non-connected wallet testing...
   // ... you also need to set getTestnetURI() as the default uri state below
-  const [chainID, setChainID] = useState(DEFAULT_NETWORK);
+  const [chainID, setChainID] = useState(250);
   const [othechain, setOtherChain] = useState(0);
   const [address, setAddress] = useState("");
 
@@ -88,15 +88,21 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
 
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>(
     new Web3Modal({
-      // network: "mainnet", // optional
       cacheProvider: true, // optional
       providerOptions: {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
             rpc: {
-              DEFAULT_NETWORK: getMainnetURI(),
+              250: getMainnetURI(),
             },
+            qrcode: true,
+            qrcodeModalOptions: {
+              mobileLinks: [
+                "metamask",
+                "trust",
+              ]
+            }
           },
         },
       },
@@ -141,9 +147,9 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const _checkNetwork = (otherChainID: number): Boolean => {
     if (chainID !== otherChainID) {
       console.warn("You are switching networks");
-      if (otherChainID === DEFAULT_NETWORK) {
+      if (otherChainID === 250) {
         setChainID(otherChainID);
-        otherChainID === DEFAULT_NETWORK ? setUri(getMainnetURI()) : setUri(getTestnetURI());
+        otherChainID === 250 ? setUri(getMainnetURI()) : setUri(getTestnetURI());
         return true;
       }
       return false;
@@ -188,7 +194,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
 
   const checkWrongNetwork = async (): Promise<boolean> => {
     console.log("debug", othechain);
-    if (othechain !== DEFAULT_NETWORK) {
+    if (othechain !== 250) {
           await swithNetwork();
           window.location.reload();
         return true;

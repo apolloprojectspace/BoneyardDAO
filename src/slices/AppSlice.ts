@@ -41,6 +41,7 @@ export const loadAppDetails = createAsyncThunk(
       treasuryMarketValue
       nextEpochRebase
       nextDistributedHec
+      treasuryInvestments
     }
   }
   `;
@@ -88,6 +89,7 @@ export const loadAppDetails = createAsyncThunk(
     const totalSupply = total / 1000000000;
     const marketCap = marketPrice * circSupply;
     const marketPriceString = marketPrice ? "$" + marketPrice.toFixed(2) : "";
+    const investments = parseFloat(graphData.data.protocolMetrics[0].treasuryInvestments);
     document.title = `HectorDAO - ${marketPriceString}`;
     if (!provider) {
       console.error("failed to connect to provider, please connect your wallet");
@@ -129,6 +131,7 @@ export const loadAppDetails = createAsyncThunk(
       circSupply,
       totalSupply,
       endBlock,
+      investments,
     } as IAppData;
   },
 );
@@ -203,6 +206,7 @@ interface IAppData {
   readonly totalSupply: number;
   readonly treasuryBalance?: number;
   readonly endBlock?: number;
+  readonly investments?: number;
 }
 
 const appSlice = createSlice({
