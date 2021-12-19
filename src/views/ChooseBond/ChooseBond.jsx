@@ -47,7 +47,6 @@ function ChooseBond() {
   const marketPrice = useSelector(state => {
     return state.app.marketPrice;
   });
-
   const investments = useSelector(state => {
     return state.app.investments;
   });
@@ -129,37 +128,6 @@ function ChooseBond() {
                   </Typography>
                 </Box>
               </Grid>
-
-              {/* <Grid item xs={6}>
-                <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
-                  <Typography variant="h5" color="textSecondary">
-                    Treasury Balance
-                  </Typography>
-                  <Typography variant="h4">
-                    {isAppLoading ? (
-                      <Skeleton width="180px" />
-                    ) : (
-                      new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                        maximumFractionDigits: 0,
-                        minimumFractionDigits: 0,
-                      }).format(treasuryBalance)
-                    )}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item xs={6} className={`hec-price`}>
-                <Box textAlign={`${isVerySmallScreen ? "right" : "center"}`}>
-                  <Typography variant="h5" color="textSecondary">
-                    HEC Price
-                  </Typography>
-                  <Typography variant="h4">
-                    {isAppLoading ? <Skeleton width="100px" /> : formatCurrency(marketPrice, 2)}
-                  </Typography>
-                </Box>
-              </Grid> */}
             </Grid>
 
             {!isSmallScreen && (

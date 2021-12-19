@@ -34,9 +34,12 @@ import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
+import { RariProvider } from "./fuse-sdk/helpers/RariContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Borrow from "./views/Borrow/Borrow";
 import Calculator from "./views/Calculator/index";
 
-const drawerWidth = 280;
+const drawerWidth = 300;
 const transitionDuration = 969;
 
 const useStyles = makeStyles(theme => ({
@@ -92,6 +95,7 @@ function App() {
   const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   let { bonds } = useBonds();
   bonds = bonds.concat([hec_dai, usdc4, mim4, dai4]);
+
   async function loadDetails(whichDetails) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -125,7 +129,7 @@ function App() {
     loadProvider => {
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
       bonds.map(bond => {
-        dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
+        dispatch(calculateUserBondDetails({ address, bond, provider: loadProvider, networkID: chainID }));
       });
     },
     [connected],
@@ -262,6 +266,10 @@ function App() {
                 );
               })}
               <ChooseBond />
+            </Route>
+
+            <Route path="/bank">
+              <Borrow poolId={6} />
             </Route>
 
             <Route component={NotFound} />
