@@ -47,21 +47,23 @@ function ChooseBond() {
   const marketPrice = useSelector(state => {
     return state.app.marketPrice;
   });
-  const investments = useSelector(state => {
-    return state.app.investments;
-  });
+  const investments =
+    useSelector(state => {
+      return state.app.investments;
+    }) ?? 0;
 
-  const treasuryBalance = useSelector(state => {
-    if (state.bonding.loading == false) {
-      let tokenBalances = 0;
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
-          tokenBalances += state.bonding[bond].purchased;
+  const treasuryBalance =
+    useSelector(state => {
+      if (state.bonding.loading == false) {
+        let tokenBalances = 0;
+        for (const bond in allBondsMap) {
+          if (state.bonding[bond]) {
+            tokenBalances += state.bonding[bond].purchased;
+          }
         }
+        return tokenBalances;
       }
-      return tokenBalances;
-    }
-  });
+    }) ?? 0;
 
   return (
     <>
@@ -93,7 +95,7 @@ function ChooseBond() {
                         currency: "USD",
                         maximumFractionDigits: 0,
                         minimumFractionDigits: 0,
-                      }).format(treasuryBalance)
+                      }).format(treasuryBalance + investments)
                     )}
                   </Typography>
                 </Box>
