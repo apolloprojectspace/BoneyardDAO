@@ -23,19 +23,19 @@ export default class JumpRateModel {
       JSON.parse(contracts["contracts/JumpRateModel.sol:JumpRateModel"].abi),
       provider,
     );
-    this.baseRatePerBlock = ethers.BigNumber.from(await contract.baseRatePerBlock());
-    this.multiplierPerBlock = ethers.BigNumber.from(await contract.multiplierPerBlock());
-    this.jumpMultiplierPerBlock = ethers.BigNumber.from(await contract.jumpMultiplierPerBlock());
-    this.kink = ethers.BigNumber.from(await contract.kink());
+    this.baseRatePerBlock = Number(await contract.baseRatePerBlock());
+    this.multiplierPerBlock = Number(await contract.multiplierPerBlock());
+    this.jumpMultiplierPerBlock = Number(await contract.jumpMultiplierPerBlock());
+    this.kink = Number(await contract.kink());
 
     contract = new ethers.Contract(
       assetAddress,
       JSON.parse(contracts["contracts/CTokenInterfaces.sol:CTokenInterface"].abi),
       provider,
     );
-    this.reserveFactorMantissa = ethers.BigNumber.from(await contract.reserveFactorMantissa());
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(await contract.adminFeeMantissa()));
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(await contract.fuseFeeMantissa()));
+    this.reserveFactorMantissa = Number(await contract.reserveFactorMantissa());
+    this.reserveFactorMantissa += Number(await contract.adminFeeMantissa());
+    this.reserveFactorMantissa += Number(await contract.fuseFeeMantissa());
 
     this.initialized = true;
   }
@@ -46,14 +46,14 @@ export default class JumpRateModel {
       JSON.parse(contracts["contracts/JumpRateModel.sol:JumpRateModel"].abi),
       provider,
     );
-    this.baseRatePerBlock = ethers.BigNumber.from(await contract.baseRatePerBlock());
-    this.multiplierPerBlock = ethers.BigNumber.from(await contract.multiplierPerBlock());
-    this.jumpMultiplierPerBlock = ethers.BigNumber.from(await contract.jumpMultiplierPerBlock());
-    this.kink = ethers.BigNumber.from(await contract.kink());
+    this.baseRatePerBlock = Number(await contract.baseRatePerBlock());
+    this.multiplierPerBlock = Number(await contract.multiplierPerBlock());
+    this.jumpMultiplierPerBlock = Number(await contract.jumpMultiplierPerBlock());
+    this.kink = Number(await contract.kink());
 
-    this.reserveFactorMantissa = ethers.BigNumber.from(reserveFactorMantissa);
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(adminFeeMantissa));
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(fuseFeeMantissa));
+    this.reserveFactorMantissa = Number(reserveFactorMantissa);
+    this.reserveFactorMantissa += Number(adminFeeMantissa);
+    this.reserveFactorMantissa += Number(fuseFeeMantissa);
 
     this.initialized = true;
   }
@@ -67,14 +67,14 @@ export default class JumpRateModel {
     adminFeeMantissa,
     fuseFeeMantissa,
   ) {
-    this.baseRatePerBlock = ethers.BigNumber.from(baseRatePerBlock);
-    this.multiplierPerBlock = ethers.BigNumber.from(multiplierPerBlock);
-    this.jumpMultiplierPerBlock = ethers.BigNumber.from(jumpMultiplierPerBlock);
-    this.kink = ethers.BigNumber.from(kink);
+    this.baseRatePerBlock = Number(baseRatePerBlock);
+    this.multiplierPerBlock = Number(multiplierPerBlock);
+    this.jumpMultiplierPerBlock = Number(jumpMultiplierPerBlock);
+    this.kink = Number(kink);
 
-    this.reserveFactorMantissa = ethers.BigNumber.from(reserveFactorMantissa);
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(adminFeeMantissa));
-    this.reserveFactorMantissa.add(ethers.BigNumber.from(fuseFeeMantissa));
+    this.reserveFactorMantissa = Number(reserveFactorMantissa);
+    this.reserveFactorMantissa += Number(adminFeeMantissa);
+    this.reserveFactorMantissa += Number(fuseFeeMantissa);
 
     this.initialized = true;
   }
@@ -82,21 +82,21 @@ export default class JumpRateModel {
   getBorrowRate(utilizationRate) {
     if (!this.initialized) throw new Error("Interest rate model class not initialized.");
 
-    if (utilizationRate.lte(this.kink)) {
-      return utilizationRate.mul(this.multiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(this.baseRatePerBlock);
+    if (utilizationRate <= this.kink) {
+      return (utilizationRate * this.multiplierPerBlock) / 1e18 + this.baseRatePerBlock;
     } else {
-      const normalRate = this.kink.mul(this.multiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(this.baseRatePerBlock);
-      const excessUtil = utilizationRate.sub(this.kink);
-      return excessUtil.mul(this.jumpMultiplierPerBlock).div(ethers.BigNumber.from(10).pow(18)).add(normalRate);
+      const normalRate = (this.kink * this.multiplierPerBlock) / 1e18 + this.baseRatePerBlock;
+      const excessUtil = utilizationRate - this.kink;
+      return (excessUtil * this.jumpMultiplierPerBlock) / 1e18 + normalRate;
     }
   }
 
   getSupplyRate(utilizationRate) {
     if (!this.initialized) throw new Error("Interest rate model class not initialized.");
 
-    const oneMinusReserveFactor = ethers.BigNumber.from(10).pow(18).sub(this.reserveFactorMantissa);
+    const oneMinusReserveFactor = 1e18 - this.reserveFactorMantissa;
     const borrowRate = this.getBorrowRate(utilizationRate);
-    const rateToPool = borrowRate.mul(oneMinusReserveFactor).div(ethers.BigNumber.from(10).pow(18));
-    return utilizationRate.mul(rateToPool).div(ethers.BigNumber.from(10).pow(18));
+    const rateToPool = (borrowRate * oneMinusReserveFactor) / 1e18;
+    return (utilizationRate * rateToPool) / 1e18;
   }
 }

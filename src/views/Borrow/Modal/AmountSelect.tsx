@@ -33,6 +33,7 @@ import { ReactComponent as ArrowUp } from "../../../assets/icons/arrow-up.svg";
 import { useDispatch } from "react-redux";
 import { error } from "../../../slices/MessagesSlice";
 import { createComptroller } from "src/fuse-sdk/helpers/createComptroller";
+import Big from "big.js";
 
 enum UserAction {
   NO_ACTION,
@@ -87,7 +88,7 @@ export function AmountSelect({
 
   const [userEnteredAmount, _setUserEnteredAmount] = useState("");
 
-  const [amount, _setAmount] = useState<BigNumber | null>(() => BigNumber.from(0));
+  const [amount, _setAmount] = useState<Big>(Big(0));
 
   const onToggleCollateral = async () => {
     const comptroller = createComptroller(comptrollerAddress, fuse);
@@ -124,18 +125,18 @@ export function AmountSelect({
 
     try {
       // Try to set the amount to BigNumber(newAmount):
-      const bigAmount = BigNumber.from(newAmount);
-      _setAmount(bigAmount.mul(10 ** asset.underlyingDecimals));
+      const bigAmount = Big(newAmount);
+      _setAmount(bigAmount.times(10 ** asset.underlyingDecimals));
     } catch (e) {
       // If the number was invalid, set the amount to null to disable confirming:
-      _setAmount(null);
+      _setAmount(Big(0));
     }
 
     setUserAction(UserAction.NO_ACTION);
   };
 
   const { data: amountIsValid } = useQuery((amount?.toString() ?? "null") + " " + mode + " isValid", async () => {
-    if (amount === null || amount.isZero()) {
+    if (amount.eq(0)) {
       return false;
     }
 
@@ -151,7 +152,7 @@ export function AmountSelect({
 
   let depositOrWithdrawAlert = null;
 
-  if (amount === null || amount.isZero()) {
+  if (amount.eq(0)) {
     if (mode === Mode.SUPPLY) {
       depositOrWithdrawAlert = "Enter a valid amount to supply.";
     } else if (mode === Mode.BORROW) {
@@ -184,13 +185,11 @@ export function AmountSelect({
       setUserAction(UserAction.WAITING_FOR_TRANSACTIONS);
 
       const isETH = asset.underlyingToken === ETH_TOKEN_DATA.address;
-      const isRepayingMax = amount!.eq(asset.borrowBalance) && !isETH && mode === Mode.REPAY;
-
-      isRepayingMax && console.log("Using max repay!");
+      const isRepayingMax = amount.gte(asset.borrowBalance) && !isETH && mode === Mode.REPAY;
 
       const max = BigNumber.from(2).pow(256).sub(1);
 
-      const amountBN = amount;
+      const amountBN = amount.toString();
 
       const cToken = new ethers.Contract(
         asset.cToken,
@@ -310,7 +309,6 @@ export function AmountSelect({
                 fullWidth
                 value={userEnteredAmount}
                 onChange={e => updateAmount(e.target.value)}
-                // startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 labelWidth={55}
                 endAdornment={
                   <InputAdornment position="end">
@@ -323,7 +321,7 @@ export function AmountSelect({
 
           <StatsColumn
             symbol={tokenData?.symbol ?? asset.underlyingSymbol}
-            amount={amount ? parseInt(amount.toNumber().toFixed(0)) : 0}
+            amount={amount ? Number(amount.toNumber().toFixed(0)) : 0}
             asset={asset}
             mode={mode}
             enableAsCollateral={mode === Mode.SUPPLY}

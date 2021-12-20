@@ -3,8 +3,6 @@ import { formatCurrency } from "../../helpers";
 import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useTokenData } from "../../fuse-sdk/hooks/useTokenData";
 import { convertMantissaToAPY } from "../../fuse-sdk/helpers/apyUtils";
-import { IAppData } from "src/slices/AppSlice";
-import { useSelector } from "react-redux";
 
 export function AssetSupplyRow({
   asset,
@@ -14,11 +12,6 @@ export function AssetSupplyRow({
   onClick: (asset: USDPricedFuseAsset) => void;
 }) {
   const tokenData = useTokenData(asset.underlyingToken);
-  const stakingAPY = useSelector((state: any) => {
-    return (state.app as IAppData).stakingAPY;
-  });
-  const isStakedHEC =
-    asset.underlyingToken.toLowerCase() === "0x04F2694C8fcee23e8Fd0dfEA1d4f5Bb8c352111F".toLowerCase();
   const supplyAPY = convertMantissaToAPY(asset.supplyRatePerBlock, 365);
 
   return (
@@ -41,9 +34,7 @@ export function AssetSupplyRow({
       </TableCell>
       <TableCell align={"right"}>
         <>
-          <Typography>
-            {isStakedHEC && stakingAPY ? Number((stakingAPY * 100).toFixed(1)).toLocaleString() : supplyAPY.toFixed(2)}%
-          </Typography>
+          <Typography>{supplyAPY.toFixed(2)}%</Typography>
 
           <Tooltip
             arrow

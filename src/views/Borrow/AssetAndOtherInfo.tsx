@@ -1,20 +1,10 @@
 import { Paper, Box, Typography, Select, Grid, useMediaQuery, useTheme, CircularProgress } from "@material-ui/core";
-import React, { useState } from "react";
-import { shortUsdFormatter } from "./Borrow";
-import CaptionedStat from "./CaptionedStat";
-import {
-  LineChart,
-  Line,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceDot,
-  ReferenceLine,
-} from "recharts";
+import { useState } from "react";
+import { LineChart, Line, Tooltip, ResponsiveContainer, ReferenceDot, ReferenceLine } from "recharts";
 import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { useTokenData } from "../../fuse-sdk/hooks/useTokenData";
 import { useRari } from "../../fuse-sdk/helpers/RariContext";
 import { useQuery } from "react-query";
-import { ethers } from "ethers";
 import JumpRateModel from "../../fuse-sdk/irm/JumpRateModel";
 
 const CustomTooltip = (props: any) => {
@@ -61,7 +51,6 @@ export function AssetAndOtherInfo({ assets }: { assets: USDPricedFuseAsset[] }) 
     return convertIRMtoCurve(interestRateModel);
   });
 
-  const isSmallScreen = useMediaQuery("(max-width: 600px)");
   const theme = useTheme();
 
   const borrowLineColor = theme.palette.type === "light" ? "#2D3748" : "#fff";
@@ -92,90 +81,40 @@ export function AssetAndOtherInfo({ assets }: { assets: USDPricedFuseAsset[] }) 
         data.data === null ? (
           <h4>No graph is available for this asset's interest curves.</h4>
         ) : (
-          <Grid container spacing={2} direction="column">
-            <Grid item>
-              <ResponsiveContainer minWidth={300} minHeight={200}>
-                <LineChart data={data.data}>
-                  <Tooltip content={props => <CustomTooltip {...props} />} />
-                  <Line
-                    type="monotone"
-                    dataKey={"borrow"}
-                    dot={false}
-                    strokeWidth={3}
-                    stroke={borrowLineColor}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey={"supply"}
-                    dot={false}
-                    strokeWidth={3}
-                    stroke={selectedTokenData?.color || "#A6A6A6"}
-                  />
+          <ResponsiveContainer minWidth={300} minHeight={200}>
+            <LineChart data={data.data}>
+              <Tooltip content={props => <CustomTooltip {...props} />} />
+              <Line type="monotone" dataKey={"borrow"} dot={false} strokeWidth={3} stroke={borrowLineColor} />
+              <Line
+                type="monotone"
+                dataKey={"supply"}
+                dot={false}
+                strokeWidth={3}
+                stroke={selectedTokenData?.color || "#A6A6A6"}
+              />
 
-                  <ReferenceLine
-                    x={selectedAssetUtilization}
-                    label={{ value: "Current Utilization", fill: currentUtilizationColor, position: "insideTop" }}
-                    stroke={currentUtilizationColor}
-                    strokeDasharray="3 3"
-                  />
-                  <ReferenceDot
-                    r={4}
-                    x={selectedAssetUtilization}
-                    y={data.data[selectedAssetUtilization].borrow}
-                    stroke={borrowLineColor}
-                    fill={borrowLineColor}
-                  />
-                  <ReferenceDot
-                    r={4}
-                    x={selectedAssetUtilization}
-                    y={data.data[selectedAssetUtilization].supply}
-                    stroke={selectedTokenData?.color || "#A6A6A6"}
-                    fill={selectedTokenData?.color || "#A6A6A6"}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </Grid>
-            <Grid item>
-              <Grid container spacing={3}>
-                <Grid item xs={6}>
-                  <CaptionedStat
-                    stat={(selectedAsset.collateralFactor / 1e16).toFixed(0) + "%"}
-                    caption={"Collateral Factor"}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <CaptionedStat
-                    stat={(selectedAsset.reserveFactor / 1e16).toFixed(0) + "%"}
-                    caption={"Reserve Factor"}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container spacing={3}>
-                <Grid item xs={4}>
-                  <CaptionedStat stat={shortUsdFormatter(selectedAsset.totalSupplyUSD)} caption={"Total Supplied"} />
-                </Grid>
-
-                {!isSmallScreen && (
-                  <Grid item xs={4}>
-                    <CaptionedStat
-                      stat={
-                        selectedAsset.totalSupplyUSD.toString() === "0"
-                          ? "0%"
-                          : ((selectedAsset.totalBorrowUSD / selectedAsset.totalSupplyUSD) * 100).toFixed(0) + "%"
-                      }
-                      caption={"Utilization"}
-                    />
-                  </Grid>
-                )}
-                <Grid item xs={4}>
-                  {/* TODO Remove? */}
-                  <CaptionedStat stat={shortUsdFormatter(selectedAsset.totalBorrowUSD)} caption={"Total Borrowed"} />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+              <ReferenceLine
+                x={selectedAssetUtilization}
+                label={{ value: "Current Utilization", fill: currentUtilizationColor, position: "insideTop" }}
+                stroke={currentUtilizationColor}
+                strokeDasharray="3 3"
+              />
+              <ReferenceDot
+                r={4}
+                x={selectedAssetUtilization}
+                y={data.data[selectedAssetUtilization].borrow}
+                stroke={borrowLineColor}
+                fill={borrowLineColor}
+              />
+              <ReferenceDot
+                r={4}
+                x={selectedAssetUtilization}
+                y={data.data[selectedAssetUtilization].supply}
+                stroke={selectedTokenData?.color || "#A6A6A6"}
+                fill={selectedTokenData?.color || "#A6A6A6"}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         )
       ) : (
         <Box display="flex" justifyContent="center" alignItems="center">
@@ -204,24 +143,10 @@ export const convertIRMtoCurve = (interestRateModel: JumpRateModel) => {
 
   for (var i = 0; i <= 100; i++) {
     const supplyLevel =
-      (Math.pow(
-        (interestRateModel.getSupplyRate(ethers.BigNumber.from(i).mul(ethers.BigNumber.from(10).pow(16))) / 1e18) *
-          (blocksPerMin * 60 * 24) +
-          1,
-        365,
-      ) -
-        1) *
-      100;
+      (Math.pow((interestRateModel.getSupplyRate(i * 1e16) / 1e18) * (blocksPerMin * 60 * 24) + 1, 365) - 1) * 100;
 
     const borrowLevel =
-      (Math.pow(
-        (interestRateModel.getBorrowRate(ethers.BigNumber.from(i).mul(ethers.BigNumber.from(10).pow(16))) / 1e18) *
-          (blocksPerMin * 60 * 24) +
-          1,
-        365,
-      ) -
-        1) *
-      100;
+      (Math.pow((interestRateModel.getBorrowRate(i * 1e16) / 1e18) * (blocksPerMin * 60 * 24) + 1, 365) - 1) * 100;
 
     supplierRates.push({ x: i, y: supplyLevel });
     borrowerRates.push({ x: i, y: borrowLevel });

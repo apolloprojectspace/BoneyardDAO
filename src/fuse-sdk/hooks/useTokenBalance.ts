@@ -5,8 +5,9 @@ import ERC20ABI from "../../abi/ERC20.json";
 import { ETH_TOKEN_DATA } from "./useTokenData";
 import { Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
+import Big from "big.js";
 
-export const fetchTokenBalance = async (tokenAddress: string, provider: Provider, address: string) => {
+export const fetchTokenBalance = async (tokenAddress: string, provider: Provider, address: string): Promise<Big> => {
   let stringBalance;
 
   if (tokenAddress === ETH_TOKEN_DATA.address || tokenAddress === "NO_ADDRESS_HERE_USE_WETH_FOR_ADDRESS") {
@@ -17,7 +18,7 @@ export const fetchTokenBalance = async (tokenAddress: string, provider: Provider
     stringBalance = await contract.balanceOf(address);
   }
 
-  return ethers.BigNumber.from(stringBalance);
+  return Big(stringBalance);
 };
 
 export function useTokenBalance(tokenAddress: string, customAddress?: string) {

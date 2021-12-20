@@ -18,17 +18,17 @@ export default class WhitePaperInterestRateModel {
       JSON.parse(contracts["contracts/WhitePaperInterestRateModel.sol:WhitePaperInterestRateModel"].abi),
       provider,
     );
-    this.baseRatePerBlock = ethers.BigNumber.from(await contract.baseRatePerBlock());
-    this.multiplierPerBlock = ethers.BigNumber.from(await contract.multiplierPerBlock());
+    this.baseRatePerBlock = Number(await contract.baseRatePerBlock());
+    this.multiplierPerBlock = Number(await contract.multiplierPerBlock());
 
     contract = new ethers.Contract(
       assetAddress,
       JSON.parse(contracts["contracts/CTokenInterfaces.sol:CTokenInterface"].abi),
       provider,
     );
-    this.reserveFactorMantissa = ethers.BigNumber.from(await contract.reserveFactorMantissa());
-    this.reserveFactorMantissa.iadd(ethers.BigNumber.from(await contract.adminFeeMantissa()));
-    this.reserveFactorMantissa.iadd(ethers.BigNumber.from(await contract.fuseFeeMantissa()));
+    this.reserveFactorMantissa = Number(await contract.reserveFactorMantissa());
+    this.reserveFactorMantissa += Number(await contract.adminFeeMantissa());
+    this.reserveFactorMantissa += Number(await contract.fuseFeeMantissa());
 
     this.initialized = true;
   }
@@ -61,7 +61,7 @@ export default class WhitePaperInterestRateModel {
 
   getBorrowRate(utilizationRate) {
     if (!this.initialized) throw new Error("Interest rate model class not initialized.");
-    return utilizationRate.mul(this.multiplierPerBlock).div(1e18).add(this.baseRatePerBlock);
+    return (utilizationRate * this.multiplierPerBlock) / 1e18 + this.baseRatePerBlock;
   }
 
   // getSupplyRate(utilizationRate) {

@@ -3,10 +3,8 @@ import { USDPricedFuseAsset } from "../../../fuse-sdk/helpers/fetchFusePoolData"
 import { formatCurrency } from "../../../helpers";
 import { Mode } from "../../../fuse-sdk/helpers/fetchMaxAmount";
 import { convertMantissaToAPR, convertMantissaToAPY } from "../../../fuse-sdk/helpers/apyUtils";
-import { useBorrowLimit } from "../../../fuse-sdk/hooks/useBorrowLimit";
 import { useRari } from "src/fuse-sdk/helpers/RariContext";
 import { useQuery, UseQueryResult } from "react-query";
-import { BigNumber, ethers } from "ethers";
 
 export const StatsColumn = ({
   mode,
@@ -28,7 +26,7 @@ export const StatsColumn = ({
   const { data: updatedAsset = asset }: UseQueryResult<USDPricedFuseAsset> = useQuery(
     `${mode} ${JSON.stringify(asset)} ${amount}`,
     async () => {
-      const ethPrice = Number(ethers.utils.formatEther(await fuse.getEthUsdPriceBN()));
+      const ethPrice = Number(await fuse.getEthUsdPriceBN());
 
       const interestRateModel = await fuse.getInterestRateModel(asset.cToken);
 
@@ -43,7 +41,7 @@ export const StatsColumn = ({
 
           totalSupply,
           supplyRatePerBlock: interestRateModel.getSupplyRate(
-            totalSupply > 0 ? BigNumber.from(10).pow(18).mul(asset.totalBorrow).div(totalSupply) : BigNumber.from(0),
+            totalSupply > 0 ? (1e18 * asset.totalBorrow) / totalSupply : 0,
           ),
         };
       } else if (mode === Mode.WITHDRAW) {
@@ -59,7 +57,7 @@ export const StatsColumn = ({
 
           totalSupply,
           supplyRatePerBlock: interestRateModel.getSupplyRate(
-            totalSupply > 0 ? BigNumber.from(10).pow(18).mul(asset.totalBorrow).div(totalSupply) : BigNumber.from(0),
+            totalSupply > 0 ? (1e18 * asset.totalBorrow) / totalSupply : 0,
           ),
         };
       } else if (mode === Mode.BORROW) {
@@ -75,9 +73,7 @@ export const StatsColumn = ({
 
           totalBorrow,
           borrowRatePerBlock: interestRateModel.getBorrowRate(
-            asset.totalSupply > 0
-              ? BigNumber.from(10).pow(18).mul(totalBorrow).div(asset.totalSupply)
-              : BigNumber.from(0),
+            asset.totalSupply > 0 ? (1e18 * totalBorrow) / asset.totalSupply : 0,
           ),
         };
       } else if (mode === Mode.REPAY) {
@@ -93,9 +89,7 @@ export const StatsColumn = ({
 
           totalBorrow,
           borrowRatePerBlock: interestRateModel.getBorrowRate(
-            asset.totalSupply > 0
-              ? BigNumber.from(10).pow(18).mul(totalBorrow).div(asset.totalSupply)
-              : BigNumber.from(0),
+            asset.totalSupply > 0 ? (1e18 * totalBorrow) / asset.totalSupply : 0,
           ),
         };
       }
@@ -104,9 +98,12 @@ export const StatsColumn = ({
 
   const updatedBorrowLimit = enableAsCollateral
     ? updatedAsset.supplyBalanceUSD * (updatedAsset.collateralFactor / 1e18)
-    : borrowLimit -
-      asset.supplyBalanceUSD * (asset.collateralFactor / 1e18) +
-      updatedAsset.supplyBalanceUSD * (updatedAsset.collateralFactor / 1e18);
+    : Math.max(
+        0,
+        borrowLimit -
+          asset.supplyBalanceUSD * (asset.collateralFactor / 1e18) +
+          updatedAsset.supplyBalanceUSD * (updatedAsset.collateralFactor / 1e18),
+      );
 
   const isSupplyingOrWithdrawing = mode === Mode.SUPPLY || mode === Mode.WITHDRAW;
 
@@ -133,10 +130,10 @@ export const StatsColumn = ({
                 {isSupplyingOrWithdrawing ? (
                   <>
                     {" → "}
-                    {formatCurrency(updatedAsset!.supplyBalance / 10 ** updatedAsset!.underlyingDecimals, 2).replace(
-                      "$",
-                      "",
-                    )}
+                    {formatCurrency(
+                      Math.max(0, updatedAsset.supplyBalance) / 10 ** updatedAsset.underlyingDecimals,
+                      2,
+                    ).replace("$", "")}
                   </>
                 ) : null}{" "}
                 {symbol}
@@ -179,7 +176,7 @@ export const StatsColumn = ({
                 {!isSupplyingOrWithdrawing ? (
                   <>
                     {" → "}
-                    {formatCurrency(updatedAsset.borrowBalanceUSD, 2)}
+                    {formatCurrency(Math.max(0, updatedAsset.borrowBalanceUSD), 2)}
                   </>
                 ) : null}
               </>

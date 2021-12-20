@@ -23,9 +23,11 @@ import { USDPricedFuseAsset } from "../../fuse-sdk/helpers/fetchFusePoolData";
 import { PoolModal } from "./Modal/PoolModal";
 import { Mode } from "../../fuse-sdk/helpers/fetchMaxAmount";
 import { useBorrowLimit } from "src/fuse-sdk/hooks/useBorrowLimit";
+import { useWeb3Context } from "../../hooks/web3Context";
 
 export default function Borrow({ poolId }: { poolId: number }) {
   const data = useFusePoolData(poolId);
+  const { connect, connected } = useWeb3Context();
   const {
     totalSuppliedUSD,
     totalBorrowedUSD,
@@ -49,11 +51,18 @@ export default function Borrow({ poolId }: { poolId: number }) {
       : (((totalBorrowedUSD ?? 0) / totalSuppliedUSD) * 100).toFixed(2) + "%";
 
   const [selectedAsset, setSelectedAsset] = useState<USDPricedFuseAsset | null>(null);
-  const [defaultMode, setDefaultMode] = useState(Mode.SUPPLY)
-  const handleOpen = useCallback((asset, mode) => {
-    setSelectedAsset(asset)
-    setDefaultMode(mode)
-  }, []);
+  const [defaultMode, setDefaultMode] = useState(Mode.SUPPLY);
+  const handleOpen = useCallback(
+    (asset, mode) => {
+      if (!connected) {
+        connect();
+        return;
+      }
+      setSelectedAsset(asset);
+      setDefaultMode(mode);
+    },
+    [connect, connected],
+  );
   const handleClose = useCallback(() => setSelectedAsset(null), []);
 
   return (
@@ -144,7 +153,7 @@ function SupplyList({
   nonSuppliedAssets: USDPricedFuseAsset[];
   onClick: (asset: USDPricedFuseAsset, mode: Mode) => void;
 }) {
-  const handleClick = useCallback(( asset) => onClick(asset, Mode.SUPPLY), [])
+  const handleClick = useCallback(asset => onClick(asset, Mode.SUPPLY), []);
   return (
     <>
       <Typography variant="h5">Your Supply Balance: {formatCurrency(totalSupplyBalanceUSD, 2)}</Typography>
@@ -183,7 +192,7 @@ function BorrowList({
   totalBorrowBalanceUSD: number;
   onClick: (asset: USDPricedFuseAsset, mode: Mode) => void;
 }) {
-  const handleClick = useCallback(( asset) => onClick(asset, Mode.BORROW), [])
+  const handleClick = useCallback(asset => onClick(asset, Mode.BORROW), []);
   return (
     <>
       <Typography variant="h5"> Your Borrow Balance: {formatCurrency(totalBorrowBalanceUSD, 2)}</Typography>
@@ -203,7 +212,9 @@ function BorrowList({
             ))}
 
             {nonBorrowedAssets.map(asset =>
-              asset.isPaused ? null : <AssetBorrowRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />,
+              asset.isPaused ? null : (
+                <AssetBorrowRow key={asset.underlyingToken} asset={asset} onClick={handleClick} />
+              ),
             )}
           </TableBody>
         </Table>
@@ -229,7 +240,7 @@ function TotalCard({ title, value }: { title: string; value?: number | string | 
             }).format(value)
           )
         ) : (
-          <Skeleton width="150px"></Skeleton>
+          <Skeleton width="150px" />
         )}
       </Typography>
     </>

@@ -213,7 +213,6 @@ export default class Fuse {
   constructor(web3Provider) {
     this.provider = web3Provider;
 
-    // TODO Why???
     this.getEthUsdPriceBN = async function () {
       return (await axios.get("https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=ethereum")).data
         .ethereum.usd;
@@ -246,35 +245,6 @@ export default class Fuse {
     this.compoundContracts = contracts;
     // this.openOracleContracts = openOracleContracts;
     this.oracleContracts = oracleContracts;
-
-    // this.getCreate2Address = function (creatorAddress, salts, byteCodeHash) {
-    //   // TODO utils
-    //   return `0x${this.web3.utils
-    //     .sha3(
-    //       `0x${["ff", creatorAddress, this.web3.utils.soliditySha3(...salts), byteCodeHash]
-    //         .map(x => x.replace(/0x/, ""))
-    //         .join("")}`,
-    //     )
-    //     .slice(-40)}`.toLowerCase();
-    // };
-
-    /* this.identifyPriceOracle = async function (priceOracleAddress) {
-      // Get PriceOracle type from runtime bytecode hash
-      const runtimeBytecodeHash = Web3.utils.sha3(await this.web3.eth.getCode(priceOracleAddress));
-
-      for (const oracleContractName of Object.keys(Fuse.PRICE_ORACLE_RUNTIME_BYTECODE_HASHES)) {
-        const valueOrArr = Fuse.PRICE_ORACLE_RUNTIME_BYTECODE_HASHES[oracleContractName];
-
-        if (Array.isArray(valueOrArr)) {
-          for (const potentialHash of valueOrArr) console.log("ISARRAY", { potentialHash, runtimeBytecodeHash });
-          if (runtimeBytecodeHash == potentialHash) return oracleContractName;
-        } else {
-          if (runtimeBytecodeHash == valueOrArr) return oracleContractName;
-        }
-      }
-
-      return null;
-    }; */
 
     this.identifyInterestRateModel = async function (interestRateModelAddress) {
       // Get interest rate model type from runtime bytecode hash and init class

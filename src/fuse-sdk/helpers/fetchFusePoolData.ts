@@ -67,8 +67,6 @@ export interface FusePoolData {
   totalSupplyBalanceUSD: any;
   totalBorrowBalanceUSD: any;
   id?: number;
-  admin: string;
-  isAdminWhitelisted: boolean;
 }
 
 export enum FusePoolMetric {
@@ -106,11 +104,6 @@ export const fetchFusePoolData = async (
 
   let oracleModel: string | undefined = await fuse.getPriceOracle(oracle);
 
-  const admin = await comptrollerContract.admin();
-
-  // Whitelisted (Verified)
-  const isAdminWhitelisted = await fuse.contracts.FusePoolDirectory.adminWhitelist(admin);
-
   for (let i = 0; i < assets.length; i++) {
     let asset = assets[i];
 
@@ -147,7 +140,6 @@ export const fetchFusePoolData = async (
     isPrivate,
     oracle,
     oracleModel,
-    admin,
 
     totalLiquidityUSD,
 
@@ -156,6 +148,5 @@ export const fetchFusePoolData = async (
 
     totalSupplyBalanceUSD,
     totalBorrowBalanceUSD,
-    isAdminWhitelisted,
   };
 };
