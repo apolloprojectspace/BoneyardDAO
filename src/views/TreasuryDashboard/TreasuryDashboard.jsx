@@ -207,7 +207,8 @@ function TreasuryDashboard() {
                     "treasuryDaiMarketValue",
                     "treasuryUsdcMarketValue",
                     "treasuryMIMMarketValue",
-                    "treasuryFRAXRiskFreeValue",
+                    "treasuryFRAXMarketValue",
+                    "treasuryGOHMMarketValue",
                     "treasuryWFTMMarketValue",
                   ]}
                   stopColor={[
@@ -215,6 +216,7 @@ function TreasuryDashboard() {
                     ["#768299", "#98B3E9"],
                     ["#8351ff", "#b151ff"],
                     ["#c6c6c6", "#545454"],
+                    ["#ffffff", "#d5d5d5"],
                     ["#22d5e7", "#18919d"],
                   ]}
                   headerText="Market Value of Treasury Assets"
@@ -234,12 +236,19 @@ function TreasuryDashboard() {
                   type="stack"
                   data={data}
                   format="currency"
-                  dataKey={["treasuryDaiRiskFreeValue", "treasuryUsdcRiskFreeValue", "treasuryMIMRiskFreeValue", "treasuryFRAXRiskFreeValue"]}
+                  dataKey={[
+                    "treasuryDaiRiskFreeValue",
+                    "treasuryUsdcRiskFreeValue",
+                    "treasuryMIMRiskFreeValue",
+                    "treasuryFRAXRiskFreeValue",
+                    "treasuryGOHMRiskFreeValue",
+                  ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
                     ["#768299", "#98B3E9"],
                     ["#8351ff", "#b151ff"],
                     ["#c6c6c6", "#545454"],
+                    ["#ffffff", "#d5d5d5"],
                     ["#22d5e7", "#18919d"],
                   ]}
                   headerText="Risk Free Value of Treasury Assets"
