@@ -223,7 +223,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     }, 1);
   }, [provider, web3Modal, connected]);
 
-  const scanner = getScanner(chainID);
   const onChainProvider = useMemo(
 
     () => ({ connect, disconnect, hasCachedProvider, provider, connected, address, chainID, vchainID, web3Modal, uri, checkWrongNetwork, }),

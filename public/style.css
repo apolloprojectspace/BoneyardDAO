@@ -200,8 +200,7 @@
 	color: #161616;
 }
 
-.app.light #bond-view .MuiBackdrop-root .hec-card,
-.app.light #borrow-view .MuiBackdrop-root .hec-card {
+.app.light #bond-view .MuiBackdrop-root .hec-card {
 	background: #FFF5E6;
 	border: 1px solid #000000;
 }
