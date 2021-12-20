@@ -268,10 +268,6 @@ function App() {
               <ChooseBond />
             </Route>
 
-            <Route path="/bank">
-              <Borrow poolId={6} />
-            </Route>
-
             <Route component={NotFound} />
           </Switch>
         </div>

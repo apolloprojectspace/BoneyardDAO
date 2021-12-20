@@ -22,7 +22,7 @@ import { abi as ReserveHecUsdcContract } from "src/abi/reserves/HecUsdc.json";
 import { abi as FtmBondContract } from "src/abi/bonds/FtmContract.json";
 import { abi as FtmBondContractV2 } from "src/abi/bonds/FtmContractV2.json";
 
-import { abi as ierc20Abi } from "src/abi/IERC20.json";
+import ierc20Abi from "src/abi/ERC20.json";
 import { DEFAULT_DEPRECATION_REASON } from "graphql";
 
 // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions

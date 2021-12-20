@@ -7,7 +7,6 @@ import { EnvHelper } from "../helpers/Environment";
 import { NodeHelper } from "src/helpers/NodeHelper";
 import { error } from "src/slices/MessagesSlice";
 import { DEFAULT_NETWORK, messages } from "src/constants";
-import { swithNetwork } from "src/helpers/SwitchNetwork";
 
 /**
  * kept as function to mimic `getMainnetURI()`
@@ -43,7 +42,7 @@ function getScanner(chainId: number): string {
       return "https://ftmscan.com";
     }
     default: {
-      return "https://etherscan.io";
+      return "https://ftmscan.com";
     }
   }
 }
@@ -60,7 +59,8 @@ type onChainProvider = {
   connected: Boolean;
   web3Modal: Web3Modal;
   chainID: number;
-  scanner: string;
+  vchainID: number;
+  scanner?: string;
 };
 
 export type Web3ContextData = {
@@ -92,7 +92,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   // NOTE (appleseed): if you are testing on rinkeby you need to set chainId === 4 as the default for non-connected wallet testing...
   // ... you also need to set getTestnetURI() as the default uri state below
   const [chainID, setChainID] = useState(250);
-  const [othechain, setOtherChain] = useState(0);
+  const [vchainID, setVChain] = useState(250);
   const [address, setAddress] = useState("");
 
   const [uri, setUri] = useState(getMainnetURI());
@@ -142,7 +142,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
 
       rawProvider.on("chainChanged", async (chain: number) => {
         _checkNetwork(chain);
-        setOtherChain(chain);
+        setVChain(chain);
         setTimeout(() => window.location.reload(), 1);
       });
 
@@ -185,13 +185,12 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
     _initListeners(rawProvider);
     const connectedProvider = new Web3Provider(rawProvider, "any");
     const chainId = await connectedProvider.getNetwork().then(network => network.chainId);
-    setOtherChain(chainId);
+    setVChain(chainId);
     const connectedAddress = await connectedProvider.getSigner().getAddress();
     const validNetwork = _checkNetwork(chainId);
     if (!validNetwork) {
       console.error("Wrong network, please switch to fantom");
       error("Please connect your wallet!");
-      // checkWrongNetwork();
       return;
     }
     // Save everything after we've validated the right network.
@@ -206,14 +205,12 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   }, [provider, web3Modal, connected]);
 
   const checkWrongNetwork = async (): Promise<boolean> => {
-    console.log("debug", othechain);
-    if (othechain !== 250) {
-          await swithNetwork();
-          window.location.reload();
-        return true;
+    const chainId = await provider.getNetwork().then(network => network.chainId);
+    setVChain(chainId);
+    if (chainId == 250) {
+      return false;
     }
-
-    return false;
+    return true;
   };
 
   const disconnect = useCallback(async () => {
@@ -229,8 +226,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const scanner = getScanner(chainID);
   const onChainProvider = useMemo(
 
-    () => ({ connect, disconnect, hasCachedProvider, provider, connected, address, chainID, web3Modal, uri, checkWrongNetwork, }),
-    [connect, disconnect, hasCachedProvider, provider, connected, address, chainID, web3Modal, uri],
+    () => ({ connect, disconnect, hasCachedProvider, provider, connected, address, chainID, vchainID, web3Modal, uri, checkWrongNetwork, }),
+    [connect, disconnect, hasCachedProvider, provider, connected, address, chainID, vchainID, web3Modal, uri, checkWrongNetwork],
   );
 
   useEffect(() => {

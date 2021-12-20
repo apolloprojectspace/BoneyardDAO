@@ -13979,10 +13979,10 @@ react-qr-reader@^2.2.1:
     prop-types "^15.7.2"
     webrtc-adapter "^7.2.1"
 
-react-query@^3.33.6:
-  version "3.33.6"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.33.6.tgz#12be9c59efe3b63dd1ed74204ae37ad4a19c7d77"
-  integrity sha512-prOMxzd4Utyl1AsR5PKqEeDUpx91BwJH+bm9LaQ9YooS68joGzsIDdNCe7m/lHQZI73NOqGJBPV5rFCHHwJRwQ==
+react-query@^3.34.5:
+  version "3.34.5"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.5.tgz#a145c02f58088c5c83c91697cece50e89b4dbfd8"
+  integrity sha512-qk1hYo+y90LGY5W4kNEYT5yCk8gyL1fVTMoRZfzBTaSdaZWOcdvij36MmkhIqiPdXoEt5pBvX2ejokazwq8haw==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"

@@ -55,7 +55,7 @@ function NavContent() {
               <SvgIcon
                 color="primary"
                 component={HectorIcon}
-                viewBox="0 0 151 100"
+                viewBox="0 0 161 161"
                 style={{ minWdth: "151px", minHeight: "98px", width: "151px" }}
               />
               <div className="wallet-link f-32">Hector</div>
