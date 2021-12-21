@@ -16,7 +16,6 @@ import {
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
 } from "./interfaces";
-import { segmentUA } from "../helpers/userAnalyticHelpers";
 import { messages } from "src/constants";
 import { sleep } from "src/helpers/Sleep";
 import { metamaskErrorWrap } from "src/helpers/MetamaskErrorWrap";
