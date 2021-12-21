@@ -48,7 +48,7 @@ function TreasuryDashboard() {
   });
   const backingPerHec = useSelector(state => {
     if (state.bonding.loading === false) {
-      let tokenBalances = 0;
+      let tokenBalances = state.app.investments ?? 0;
       for (const bond in allBondsMap) {
         if (state.bonding[bond]) {
           tokenBalances += state.bonding[bond].purchased;
