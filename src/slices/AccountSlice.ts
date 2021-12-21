@@ -60,7 +60,6 @@ export const loadAccountDetails = createAsyncThunk(
     const wshecContract = new ethers.Contract(addresses[networkID].WSHEC_ADDRESS as string, wsHEC, provider);
     const unwrapAllowance = await wshecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
     const wshecBalance = await wshecContract.balanceOf(address);
-    const wshecAsShec = await wshecContract.wsHECTosHEC(wshecBalance);
 
     return {
       balances: {
