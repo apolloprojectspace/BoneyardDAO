@@ -33,7 +33,6 @@ function ConnectMenu({ theme }) {
     buttonText = "Switch to Fantom";
     clickFunc = swithNetwork;
   }
-  console.log("debug c", chainId);
   
   if (pendingTransactions && pendingTransactions.length > 0) {
     buttonText = "In progress";
