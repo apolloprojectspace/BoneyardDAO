@@ -3,6 +3,7 @@ import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
+import { abi as HectorStakingv2 } from "../abi/HectorStakingv2.json";
 import { setAll } from "../helpers";
 
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
@@ -40,6 +41,8 @@ export const loadAccountDetails = createAsyncThunk(
     let unstakeAllowance = 0;
     let oldunstakeAllowance = 0;
     let daiBondAllowance = 0;
+    let depositAmount = 0;
+    let expiry = 0;
 
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
     const daiBalance = await daiContract.balanceOf(address);
@@ -61,6 +64,10 @@ export const loadAccountDetails = createAsyncThunk(
     const unwrapAllowance = await wshecContract.allowance(address, addresses[networkID].WSHEC_ADDRESS);
     const wshecBalance = await wshecContract.balanceOf(address);
 
+    const stakingContract = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStakingv2, provider,);
+    depositAmount = (await stakingContract.warmupInfo(address)).deposit;
+    expiry = (await stakingContract.warmupInfo(address)).expiry;
+
     return {
       balances: {
         dai: ethers.utils.formatEther(daiBalance),
@@ -77,6 +84,10 @@ export const loadAccountDetails = createAsyncThunk(
       wrapping: {
         hecWrap: +wrapAllowance,
         hecUnwrap: +unwrapAllowance,
+      },
+      warmup: {
+        warmupAmount: ethers.utils.formatUnits(depositAmount, "gwei"),
+        expiryBlock: expiry,
       },
       bonding: {
         daiAllowance: daiBondAllowance,

@@ -11,12 +11,12 @@ import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import { useWeb3Context, useBonds } from "src/hooks";
 import { isPendingTxn, txnButtonTextGeneralPending } from "src/slices/PendingTxnsSlice";
-import { hec_dai, mim4, usdc4, dai4 } from "src/helpers/AllBonds";
+import { dailp, mim4, usdc4, dai4, dailp4, mim4_v2, usdc4_v2, dai4_v2 } from "src/helpers/AllBonds";
 
 export function ClaimBondTableData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
-  bonds = bonds.concat([hec_dai, mim4, usdc4, dai4]);
+  bonds = bonds.concat([dailp4, mim4, usdc4, dai4, mim4_v2, usdc4_v2, dai4_v2]);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];
@@ -60,6 +60,11 @@ export function ClaimBondTableData({ userBond }) {
           <Typography variant="body1" style={{ fontSize: "16px" }}>
             {displayName ? trim(displayName, 4) : <Skeleton width={100} />}
           </Typography>
+          {bond.isOld && 
+          <Typography variant="body1" style={{fontSize: "10px", textAlign: "right"}}>
+            (OLD)
+          </Typography>
+          }
         </div>
       </TableCell>
       <TableCell align="center">
@@ -89,7 +94,7 @@ export function ClaimBondTableData({ userBond }) {
 export function ClaimBondCardData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
-  bonds = bonds.concat([hec_dai, mim4, usdc4, dai4]);
+  bonds = bonds.concat([dailp4, mim4, usdc4, dai4, mim4_v2, usdc4_v2, dai4_v2]);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];

@@ -182,3 +182,73 @@ export const changeStake = createAsyncThunk(
     return;
   },
 );
+
+export const changeForfeit = createAsyncThunk(
+  "stake/forfeit",
+  async ({ provider, address, networkID }: IActionValueAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const staking = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStaking, signer);
+    let forfeitTx;
+
+    try {
+      forfeitTx = await staking.forfeit();
+      const text = "Forfeiting";
+      const pendingTxnType = "forfeiting";
+      dispatch(fetchPendingTxns({ txnHash: forfeitTx.hash, text, type: pendingTxnType }));
+      await forfeitTx.wait();
+      dispatch(success(messages.tx_successfully_send));
+    } catch (e: any) {
+      return metamaskErrorWrap(e, dispatch);
+    } finally {
+      if (forfeitTx) {
+        dispatch(clearPendingTxn(forfeitTx.hash));
+      }
+    }
+    await sleep(7);
+    dispatch(info(messages.your_balance_update_soon));
+    await sleep(15);
+    await dispatch(loadAccountDetails({ address, networkID, provider }));
+    dispatch(info(messages.your_balance_updated));
+    return;
+  },
+);
+
+export const changeClaim = createAsyncThunk(
+  "stake/changeClaim",
+  async ({ provider, address, networkID }: IActionValueAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const staking = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStaking, signer);
+    let claimTx;
+
+    try {
+      claimTx = await staking.claim(address);
+      const text = "Claiming";
+      const pendingTxnType = "claiming";
+      dispatch(fetchPendingTxns({ txnHash: claimTx.hash, text, type: pendingTxnType }));
+      await claimTx.wait();
+      dispatch(success(messages.tx_successfully_send));
+    } catch (e: any) {
+      return metamaskErrorWrap(e, dispatch);
+    } finally {
+      if (claimTx) {
+        dispatch(clearPendingTxn(claimTx.hash));
+      }
+    }
+    await sleep(7);
+    dispatch(info(messages.your_balance_update_soon));
+    await sleep(7);
+    await dispatch(loadAccountDetails({ address, networkID, provider }));
+    dispatch(info(messages.your_balance_updated));
+    return;
+  },
+);

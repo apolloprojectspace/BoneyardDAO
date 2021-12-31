@@ -1,6 +1,7 @@
 import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { abi as MimBondContract } from "src/abi/bonds/MimContract.json";
+import { abi as Dai44v3Contract } from "src/abi/bonds/Dai44v3Contract.json";
 import { abi as ierc20Abi } from "src/abi/IERC20.json";
 import { getBondCalculator, getBondCalculator1, getgOHMBondCalculator } from "src/helpers/BondCalculator";
 import { addresses } from "src/constants";
@@ -35,9 +36,12 @@ interface BondOpts {
   bondToken: string; // Unused, but native token to buy the bond.
   isFour?: Boolean;
   isTotal?: Boolean;
+  isOld?: Boolean;
   decimals?: number;
   fourAddress?: string;
   oldfourAddress?: string;
+  additionValue?: number;
+  substractionValue?: number;
 }
 
 // Technically only exporting for the interface
@@ -52,9 +56,12 @@ export abstract class Bond {
   readonly bondToken: string;
   readonly isFour?: Boolean;
   readonly isTotal?: Boolean;
+  readonly isOld?: Boolean;
   readonly decimals?: number;
   readonly fourAddress?: string;
   readonly oldfourAddress?: string;
+  readonly additionValue?: number;
+  readonly substractionValue?: number;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: Boolean;
@@ -74,9 +81,12 @@ export abstract class Bond {
     this.bondToken = bondOpts.bondToken;
     this.isFour = bondOpts.isFour;
     this.isTotal = bondOpts.isTotal;
+    this.isOld = bondOpts.isOld;
     this.decimals = bondOpts.decimals;
     this.fourAddress = bondOpts.fourAddress;
     this.oldfourAddress = bondOpts.oldfourAddress;
+    this.additionValue = bondOpts.additionValue;
+    this.substractionValue = bondOpts.substractionValue;
   }
 
   getAddressForBond(networkID: NetworkID) {
@@ -127,12 +137,12 @@ export class LPBond extends Bond {
     const token = this.getContractForReserve(networkID, provider);
     const tokenAddress = this.getAddressForReserve(networkID);
     let bondCalculator;
-    if (this.name == "hec_dai_lp_v1") {
+    if (this.name == "dailp_v1") {
       bondCalculator = getBondCalculator(networkID, provider);
     } else {
       bondCalculator = getBondCalculator1(networkID, provider);
     }
-    if (this.name == "gohmlp" || this.name == "gohmlp4") {
+    if (this.name == "gohmlp" || this.name == "gohmlp4" || this.name == "gohmlp4_v2") {
       bondCalculator = getgOHMBondCalculator(networkID, provider);
     }
     let decimals = 18;
@@ -144,11 +154,18 @@ export class LPBond extends Bond {
       let bond = this.getContractForBond(networkID, provider);
       tokenAmount = await bond.totalPrinciple();
     }
+    if (this.substractionValue) {
+      tokenAmount = tokenAmount.sub(BigInt(this.substractionValue));
+    }
     if (this.fourAddress) {
-      const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);
+      const fourBond = new ethers.Contract(this.fourAddress, Dai44v3Contract, provider);
       const val = await fourBond.totalPrinciple();
       tokenAmount = BigNumber.from(tokenAmount).sub(val);
     }
+    if (this.additionValue) {
+      tokenAmount = tokenAmount.add(BigInt(this.additionValue));
+    }
+    
     const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount);
     const markdown = await bondCalculator.markdown(tokenAddress);
     let tokenUSD;
@@ -186,12 +203,15 @@ export class StableBond extends Bond {
       let bond = this.getContractForBond(networkID, provider);
       balance = (await bond.totalPrinciple()) / Math.pow(10, decimals);
     }
-    if (this.oldfourAddress) {
-      let bond = new ethers.Contract(this.oldfourAddress, MimBondContract, provider);
-      if (this.isTotal)
-        balance += (await bond.totalPrinciple()) / Math.pow(10, decimals);
-      else
-        balance -= (await bond.totalPrinciple()) / Math.pow(10, decimals);
+    // if (this.oldfourAddress) {
+    //   let bond = new ethers.Contract(this.oldfourAddress, MimBondContract, provider);
+    //   if (this.isTotal)
+    //     balance += (await bond.totalPrinciple()) / Math.pow(10, decimals);
+    //   else
+    //     balance -= (await bond.totalPrinciple()) / Math.pow(10, decimals);
+    // }
+    if (this.additionValue) {
+      balance += this.additionValue / Math.pow(10, decimals);
     }
     if (this.fourAddress) {
       const fourBond = new ethers.Contract(this.fourAddress, MimBondContract, provider);

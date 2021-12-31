@@ -8,14 +8,14 @@ import { SvgIcon } from "@material-ui/core";
 import { ReactComponent as HecImg } from "../assets/tokens/HEC.svg";
 import { ReactComponent as SHecImg } from "../assets/tokens/SHEC.svg";
 
-import { hec_dai } from "./AllBonds";
+import { dailp } from "./AllBonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
-  const hec_dai_address = hec_dai.getAddressForReserve(networkID);
-  const pairContract = new ethers.Contract(hec_dai_address, PairContract, provider);
+  const dailp_address = dailp.getAddressForReserve(networkID);
+  const pairContract = new ethers.Contract(dailp_address, PairContract, provider);
   const reserves = await pairContract.getReserves();
   const marketPrice = reserves[1] / reserves[0];
 

@@ -32,7 +32,7 @@ import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
 import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
-import { hec_dai, mim4, usdc4, dai4 } from "./helpers/AllBonds";
+import { dailp, mim4, usdc4, dai4, dailp4, mim4_v2, usdc4_v2, dai4_v2 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
 import Calculator from "./views/Calculator/index";
 
@@ -91,7 +91,7 @@ function App() {
   const isAppLoading = useSelector(state => state.app.loading);
   const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   let { bonds } = useBonds();
-  bonds = bonds.concat([hec_dai, usdc4, mim4, dai4]);
+  bonds = bonds.concat([dailp4, usdc4, mim4, dai4, usdc4_v2, mim4_v2, dai4_v2]);
   async function loadDetails(whichDetails) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)

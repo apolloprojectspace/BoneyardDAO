@@ -18,7 +18,7 @@ import {
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
 import TabPanel from "../../components/TabPanel";
 import { trim } from "../../helpers";
-import { changeApproval, changeStake } from "../../slices/StakeThunk";
+import { changeApproval, changeStake, changeForfeit, changeClaim } from "../../slices/StakeThunk";
 import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
@@ -84,11 +84,37 @@ function Stake() {
   const stakingTVL = useSelector(state => {
     return state.app.stakingTVL;
   });
+  const currentEpochNumber = useSelector(state => {
+    return state.app.epochNumber;
+  });
 
   const pendingTransactions = useSelector(state => {
     return state.pendingTransactions;
   });
 
+  const depositAmount = useSelector(state =>{
+    return state.account.warmup && state.account.warmup.warmupAmount;
+  });
+
+  const expiry = useSelector(state =>{
+    return state.account.warmup && state.account.warmup.expiryBlock;
+  });
+
+  const onFofeit = async() => {
+    await dispatch(changeForfeit({ address, provider, networkID: chainID }));
+  };
+
+  const onClaim = async() => {
+    await dispatch(changeClaim({ address, provider, networkID: chainID }));
+  }
+  const warmupRebaseTime = expiry - currentEpochNumber;
+  const trimmedDepositAmount = Number(
+    [depositAmount]
+        .filter(Boolean)
+        .map(amount => Number(amount))
+        .reduce((a, b) => a + b, 0)
+        .toFixed(4),
+  );
   const setMax = () => {
     if (view === 0) {
       setQuantity(hecBalance);
@@ -389,6 +415,50 @@ function Stake() {
                         </Typography>
                       </div>
 
+                      {trimmedDepositAmount && trimmedDepositAmount > 0 ?
+                                              
+                        <>
+                        <div className="data-row">
+                            <Typography variant="body1">Your Warm Up Balance</Typography>
+                            <Typography variant="body1">
+                                {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedDepositAmount} sHEC</>}
+                            </Typography>
+                        </div>
+                        <div className="data-row">
+                            <Typography variant="body1">Pending Warm Up Till Release</Typography>
+                            <Typography variant="body1">
+                            {warmupRebaseTime >= 1 ? 
+                                <>{isAppLoading ? <Skeleton width="80px" style={{marginLeft:"auto"}}/> : <>{trim(warmupRebaseTime, 4)} Rebase(s) left till claimable</>}
+                                <div style={{textAlign: "right"}}>
+                                <Button 
+                                    className="exit-button"
+                                    variant="outlined" 
+                                    color="primary"
+                                    disabled={isPendingTxn(pendingTransactions, "forfeiting")}
+                                    onClick={() => {
+                                    onFofeit();
+                                    }}
+                                >
+                                    {txnButtonText(pendingTransactions, "forfeiting", "EXIT Warm Up")}
+                                </Button>
+                                </div>
+                                </>
+                                :
+                                <Button 
+                                    className="stake-button"
+                                    variant="outlined" 
+                                    color="primary"
+                                    disabled={isPendingTxn(pendingTransactions, "claiming")}
+                                    onClick={() => {
+                                    onClaim();
+                                    }}
+                                >
+                                    {txnButtonText(pendingTransactions, "claiming", "Claim")}
+                                </Button>
+                            }                                
+                            </Typography>
+                        </div>
+                        </>:<></>} 
                       <div className="data-row">
                         <Typography variant="body1">Your Staked Balance</Typography>
                         <Typography variant="body1">

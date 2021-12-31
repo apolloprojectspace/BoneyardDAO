@@ -92,12 +92,12 @@ export const calcBondDetails = createAsyncThunk(
     const bondContract = bond.getContractForBond(networkID, provider);
     // const bondCalcContract = getBondCalculator(networkID, provider);
     let bondCalcContract;
-    if (bond.name == "hec_dai_lp_v1") {
+    if (bond.name == "dailp_v1") {
       bondCalcContract = getBondCalculator(networkID, provider);
     } else {
       bondCalcContract = getBondCalculator1(networkID, provider);
     }
-    if (bond.name == "gohmlp" || bond.name == "gohmlp4") {
+    if (bond.name == "gohmlp" || bond.name == "gohmlp4" || bond.name == "gohmlp4_v2") {
       bondCalcContract = getgOHMBondCalculator(networkID, provider);
     }
 
@@ -175,9 +175,6 @@ export const calcBondDetails = createAsyncThunk(
     if (isSoldOut) {
       bondDiscount = -0.1;
     }
-    // if (bond.name == "gohmlp4") {
-    //   bondQuote = bondQuote * 100;
-    // }
 
     return {
       bond: bond.name,
