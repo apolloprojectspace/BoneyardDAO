@@ -725,6 +725,7 @@ export const allBonds = [
   dailp4_v2,
   usdclp4_v2,
   frax,
+  frax4,
   frax4_v2,
   fraxlp,
   fraxlp4_v2,

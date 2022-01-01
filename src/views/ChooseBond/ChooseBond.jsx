@@ -147,7 +147,7 @@ function ChooseBond() {
                     </TableHead>
                     <TableBody>
                       {bonds
-                        .filter(bond => bond.isFour)
+                        .filter(bond => bond.isFour && bond.name !== 'frax4')
                         .map(bond => (
                           <BondTableData key={bond.name} bond={bond} />
                         ))}
