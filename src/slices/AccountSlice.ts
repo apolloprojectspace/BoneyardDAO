@@ -42,6 +42,7 @@ export const loadAccountDetails = createAsyncThunk(
     let oldunstakeAllowance = 0;
     let daiBondAllowance = 0;
     let depositAmount = 0;
+    let warmUpAmount = 0;
     let expiry = 0;
 
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
@@ -65,8 +66,10 @@ export const loadAccountDetails = createAsyncThunk(
     const wshecBalance = await wshecContract.balanceOf(address);
 
     const stakingContract = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStakingv2, provider,);
-    depositAmount = (await stakingContract.warmupInfo(address)).deposit;
-    expiry = (await stakingContract.warmupInfo(address)).expiry;
+    const warmupInfo = (await stakingContract.warmupInfo(address));
+    depositAmount = warmupInfo.deposit;
+    warmUpAmount = +ethers.utils.formatUnits((await shecContract.balanceForGons(warmupInfo.gons)), "gwei");
+    expiry = warmupInfo.expiry;
 
     return {
       balances: {
@@ -86,7 +89,8 @@ export const loadAccountDetails = createAsyncThunk(
         hecUnwrap: +unwrapAllowance,
       },
       warmup: {
-        warmupAmount: ethers.utils.formatUnits(depositAmount, "gwei"),
+        depositAmount: ethers.utils.formatUnits(depositAmount, "gwei"),
+        warmUpAmount,
         expiryBlock: expiry,
       },
       bonding: {

@@ -92,8 +92,8 @@ function Stake() {
     return state.pendingTransactions;
   });
 
-  const depositAmount = useSelector(state =>{
-    return state.account.warmup && state.account.warmup.warmupAmount;
+  const warmUpAmount = useSelector(state =>{
+    return state.account.warmup && state.account.warmup.warmUpAmount;
   });
 
   const expiry = useSelector(state =>{
@@ -109,7 +109,7 @@ function Stake() {
   }
   const warmupRebaseTime = expiry - currentEpochNumber;
   const trimmedDepositAmount = Number(
-    [depositAmount]
+    [warmUpAmount]
         .filter(Boolean)
         .map(amount => Number(amount))
         .reduce((a, b) => a + b, 0)
