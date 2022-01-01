@@ -163,7 +163,7 @@ function ChooseBond() {
           <Box className="hec-card-container">
             <Grid container item spacing={2}>
               {bonds
-                .filter(bond => bond.isFour)
+                .filter(bond => bond.isFour && bond.name !== 'frax4')
                 .map(bond => (
                   <Grid item xs={12} key={bond.name}>
                     <BondDataCard key={bond.name} bond={bond} />
