@@ -361,7 +361,7 @@ export const frax = new StableBond({
 
 export const frax4 = new StableBond({
   name: "frax4",
-  displayName: "FRAX",
+  displayName: "(Old) FRAX",
   bondToken: "FRAX",
   bondIconSvg: FraxImg,
   bondContractABI: MimBondContract,
@@ -725,7 +725,6 @@ export const allBonds = [
   dailp4_v2,
   usdclp4_v2,
   frax,
-  frax4,
   frax4_v2,
   fraxlp,
   fraxlp4_v2,
