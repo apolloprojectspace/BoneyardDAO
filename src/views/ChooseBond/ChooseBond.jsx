@@ -27,7 +27,7 @@ import InfoTooltip from "src/components/InfoTooltip/InfoTooltip";
 
 function ChooseBond() {
   const { bonds } = useBonds();
-  const oldBonds = ['usdclp4', 'frax4'];
+  const oldBonds = ['usdclp4', 'frax4', 'gohmlp4', 'fraxlp4'];
   // console.log("debug", bonds);
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
   const isVerySmallScreen = useMediaQuery("(max-width: 420px)");

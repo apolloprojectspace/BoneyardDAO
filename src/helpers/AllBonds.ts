@@ -425,7 +425,7 @@ export const gohmlp = new LPBond({
 
 export const gohmlp4 = new LPBond({
   name: "gohmlp4",
-  displayName: "HEC-gOHM LP",
+  displayName: "(Old) HEC-gOHM LP",
   bondToken: "gOHM",
   bondIconSvg: HecgOHMImg,
   isFour: true,
@@ -586,7 +586,7 @@ export const fraxlp = new LPBond({
 
 export const fraxlp4 = new LPBond({
   name: "fraxlp4",
-  displayName: "HEC-FRAX LP",
+  displayName: "(Old) HEC-FRAX LP",
   bondToken: "FRAX",
   bondIconSvg: HecFraxImg,
   isTotal: true,
@@ -714,6 +714,7 @@ export const allBonds = [
   dailp_v2,
   usdclp,
   gohmlp,
+  gohmlp4,
   gohmlp4_v2,
   ftm,
   dai,
@@ -729,6 +730,7 @@ export const allBonds = [
   frax4,
   frax4_v2,
   fraxlp,
+  fraxlp4,
   fraxlp4_v2,
   // ftmv2,
 ];
