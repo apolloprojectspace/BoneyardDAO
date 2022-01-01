@@ -416,7 +416,7 @@ export const gohmlp = new LPBond({
     },
     [NetworkID.Testnet]: {
       bondAddress: "",
-      reserveAddress: "", 
+      reserveAddress: "",
     },
   },
   lpUrl:
@@ -440,7 +440,7 @@ export const gohmlp4 = new LPBond({
     },
     [NetworkID.Testnet]: {
       bondAddress: "",
-      reserveAddress: "", 
+      reserveAddress: "",
     },
   },
   lpUrl:
@@ -464,7 +464,7 @@ export const gohmlp4_v2 = new LPBond({
     },
     [NetworkID.Testnet]: {
       bondAddress: "",
-      reserveAddress: "", 
+      reserveAddress: "",
     },
   },
   lpUrl:
@@ -725,6 +725,7 @@ export const allBonds = [
   dailp4_v2,
   usdclp4_v2,
   frax,
+  frax4,
   frax4_v2,
   fraxlp,
   fraxlp4_v2,

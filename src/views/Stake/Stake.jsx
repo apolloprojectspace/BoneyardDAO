@@ -99,11 +99,11 @@ function Stake() {
   const expiry = useSelector(state =>{
     return state.account.warmup && state.account.warmup.expiryBlock;
   });
-
+  
   const onFofeit = async() => {
     await dispatch(changeForfeit({ address, provider, networkID: chainID }));
   };
-
+  
   const onClaim = async() => {
     await dispatch(changeClaim({ address, provider, networkID: chainID }));
   }
@@ -439,7 +439,7 @@ function Stake() {
                                     onFofeit();
                                     }}
                                 >
-                                    {txnButtonText(pendingTransactions, "forfeiting", "EXIT Warm Up")}
+                                    {txnButtonText(pendingTransactions, "forfeiting", "Forfeit")}
                                 </Button>
                                 </div>
                                 </>

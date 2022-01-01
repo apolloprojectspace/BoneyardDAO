@@ -116,6 +116,7 @@ export const loadAppDetails = createAsyncThunk(
     // Current index
     const currentIndex = await stakingContract.index();
     const endBlock = epoch.endBlock;
+    const epochNumber = epoch.number;
 
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
@@ -132,6 +133,7 @@ export const loadAppDetails = createAsyncThunk(
       totalSupply,
       endBlock,
       investments,
+      epochNumber
     } as IAppData;
   },
 );
@@ -207,6 +209,7 @@ interface IAppData {
   readonly treasuryBalance?: number;
   readonly endBlock?: number;
   readonly investments?: number;
+  readonly epochNumber?: number;
 }
 
 const appSlice = createSlice({
