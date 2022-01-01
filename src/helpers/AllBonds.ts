@@ -657,8 +657,8 @@ export const usdclp = new LPBond({
 });
 
 export const usdclp4 = new LPBond({
-  name: "(Old) usdclp4",
-  displayName: "HEC-USDC LP",
+  name: "usdclp4",
+  displayName: "(Old) HEC-USDC LP",
   bondToken: "USDC",
   decimals: 6,
   isFour: true,
