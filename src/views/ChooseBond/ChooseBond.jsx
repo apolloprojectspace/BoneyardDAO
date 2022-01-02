@@ -58,7 +58,7 @@ function ChooseBond() {
       if (state.bonding.loading == false) {
         let tokenBalances = 0;
         for (const bond in allBondsMap) {
-          if (state.bonding[bond]) {
+          if (state.bonding[bond] && !oldBonds.includes(bond)) {
             tokenBalances += state.bonding[bond].purchased;
           }
         }
