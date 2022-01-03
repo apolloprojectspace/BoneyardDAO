@@ -429,7 +429,7 @@ function Stake() {
                                   <Skeleton width="80px" style={{ marginLeft: "auto" }} />
                                 ) : (
                                   <>
-                                    {warmupRebaseTime === 0 ? (
+                                    {warmupRebaseTime <= 0 ? (
                                       <Typography variant="body1">Warm Up Period Ended</Typography>
                                     ) : (
                                       <>Rebase(s) left till claimable: {trim(warmupRebaseTime, 4)}</>
