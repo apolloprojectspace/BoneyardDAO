@@ -64,13 +64,13 @@ function TreasuryDashboard() {
 
   useEffect(() => {
     apollo(treasuryDataQuery).then(r => {
-      let metrics = r.data.protocolMetrics.map(entry =>
+      let metrics = r?.data?.protocolMetrics.map(entry =>
         Object.entries(entry).reduce((obj, [key, value]) => ((obj[key] = parseFloat(value)), obj), {}),
       );
       metrics = metrics.filter(pm => pm.treasuryMarketValue > 0);
       setData(metrics);
 
-      let staked = r.data.protocolMetrics.map(entry => ({
+      let staked = r?.data?.protocolMetrics.map(entry => ({
         staked: (parseFloat(entry.sHecCirculatingSupply) / parseFloat(entry.hecCirculatingSupply)) * 100,
         timestamp: entry.timestamp,
       }));
@@ -82,7 +82,7 @@ function TreasuryDashboard() {
     });
 
     apollo(rebasesV1DataQuery).then(r => {
-      let apy = r.data.rebases.map(entry => ({
+      let apy = r?.data?.rebases.map(entry => ({
         apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
         timestamp: entry.timestamp - (entry.timestamp % (3600 * 4)),
       }));

@@ -116,26 +116,12 @@ const renderStackedAreaChart = (
 ) => (
   <AreaChart data={data}>
     <defs>
-      <linearGradient id={`color-${dataKey[0]}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={stopColor[0][0]} stopOpacity={1} />
-        <stop offset="90%" stopColor={stopColor[0][1]} stopOpacity={0.9} />
-      </linearGradient>
-      <linearGradient id={`color-${dataKey[1]}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={stopColor[1][0]} stopOpacity={1} />
-        <stop offset="90%" stopColor={stopColor[1][1]} stopOpacity={0.9} />
-      </linearGradient>
-      <linearGradient id={`color-${dataKey[2]}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={stopColor[2][0]} stopOpacity={1} />
-        <stop offset="90%" stopColor={stopColor[2][1]} stopOpacity={0.9} />
-      </linearGradient>
-      <linearGradient id={`color-${dataKey[3]}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={stopColor[3][0]} stopOpacity={1} />
-        <stop offset="90%" stopColor={stopColor[3][1]} stopOpacity={0.9} />
-      </linearGradient>
-      <linearGradient id={`color-${dataKey[4]}`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor={stopColor[4][0]} stopOpacity={1} />
-        <stop offset="90%" stopColor={stopColor[4][1]} stopOpacity={0.9} />
-      </linearGradient>
+      {dataKey.map((key, index) => (
+        <linearGradient id={`color-${key}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stopColor[index][0]} stopOpacity={1} />
+          <stop offset="90%" stopColor={stopColor[index][1]} stopOpacity={0.9} />
+        </linearGradient>
+      ))}
     </defs>
     <XAxis
       dataKey="timestamp"
@@ -169,41 +155,16 @@ const renderStackedAreaChart = (
       formatter={value => trim(parseFloat(value), 2)}
       content={<CustomTooltip bulletpointColors={bulletpointColors} itemNames={itemNames} itemType={itemType} />}
     />
-    <Area
-      dataKey={dataKey[0]}
-      stroke={stroke ? stroke[0] : "none"}
-      fill={`url(#color-${dataKey[0]})`}
-      fillOpacity={1}
-      stackId="1"
-    />
-    <Area
-      dataKey={dataKey[1]}
-      stroke={stroke ? stroke[1] : "none"}
-      fill={`url(#color-${dataKey[1]})`}
-      fillOpacity={1}
-      stackId="1"
-    />
-    <Area
-      dataKey={dataKey[2]}
-      stroke={stroke ? stroke[2] : "none"}
-      fill={`url(#color-${dataKey[2]})`}
-      fillOpacity={1}
-      stackId="1"
-    />
-    <Area
-      dataKey={dataKey[3]}
-      stroke={stroke ? stroke[3] : "none"}
-      fill={`url(#color-${dataKey[3]})`}
-      fillOpacity={1}
-      stackId="1"
-    />
-    <Area
-      dataKey={dataKey[4]}
-      stroke={stroke ? stroke[4] : "none"}
-      fill={`url(#color-${dataKey[4]})`}
-      fillOpacity={1}
-      stackId="1"
-    />
+    {dataKey.map((key, index) => (
+      <Area
+        dataKey={key}
+        key={index}
+        stroke={stroke ? stroke[key] : "none"}
+        fill={`url(#color-${key})`}
+        fillOpacity={1}
+        stackId="1"
+      />
+    ))}
     {renderExpandedChartStroke(isExpanded, expandedGraphStrokeColor)}
   </AreaChart>
 );
