@@ -414,7 +414,7 @@ function Stake() {
                         </Typography>
                       </div>
 
-                      {trimmedDepositAmount && trimmedDepositAmount > 0 && (
+                      {trimmedDepositAmount > 0 && (
                         <>
                           <div className="data-row">
                             <Typography variant="body1">Your Warm Up Balance</Typography>
