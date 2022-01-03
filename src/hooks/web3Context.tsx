@@ -51,9 +51,10 @@ function getScanner(chainId: number): string {
   Types
 */
 type onChainProvider = {
-  connect: () => void;
+  connect: () => Promise<Web3Provider | undefined>;
   disconnect: () => void;
   checkWrongNetwork: () => Promise<boolean>;
+  hasCachedProvider: () => Boolean;
   provider: JsonRpcProvider;
   address: string;
   connected: Boolean;
@@ -111,11 +112,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
             },
             qrcode: true,
             qrcodeModalOptions: {
-              mobileLinks: [
-                "metamask",
-                "trust",
-              ]
-            }
+              mobileLinks: ["metamask", "trust"],
+            },
           },
         },
       },
@@ -224,9 +222,32 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   }, [provider, web3Modal, connected]);
 
   const onChainProvider = useMemo(
-
-    () => ({ connect, disconnect, hasCachedProvider, provider, connected, address, chainID, vchainID, web3Modal, uri, checkWrongNetwork, }),
-    [connect, disconnect, hasCachedProvider, provider, connected, address, chainID, vchainID, web3Modal, uri, checkWrongNetwork],
+    () => ({
+      connect,
+      disconnect,
+      checkWrongNetwork,
+      hasCachedProvider,
+      provider,
+      connected,
+      address,
+      chainID,
+      vchainID,
+      web3Modal,
+      uri,
+    }),
+    [
+      connect,
+      disconnect,
+      checkWrongNetwork,
+      hasCachedProvider,
+      provider,
+      connected,
+      address,
+      chainID,
+      vchainID,
+      web3Modal,
+      uri,
+    ],
   );
 
   useEffect(() => {

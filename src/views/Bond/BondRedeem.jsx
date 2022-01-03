@@ -41,11 +41,7 @@ function BondRedeem({ bond }) {
     return prettifySeconds(seconds, "day");
   };
 
-  useEffect(() => {
-    console.log(bond);
-    console.log(bondingState);
-    console.log(bondDetails);
-  }, []);
+  useEffect(() => {}, []);
 
   let isFour = false;
   let reward = "HEC";

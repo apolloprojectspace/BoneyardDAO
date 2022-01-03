@@ -1,13 +1,14 @@
 # [Hector Frontend](https://app.hectordao.com/)
-This is the front-end repo for Hector that allows users be part of the future of Greece. 
 
-##  🔧 Setting up Local Development
+This is the front-end repo for Hector that allows users be part of the future of Greece.
 
-Required: 
-- [Node v14](https://nodejs.org/download/release/latest-v14.x/)  
-- [Yarn](https://classic.yarnpkg.com/en/docs/install/) 
+## 🔧 Setting up Local Development
+
+Required:
+
+- [Node v14](https://nodejs.org/download/release/latest-v14.x/)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 - [Git](https://git-scm.com/downloads)
-
 
 ```bash
 $ git clone https://github.com/Hector-DAO/HectorDAO.git
@@ -26,15 +27,16 @@ The site is now running at `http://localhost:3000`!
 Open the source code and start editing!
 
 ### Architecture/Layout
-The app is written in [React](https://reactjs.org/) using [Redux](https://redux.js.org/) as the state container. 
 
-The files/folder structure are a  **WIP** and may contain some unused files. The project is rapidly evolving so please update this section if you see it is inaccurate!
+The app is written in [React](https://reactjs.org/) using [Redux](https://redux.js.org/) as the state container.
+
+The files/folder structure are a **WIP** and may contain some unused files. The project is rapidly evolving so please update this section if you see it is inaccurate!
 
 ```
 ./src/
-├── App.jsx       // Main app page
+├── App.tsx       // Main app page
 ├── abi/          // Contract ABIs from etherscan.io
-├── actions/      // Redux actions 
+├── actions/      // Redux actions
 ├── assets/       // Static assets (SVGs)
 ├── components/   // Reusable individual components
 ├── constants.js/ // Mainnet Addresses & common ABI
@@ -47,5 +49,4 @@ The files/folder structure are a  **WIP** and may contain some unused files. The
 
 ## 🗣 Community
 
-* [Join our Discord](https://discord.me/hector) and ask how you can get involved with the DAO!
-
+- [Join our Discord](https://discord.me/hector) and ask how you can get involved with the DAO!

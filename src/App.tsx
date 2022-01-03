@@ -9,8 +9,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import useTheme from "./hooks/useTheme";
 import useBonds from "./hooks/Bonds";
 import { useAddress, useWeb3Context } from "./hooks/web3Context";
-import useSegmentAnalytics from "./hooks/useSegmentAnalytics";
-import { segmentUA, providerChecker } from "./helpers/userAnalyticHelpers";
 import { storeQueryParameters } from "./helpers/QueryParameterHelper";
 import { shouldTriggerSafetyCheck } from "./helpers";
 
@@ -30,7 +28,6 @@ import NotFound from "./views/404/NotFound";
 import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
-import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { dailp, mim4, usdc4, dai4, dailp4, mim4_v2, usdc4_v2, dai4_v2 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
@@ -83,16 +80,14 @@ function App() {
   const isSmallerScreen = useMediaQuery("(max-width: 980px)");
   const isSmallScreen = useMediaQuery("(max-width: 600px)");
 
-  const { connect, hasCachedProvider, provider, chainID, connected, uri } = useWeb3Context();
+  const { connect, hasCachedProvider, provider, chainID, connected } = useWeb3Context();
   const address = useAddress();
 
   const [walletChecked, setWalletChecked] = useState(false);
 
-  const isAppLoading = useSelector(state => state.app.loading);
-  const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   let { bonds } = useBonds();
-  bonds = bonds.concat([dailp4, usdc4, mim4, dai4, usdc4_v2, mim4_v2, dai4_v2]);
-  async function loadDetails(whichDetails) {
+  bonds = [...bonds, ...[dailp4, usdc4, mim4, dai4, usdc4_v2, mim4_v2, dai4_v2]];
+  async function loadDetails(whichDetails: string) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
     // it's because the initial provider loaded always starts with chainID=1. This causes
@@ -115,7 +110,7 @@ function App() {
     loadProvider => {
       dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
       bonds.map(bond => {
-        dispatch(calcBondDetails({ bond, value: null, provider: loadProvider, networkID: chainID }));
+        dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
       });
     },
     [connected],
@@ -191,7 +186,7 @@ function App() {
     const updateAppDetailsInterval = setInterval(() => {
       dispatch(loadAppDetails({ networkID: chainID, provider }));
       bonds.map(bond => {
-        dispatch(calcBondDetails({ bond, value: null, provider, networkID: chainID }));
+        dispatch(calcBondDetails({ bond, value: "", provider, networkID: chainID }));
       });
     }, 1000 * 30);
     return () => {
