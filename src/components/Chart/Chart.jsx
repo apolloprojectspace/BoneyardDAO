@@ -117,7 +117,7 @@ const renderStackedAreaChart = (
   <AreaChart data={data}>
     <defs>
       {dataKey.map((key, index) => (
-        <linearGradient id={`color-${key}`} x1="0" y1="0" x2="0" y2="1">
+        <linearGradient key={index} id={`color-${key}`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={stopColor[index][0]} stopOpacity={1} />
           <stop offset="90%" stopColor={stopColor[index][1]} stopOpacity={0.9} />
         </linearGradient>

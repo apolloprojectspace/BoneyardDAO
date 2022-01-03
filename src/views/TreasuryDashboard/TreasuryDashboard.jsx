@@ -67,18 +67,22 @@ function TreasuryDashboard() {
       let metrics = r?.data?.protocolMetrics.map(entry =>
         Object.entries(entry).reduce((obj, [key, value]) => ((obj[key] = parseFloat(value)), obj), {}),
       );
-      metrics = metrics.filter(pm => pm.treasuryMarketValue > 0);
-      setData(metrics);
-
       let staked = r?.data?.protocolMetrics.map(entry => ({
         staked: (parseFloat(entry.sHecCirculatingSupply) / parseFloat(entry.hecCirculatingSupply)) * 100,
         timestamp: entry.timestamp,
       }));
-      staked = staked.filter(pm => pm.staked < 100);
-      setStaked(staked);
 
-      let runway = metrics.filter(pm => pm.runwayCurrent > 5);
-      setRunway(runway);
+      if (staked) {
+        staked = staked.filter(pm => pm.staked < 100);
+        setStaked(staked);
+      }
+
+      if (metrics) {
+        metrics = metrics.filter(pm => pm.treasuryMarketValue > 0);
+        setData(metrics);
+        const runway = metrics.filter(pm => pm.runwayCurrent > 5);
+        setRunway(runway);
+      }
     });
 
     apollo(rebasesV1DataQuery).then(r => {
@@ -86,10 +90,10 @@ function TreasuryDashboard() {
         apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
         timestamp: entry.timestamp - (entry.timestamp % (3600 * 4)),
       }));
-
-      apy = apy.filter(pm => pm.apy < 5000000);
-
-      setApy(apy);
+      if (apy) {
+        apy = apy.filter(pm => pm.apy < 5000000);
+        setApy(apy);
+      }
     });
   }, []);
 
