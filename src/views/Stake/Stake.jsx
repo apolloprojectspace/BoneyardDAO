@@ -26,7 +26,6 @@ import { Skeleton } from "@material-ui/lab";
 import { error, info } from "../../slices/MessagesSlice";
 import { ethers, BigNumber } from "ethers";
 
-
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -92,28 +91,28 @@ function Stake() {
     return state.pendingTransactions;
   });
 
-  const warmUpAmount = useSelector(state =>{
+  const warmUpAmount = useSelector(state => {
     return state.account.warmup && state.account.warmup.warmUpAmount;
   });
 
-  const expiry = useSelector(state =>{
+  const expiry = useSelector(state => {
     return state.account.warmup && state.account.warmup.expiryBlock;
   });
-  
-  const onFofeit = async() => {
+
+  const onFofeit = async () => {
     await dispatch(changeForfeit({ address, provider, networkID: chainID }));
   };
-  
-  const onClaim = async() => {
+
+  const onClaim = async () => {
     await dispatch(changeClaim({ address, provider, networkID: chainID }));
-  }
+  };
   const warmupRebaseTime = expiry - currentEpochNumber;
   const trimmedDepositAmount = Number(
     [warmUpAmount]
-        .filter(Boolean)
-        .map(amount => Number(amount))
-        .reduce((a, b) => a + b, 0)
-        .toFixed(4),
+      .filter(Boolean)
+      .map(amount => Number(amount))
+      .reduce((a, b) => a + b, 0)
+      .toFixed(4),
   );
   const setMax = () => {
     if (view === 0) {
@@ -415,50 +414,64 @@ function Stake() {
                         </Typography>
                       </div>
 
-                      {trimmedDepositAmount && trimmedDepositAmount > 0 ?
-                                              
+                      {trimmedDepositAmount && trimmedDepositAmount > 0 && (
                         <>
-                        <div className="data-row">
+                          <div className="data-row">
                             <Typography variant="body1">Your Warm Up Balance</Typography>
                             <Typography variant="body1">
-                                {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedDepositAmount} sHEC</>}
+                              {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedDepositAmount} sHEC</>}
                             </Typography>
-                        </div>
-                        <div className="data-row">
-                            <Typography variant="body1">Pending Warm Up Till Release</Typography>
+                          </div>
+                          <div className="data-row">
                             <Typography variant="body1">
-                            {warmupRebaseTime >= 1 ? 
-                                <>{isAppLoading ? <Skeleton width="80px" style={{marginLeft:"auto"}}/> : <>{trim(warmupRebaseTime, 4)} Rebase(s) left till claimable</>}
-                                <div style={{textAlign: "right"}}>
-                                <Button 
-                                    className="exit-button"
-                                    variant="outlined" 
-                                    color="primary"
-                                    disabled={isPendingTxn(pendingTransactions, "forfeiting")}
-                                    onClick={() => {
-                                    onFofeit();
-                                    }}
-                                >
-                                    {txnButtonText(pendingTransactions, "forfeiting", "Forfeit")}
-                                </Button>
-                                </div>
-                                </>
-                                :
-                                <Button 
-                                    className="stake-button"
-                                    variant="outlined" 
-                                    color="primary"
-                                    disabled={isPendingTxn(pendingTransactions, "claiming")}
-                                    onClick={() => {
-                                    onClaim();
-                                    }}
-                                >
-                                    {txnButtonText(pendingTransactions, "claiming", "Claim")}
-                                </Button>
-                            }                                
+                              <>
+                                {isAppLoading ? (
+                                  <Skeleton width="80px" style={{ marginLeft: "auto" }} />
+                                ) : (
+                                  <>
+                                    {warmupRebaseTime === 0 ? (
+                                      <Typography variant="body1">Warm Up Period Ended</Typography>
+                                    ) : (
+                                      <>Rebase(s) left till claimable: {trim(warmupRebaseTime, 4)}</>
+                                    )}
+                                  </>
+                                )}
+                              </>
                             </Typography>
-                        </div>
-                        </>:<></>} 
+                            <Typography variant="body1">
+                              {warmupRebaseTime >= 1 ? (
+                                <>
+                                  <div style={{ textAlign: "right" }}>
+                                    <Button
+                                      className="exit-button"
+                                      variant="outlined"
+                                      color="primary"
+                                      disabled={isPendingTxn(pendingTransactions, "forfeiting")}
+                                      onClick={() => {
+                                        onFofeit();
+                                      }}
+                                    >
+                                      {txnButtonText(pendingTransactions, "forfeiting", "Forfeit")}
+                                    </Button>
+                                  </div>
+                                </>
+                              ) : (
+                                <Button
+                                  className="stake-button"
+                                  variant="outlined"
+                                  color="primary"
+                                  disabled={isPendingTxn(pendingTransactions, "claiming")}
+                                  onClick={() => {
+                                    onClaim();
+                                  }}
+                                >
+                                  {txnButtonText(pendingTransactions, "claiming", "Claim")}
+                                </Button>
+                              )}
+                            </Typography>
+                          </div>
+                        </>
+                      )}
                       <div className="data-row">
                         <Typography variant="body1">Your Staked Balance</Typography>
                         <Typography variant="body1">
