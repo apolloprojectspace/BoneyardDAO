@@ -234,3 +234,16 @@
     }
   }
 }
+
+.forfeit {
+  display: flex;
+  svg {
+    overflow: visible;
+    align-self: center;
+    margin: 0;
+  }
+  button {
+    margin-right: 10px;
+    padding: 0 10px;
+  }
+}

@@ -24,7 +24,20 @@ import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
 import { error, info } from "../../slices/MessagesSlice";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import { Tooltip } from "@material-ui/core";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    customWidth: {
+      maxWidth: 250,
+      fontSize: theme.typography.pxToRem(14),
+      backgroundColor: theme.palette.common.black,
+    },
+  }),
+);
 
 function a11yProps(index) {
   return {
@@ -35,6 +48,7 @@ function a11yProps(index) {
 
 function Stake() {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const { provider, address, connected, connect, chainID } = useWeb3Context();
 
   const [zoomed, setZoomed] = useState(false);
@@ -441,7 +455,7 @@ function Stake() {
                             <Typography variant="body1">
                               {warmupRebaseTime >= 1 ? (
                                 <>
-                                  <div style={{ textAlign: "right" }}>
+                                  <div class="forfeit">
                                     <Button
                                       className="exit-button"
                                       variant="outlined"
@@ -453,6 +467,13 @@ function Stake() {
                                     >
                                       {txnButtonText(pendingTransactions, "forfeiting", "Forfeit")}
                                     </Button>
+                                    <Tooltip
+                                      arrow
+                                      title="Choosing to Forfeit will return your original HEC amount without any of the accumulated rewards for the first 3 rebases."
+                                      classes={{ tooltip: classes.customWidth }}
+                                    >
+                                      <HelpOutlineIcon />
+                                    </Tooltip>
                                   </div>
                                 </>
                               ) : (
