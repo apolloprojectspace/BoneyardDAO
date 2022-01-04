@@ -5,13 +5,13 @@ import { redeemBond } from "../../slices/BondSlice";
 import { info, error } from "../../slices/MessagesSlice";
 import BondLogo from "../../components/BondLogo";
 import { Box, Button, Link, Paper, Typography, TableRow, TableCell, SvgIcon, Slide } from "@material-ui/core";
-import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
-import { NavLink } from "react-router-dom";
 import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import { useWeb3Context, useBonds } from "src/hooks";
 import { isPendingTxn, txnButtonTextGeneralPending } from "src/slices/PendingTxnsSlice";
-import { dailp, mim4, usdc4, dai4, dailp4, mim4_v2, usdc4_v2, dai4_v2 } from "src/helpers/AllBonds";
+import { usdc4, usdc4_v2 } from "src/helpers/all-bonds/usdc-bonds";
+import { dailp4, dai4_v2, dai4 } from "src/helpers/all-bonds/dai-bonds";
+import { mim4, mim4_v2 } from "src/helpers/all-bonds/mim-bonds";
 
 export function ClaimBondTableData({ userBond }) {
   const dispatch = useDispatch();
@@ -60,11 +60,11 @@ export function ClaimBondTableData({ userBond }) {
           <Typography variant="body1" style={{ fontSize: "16px" }}>
             {displayName ? trim(displayName, 4) : <Skeleton width={100} />}
           </Typography>
-          {bond.isOld && 
-          <Typography variant="body1" style={{fontSize: "10px", textAlign: "right"}}>
-            (OLD)
-          </Typography>
-          }
+          {bond.isOld && (
+            <Typography variant="body1" style={{ fontSize: "10px", textAlign: "right" }}>
+              (OLD)
+            </Typography>
+          )}
         </div>
       </TableCell>
       <TableCell align="center">
@@ -165,15 +165,17 @@ export function ClaimBondCardData({ userBond }) {
             {txnButtonTextGeneralPending(pendingTransactions, "redeem_bond_" + bondName, "Claim")}
           </Typography>
         </Button>
-        {!bond.isFour && <Button variant="outlined" color="primary" onClick={() => onRedeem({ autostake: true })}>
-          <Typography variant="h5">
-            {txnButtonTextGeneralPending(
-              pendingTransactions,
-              "redeem_bond_" + bondName + "_autostake",
-              "Claim and Stake",
-            )}
-          </Typography>
-        </Button>}
+        {!bond.isFour && (
+          <Button variant="outlined" color="primary" onClick={() => onRedeem({ autostake: true })}>
+            <Typography variant="h5">
+              {txnButtonTextGeneralPending(
+                pendingTransactions,
+                "redeem_bond_" + bondName + "_autostake",
+                "Claim and Stake",
+              )}
+            </Typography>
+          </Button>
+        )}
       </Box>
     </Box>
   );

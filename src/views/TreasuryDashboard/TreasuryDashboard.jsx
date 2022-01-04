@@ -17,7 +17,7 @@ import { useTheme } from "@material-ui/core/styles";
 import "./treasury-dashboard.scss";
 import apollo from "../../lib/apolloClient";
 import InfoTooltip from "src/components/InfoTooltip/InfoTooltip.jsx";
-import { allBondsMap } from "src/helpers/AllBonds";
+import { allBondsMap } from "src/helpers/all-bonds/AllBonds";
 
 function TreasuryDashboard() {
   const [data, setData] = useState(null);

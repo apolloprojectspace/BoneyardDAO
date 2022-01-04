@@ -4,11 +4,7 @@ import axios from "axios";
 import { abi as PairContract } from "../abi/PairContract.json";
 import { abi as RedeemHelperAbi } from "../abi/RedeemHelper.json";
 
-import { SvgIcon } from "@material-ui/core";
-import { ReactComponent as HecImg } from "../assets/tokens/HEC.svg";
-import { ReactComponent as SHecImg } from "../assets/tokens/SHEC.svg";
-
-import { dailp } from "./AllBonds";
+import { dailp } from "./all-bonds/dai-bonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
 

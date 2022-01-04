@@ -29,9 +29,11 @@ import { dark as darkTheme } from "./themes/dark.js";
 import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
 import "./style.scss";
-import { dailp, mim4, usdc4, dai4, dailp4, mim4_v2, usdc4_v2, dai4_v2 } from "./helpers/AllBonds";
 import Wrap from "./views/Wrap/Wrap";
 import Calculator from "./views/Calculator/index";
+import { mim4, mim4_v2 } from "./helpers/all-bonds/mim-bonds";
+import { dailp4, dai4, dai4_v2 } from "./helpers/all-bonds/dai-bonds";
+import { usdc4, usdc4_v2 } from "./helpers/all-bonds/usdc-bonds";
 
 const drawerWidth = 280;
 const transitionDuration = 969;

@@ -9,7 +9,7 @@ import { ReactComponent as wshecTokenImg } from "../../assets/tokens/wsHEC.svg";
 import { NavLink } from "react-router-dom";
 
 import "./hecmenu.scss";
-import { dai } from "src/helpers/AllBonds";
+import { dai } from "src/helpers/all-bonds/dai-bonds";
 import { useWeb3Context } from "../../hooks/web3Context";
 
 import HecImg from "src/assets/tokens/HEC.svg";
