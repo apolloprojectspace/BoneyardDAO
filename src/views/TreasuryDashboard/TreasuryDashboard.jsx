@@ -50,7 +50,7 @@ function TreasuryDashboard() {
     if (state.bonding.loading === false) {
       let tokenBalances = state.app.investments ?? 0;
       for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
+        if (state.bonding[bond] && !allBondsMap[bond].isOld) {
           tokenBalances += state.bonding[bond].purchased;
         }
       }
