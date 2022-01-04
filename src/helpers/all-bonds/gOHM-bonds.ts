@@ -28,7 +28,7 @@ export const gohmlp = new LPBond({
 
 export const gohmlp4 = new LPBond({
     name: "gohmlp4",
-    displayName: "(Old) HEC-gOHM LP",
+    displayName: "HEC-gOHM LP",
     bondToken: "gOHM",
     bondIconSvg: HecgOHMImg,
     isFour: true,

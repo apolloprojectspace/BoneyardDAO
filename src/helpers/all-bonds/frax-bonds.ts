@@ -27,7 +27,7 @@ export const frax = new StableBond({
 
 export const frax4 = new StableBond({
     name: "frax4",
-    displayName: "(Old) FRAX",
+    displayName: "FRAX",
     bondToken: "FRAX",
     bondIconSvg: FraxImg,
     bondContractABI: MimBondContract,
@@ -91,7 +91,7 @@ export const fraxlp = new LPBond({
 
 export const fraxlp4 = new LPBond({
     name: "fraxlp4",
-    displayName: "(Old) HEC-FRAX LP",
+    displayName: "HEC-FRAX LP",
     bondToken: "FRAX",
     bondIconSvg: HecFraxImg,
     isTotal: true,
