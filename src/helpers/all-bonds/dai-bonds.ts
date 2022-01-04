@@ -15,12 +15,33 @@ export const dai = new StableBond({
     bondToken: "DAI",
     bondIconSvg: DaiImg,
     bondContractABI: DaiBondContract,
+    isOld: true,
     fourAddress: "0xE1Cc7FE3E78aEfe6f93D1614A09156fF296Bc81E",
     // oldfourAddress: "0xe8fd4630800bA4335801D1b104B07328Ae415605",
     additionValue: -10779154199735267171249192,
     networkAddrs: {
         [NetworkID.Mainnet]: {
             bondAddress: "0x4099EB0e82Ffa0048E4BF037a9743ca05Ec561D7",
+            reserveAddress: addresses[DEFAULT_NETWORK].DAI_ADDRESS,
+        },
+        [NetworkID.Testnet]: {
+            bondAddress: "",
+            reserveAddress: "",
+        },
+    },
+});
+export const dai_v2 = new StableBond({
+    name: "dai_v2",
+    displayName: "DAI",
+    bondToken: "DAI",
+    bondIconSvg: DaiImg,
+    bondContractABI: DaiBondContract,
+    fourAddress: "0xE1Cc7FE3E78aEfe6f93D1614A09156fF296Bc81E",
+    // oldfourAddress: "0xe8fd4630800bA4335801D1b104B07328Ae415605",
+    additionValue: -10779154199735267171249192,
+    networkAddrs: {
+        [NetworkID.Mainnet]: {
+            bondAddress: "0x4FE87D1A4f39d668Fc6B8106cE5100189CBbD3e6",
             reserveAddress: addresses[DEFAULT_NETWORK].DAI_ADDRESS,
         },
         [NetworkID.Testnet]: {

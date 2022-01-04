@@ -22,13 +22,10 @@ import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import ClaimBonds from "./ClaimBonds";
 import _ from "lodash";
-import allBonds, { allBondsMap } from "src/helpers/all-bonds/AllBonds";
-import InfoTooltip from "src/components/InfoTooltip/InfoTooltip";
+import { allBondsMap } from "src/helpers/all-bonds/AllBonds";
 
 function ChooseBond() {
   const { bonds } = useBonds();
-  const oldBonds = ["usdclp4", "frax4", "gohmlp4", "fraxlp4"];
-  // console.log("debug", bonds);
   const isSmallScreen = useMediaQuery("(max-width: 733px)"); // change to breakpoint query
   const isVerySmallScreen = useMediaQuery("(max-width: 420px)");
 
@@ -196,7 +193,7 @@ function ChooseBond() {
                     </TableHead>
                     <TableBody>
                       {bonds
-                        .filter(bond => !bond.isFour)
+                        .filter(bond => !bond.isFour && !bond.isOld)
                         .map(bond => (
                           <BondTableData key={bond.name} bond={bond} />
                         ))}
@@ -212,7 +209,7 @@ function ChooseBond() {
           <Box className="hec-card-container">
             <Grid container item spacing={2}>
               {bonds
-                .filter(bond => !bond.isFour)
+                .filter(bond => !bond.isFour && !bond.isOld)
                 .map(bond => (
                   <Grid item xs={12} key={bond.name}>
                     <BondDataCard key={bond.name} bond={bond} />
