@@ -134,14 +134,14 @@ function HecMenu() {
                         <SvgIcon
                           component={hecTokenImg}
                           viewBox="0 0 32 32"
-                          style={{ height: "25px", width: "25px" }}
+                          style={{ height: "27px", width: "27px" }}
                         />
                         <Typography variant="body1">HEC</Typography>
                       </Button>
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("sHEC", SHEC_ADDRESS)}>
                         <SvgIcon
                           component={shecTokenImg}
-                          viewBox="0 0 32 32"
+                          viewBox="0 0 100 100"
                           style={{ height: "25px", width: "25px" }}
                         />
                         <Typography variant="body1">sHEC</Typography>
@@ -149,7 +149,7 @@ function HecMenu() {
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("wsHEC", WSHEC_ADDRESS)}>
                         <SvgIcon
                           component={wshecTokenImg}
-                          viewBox="0 0 32 32"
+                          viewBox="0 0 100 100"
                           style={{ height: "25px", width: "25px" }}
                         />
                         <Typography variant="body1">wsHEC</Typography>

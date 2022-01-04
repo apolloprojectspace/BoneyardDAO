@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Social from "./Social";
@@ -8,7 +8,7 @@ import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as GlobeIcon } from "../../assets/icons/globe.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as WrapIcon } from "../../assets/icons/wrap.svg";
-import { ReactComponent as HectorIcon } from "../../assets/icons/hector-nav-header.svg";
+import { ReactComponent as HectorIcon } from "../../assets/icons/hector-nav-logo.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
@@ -53,9 +53,10 @@ function NavContent() {
           <Box className="branding-header">
             <Link href="https://app.hectordao.com" target="_blank">
               <SvgIcon
+                id="header-nav-logo"
                 color="primary"
+                viewBox="0 0 151 100"
                 component={HectorIcon}
-                viewBox="0 0 161 161"
                 style={{ minWdth: "151px", minHeight: "98px", width: "151px" }}
               />
               <div className="wallet-link f-32">Hector</div>
@@ -189,7 +190,7 @@ function NavContent() {
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
-                  <SvgIcon color="primary" component={GlobeIcon} viewBox="0 0 24 24"/>
+                  <SvgIcon color="primary" component={GlobeIcon} viewBox="0 0 24 24" />
                   Calculator
                 </Typography>
               </Link>

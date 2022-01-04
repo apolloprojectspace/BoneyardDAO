@@ -1,5 +1,5 @@
 import { Backdrop, Container, SvgIcon } from "@material-ui/core";
-import { ReactComponent as HectorIcon } from "../../assets/icons/hector-nav-header.svg";
+import { ReactComponent as HectorIcon } from "../../assets/icons/hector-nav-logo.svg";
 import "./loading.scss";
 
 function LoadingSplash() {

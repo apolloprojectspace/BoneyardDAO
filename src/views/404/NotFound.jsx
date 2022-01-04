@@ -1,4 +1,4 @@
-import HectorIcon from "../../assets/icons/hector-nav-header.svg";
+import HectorIcon from "../../assets/icons/hector-nav-logo.svg";
 import "./notfound.scss";
 
 export default function NotFound() {
