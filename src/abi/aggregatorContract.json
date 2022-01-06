@@ -1,0 +1,197 @@
+{
+    "abi": [{
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    }, {
+        "anonymous": false,
+        "inputs": [{
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+        }, {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+        }],
+        "name": "OwnershipPulled",
+        "type": "event"
+    }, {
+        "anonymous": false,
+        "inputs": [{
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+        }, {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+        }],
+        "name": "OwnershipPushed",
+        "type": "event"
+    }, {
+        "inputs": [{
+            "internalType": "address[]",
+            "name": "_contracts",
+            "type": "address[]"
+        }],
+        "name": "globalBondData",
+        "outputs": [{
+            "components": [{
+                "internalType": "address",
+                "name": "Contract",
+                "type": "address"
+            }, {
+                "internalType": "string",
+                "name": "Name",
+                "type": "string"
+            }, {
+                "components": [{
+                    "internalType": "uint256",
+                    "name": "controlVariable",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "vestingTerm",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "minimumPrice",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "maxPayout",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "fee",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "maxDebt",
+                    "type": "uint256"
+                }],
+                "internalType": "struct IHectorBondStakeDepository.Terms",
+                "name": "BondTerms",
+                "type": "tuple"
+            }, {
+                "internalType": "uint256",
+                "name": "MaxPayout",
+                "type": "uint256"
+            }, {
+                "internalType": "uint256",
+                "name": "StandardizedDebtRatio",
+                "type": "uint256"
+            }, {
+                "internalType": "uint256",
+                "name": "TotalDebt",
+                "type": "uint256"
+            }, {
+                "internalType": "uint256",
+                "name": "BondPriceInUSD",
+                "type": "uint256"
+            }, {
+                "internalType": "uint256",
+                "name": "TotalPrinciple",
+                "type": "uint256"
+            }],
+            "internalType": "struct Aggregator.GlobalBondData[]",
+            "name": "",
+            "type": "tuple[]"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address[]",
+            "name": "_contracts",
+            "type": "address[]"
+        }, {
+            "internalType": "address",
+            "name": "_depositor",
+            "type": "address"
+        }],
+        "name": "perUserBondData",
+        "outputs": [{
+            "components": [{
+                "internalType": "address",
+                "name": "Contract",
+                "type": "address"
+            }, {
+                "internalType": "string",
+                "name": "Name",
+                "type": "string"
+            }, {
+                "components": [{
+                    "internalType": "uint256",
+                    "name": "Payout",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "Vesting",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "LastBlock",
+                    "type": "uint256"
+                }, {
+                    "internalType": "uint256",
+                    "name": "PricePaid",
+                    "type": "uint256"
+                }],
+                "internalType": "struct Aggregator.BondInfo",
+                "name": "Info",
+                "type": "tuple"
+            }, {
+                "internalType": "uint256",
+                "name": "PercentVested",
+                "type": "uint256"
+            }, {
+                "internalType": "uint256",
+                "name": "PendingPayout",
+                "type": "uint256"
+            }],
+            "internalType": "struct Aggregator.UserBondData[]",
+            "name": "_data",
+            "type": "tuple[]"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [],
+        "name": "policy",
+        "outputs": [{
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [],
+        "name": "pullManagement",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address",
+            "name": "newOwner_",
+            "type": "address"
+        }],
+        "name": "pushManagement",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [],
+        "name": "renounceManagement",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }]
+}

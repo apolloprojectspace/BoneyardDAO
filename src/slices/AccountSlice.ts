@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { abi as aggregatorAbi } from "../abi/aggregatorContract.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
 import { abi as HectorStakingv2 } from "../abi/HectorStakingv2.json";
@@ -44,6 +45,8 @@ export const loadAccountDetails = createAsyncThunk(
     let depositAmount = 0;
     let warmUpAmount = 0;
     let expiry = 0;
+
+    // const aggregatorContract = new ethers.Contract(addresses[networkID].AGGREGATOR_ADDRESS as string, aggregatorAbi, provider);
 
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
     const daiBalance = await daiContract.balanceOf(address);
