@@ -111,7 +111,7 @@ function Stake() {
     await dispatch(changeClaim({ address, provider, networkID: chainID }));
   };
   const warmupRebaseTime = expiry - currentEpochNumber;
-  const trimmedDepositAmount = Number(
+  const trimmedWarmUpAmount = Number(
     [warmUpAmount]
       .filter(Boolean)
       .map(amount => Number(amount))
@@ -453,10 +453,10 @@ function Stake() {
             </Paper>
           </Zoom>
         </div>
-        {trimmedDepositAmount > 0 && (
+        {trimmedWarmUpAmount > 0 && (
           <WarmUp
             depositAmount={depositAmount}
-            trimmedDepositAmount={trimmedDepositAmount}
+            trimmedWarmUpAmount={trimmedWarmUpAmount}
             warmupRebaseTime={warmupRebaseTime}
             pendingTransactions={pendingTransactions}
             onClaim={onClaim}

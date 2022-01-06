@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme =>
 
 interface Props {
   depositAmount: number;
-  trimmedDepositAmount: number;
+  trimmedWarmUpAmount: number;
   warmupRebaseTime: number;
   pendingTransactions: any;
   onClaim: () => void;
@@ -25,7 +25,7 @@ interface Props {
 }
 export default function WarmUp({
   depositAmount,
-  trimmedDepositAmount,
+  trimmedWarmUpAmount,
   warmupRebaseTime,
   pendingTransactions,
   onClaim,
@@ -53,7 +53,9 @@ export default function WarmUp({
           </div>
           <div className={"rewards-gained"}>
             <div className="MuiTypography-body1">Rewards Gained</div>
-            <div className="MuiTypography-body1">{trim(trimmedDepositAmount - depositAmount, 4)}</div>
+            <div className="MuiTypography-body1">
+              {trimmedWarmUpAmount ? trim(trimmedWarmUpAmount - depositAmount, 4) : 0}
+            </div>
           </div>
           <div className={"remaining-rebases"}>
             <div className="MuiTypography-body1">Rebase(s) left</div>
