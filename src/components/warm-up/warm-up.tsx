@@ -59,7 +59,9 @@ export default function WarmUp({
           </div>
           <div className={"remaining-rebases"}>
             <div className="MuiTypography-body1">Rebase(s) left</div>
-            <div className="MuiTypography-body1">{warmupRebaseTime}</div>
+            <div className="MuiTypography-body1">
+              {warmupRebaseTime <= 0 ? "finished" : <div>{warmupRebaseTime}</div>}
+            </div>
           </div>
           <div className={"claim-forfeit"}>
             {warmupRebaseTime >= 1 ? (
