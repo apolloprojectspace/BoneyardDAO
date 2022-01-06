@@ -50,3 +50,4 @@ The files/folder structure are a **WIP** and may contain some unused files. The 
 ## 🗣 Community
 
 - [Join our Discord](https://discord.me/hector) and ask how you can get involved with the DAO!
+
