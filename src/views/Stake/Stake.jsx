@@ -217,6 +217,16 @@ function Stake() {
   return (
     <>
       <div class="stake">
+        {trimmedWarmUpAmount > 0 && (
+          <WarmUp
+            depositAmount={depositAmount}
+            trimmedWarmUpAmount={trimmedWarmUpAmount}
+            warmupRebaseTime={warmupRebaseTime}
+            pendingTransactions={pendingTransactions}
+            onClaim={onClaim}
+            onFofeit={onFofeit}
+          />
+        )}
         <div id="stake-view">
           <Zoom in={true} onEntered={() => setZoomed(true)}>
             <Paper className={`hec-card`}>
@@ -453,16 +463,6 @@ function Stake() {
             </Paper>
           </Zoom>
         </div>
-        {trimmedWarmUpAmount > 0 && (
-          <WarmUp
-            depositAmount={depositAmount}
-            trimmedWarmUpAmount={trimmedWarmUpAmount}
-            warmupRebaseTime={warmupRebaseTime}
-            pendingTransactions={pendingTransactions}
-            onClaim={onClaim}
-            onFofeit={onFofeit}
-          />
-        )}
         {address && oldshecBalance > 0.0001 && (
           <div id="stake-view">
             <Zoom in={true} onEntered={() => setZoomed(true)}>
