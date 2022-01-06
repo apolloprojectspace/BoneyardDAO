@@ -1,3 +1,8 @@
+.stake {
+  display: grid;
+  grid: 1fr max-content / 1fr;
+}
+
 #stake-view {
   display: flex;
   flex-direction: column;
@@ -232,18 +237,5 @@
       min-width: 240px !important;
       margin-bottom: 15px;
     }
-  }
-}
-
-.forfeit {
-  display: flex;
-  svg {
-    overflow: visible;
-    align-self: center;
-    margin: 0;
-  }
-  button {
-    margin-right: 10px;
-    padding: 0 10px;
   }
 }
