@@ -12,6 +12,7 @@ export const mim4 = new StableBond({
     bondIconSvg: MimImg,
     bondContractABI: DaiBondContract,
     isFour: true,
+    isOld: true,
     networkAddrs: {
         [NetworkID.Mainnet]: {
             bondAddress: "0xb26be27f6f980efb07ae757d0a6a372671eacf7f",

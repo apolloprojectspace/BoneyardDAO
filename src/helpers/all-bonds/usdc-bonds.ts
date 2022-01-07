@@ -60,6 +60,7 @@ export const usdc4 = new StableBond({
     isFour: true,
     decimals: 6,
     isTotal: true,
+    isOld: true,
     networkAddrs: {
         [NetworkID.Mainnet]: {
             bondAddress: "0x605c31dD24c71f0b732Ef33aC12CDce77fAC09B6",

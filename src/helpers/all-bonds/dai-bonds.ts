@@ -80,6 +80,7 @@ export const dai4 = new StableBond({
     isFour: true,
     isTotal: true,
     bondContractABI: MimBondContract,
+    isOld: true,
     networkAddrs: {
         [NetworkID.Mainnet]: {
             bondAddress: "0xe8fd4630800bA4335801D1b104B07328Ae415605",
@@ -121,6 +122,7 @@ export const dailp = new LPBond({
     bondIconSvg: HecDaiimg,
     bondContractABI: BondHecDaiContract,
     reserveContract: ReserveHecDaiContract,
+    isOld: true,
     networkAddrs: {
         [NetworkID.Mainnet]: {
             bondAddress: "0xA1224c353cdCB03eB70FbA44dADC137F39E5EF7d",
