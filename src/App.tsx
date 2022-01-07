@@ -35,7 +35,7 @@ import { mim4, mim4_v2 } from "./helpers/all-bonds/mim-bonds";
 import { dailp4, dai4, dai4_v2 } from "./helpers/all-bonds/dai-bonds";
 import { usdc4, usdc4_v2 } from "./helpers/all-bonds/usdc-bonds";
 
-const drawerWidth = 280;
+const drawerWidth = 300;
 const transitionDuration = 969;
 
 const useStyles = makeStyles(theme => ({
