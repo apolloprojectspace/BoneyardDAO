@@ -32,6 +32,12 @@ export const getBalances = createAsyncThunk(
   },
 );
 
+interface AggregatorContract {
+  globalBondData: () => any;
+  perUserBondData: (address: string) => any;
+}
+
+
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
   async ({ networkID, provider, address }: IBaseAddressAsyncThunk, { dispatch }) => {
@@ -46,7 +52,9 @@ export const loadAccountDetails = createAsyncThunk(
     let warmUpAmount = 0;
     let expiry = 0;
 
-    // const aggregatorContract = new ethers.Contract(addresses[networkID].AGGREGATOR_ADDRESS as string, aggregatorAbi, provider);
+    // const aggregatorContract = new ethers.Contract(addresses[networkID].AGGREGATOR_ADDRESS as string, aggregatorAbi, provider) as unknown as AggregatorContract;
+    // const globalBondData = await aggregatorContract.globalBondData();
+    // console.log(globalBondData);
 
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
     const daiBalance = await daiContract.balanceOf(address);
@@ -71,7 +79,8 @@ export const loadAccountDetails = createAsyncThunk(
     const stakingContract = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStakingv2, provider,);
     const warmupInfo = (await stakingContract.warmupInfo(address));
     depositAmount = warmupInfo.deposit;
-    warmUpAmount = +ethers.utils.formatUnits((await shecContract.balanceForGons(warmupInfo.gons)), "gwei");
+    const balance = (await shecContract.balanceForGons(warmupInfo.gons));
+    warmUpAmount = +ethers.utils.formatUnits(balance, "gwei");
     expiry = warmupInfo.expiry;
 
     return {

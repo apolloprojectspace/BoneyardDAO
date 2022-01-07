@@ -35,20 +35,88 @@
         "type": "event"
     }, {
         "inputs": [{
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+        }],
+        "name": "Bonds_11",
+        "outputs": [{
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+        }],
+        "name": "Bonds_11v2",
+        "outputs": [{
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+        }],
+        "name": "Bonds_44",
+        "outputs": [{
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+        }],
+        "stateMutability": "view",
+        "type": "function"
+    }, {
+        "inputs": [{
             "internalType": "address[]",
             "name": "_contracts",
             "type": "address[]"
         }],
+        "name": "add11BondContracts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address[]",
+            "name": "_contracts",
+            "type": "address[]"
+        }],
+        "name": "add11v2BondContracts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address[]",
+            "name": "_contracts",
+            "type": "address[]"
+        }],
+        "name": "add44BondContracts",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [],
         "name": "globalBondData",
         "outputs": [{
             "components": [{
-                "internalType": "address",
-                "name": "Contract",
-                "type": "address"
-            }, {
                 "internalType": "string",
                 "name": "Name",
                 "type": "string"
+            }, {
+                "internalType": "address",
+                "name": "Contract",
+                "type": "address"
             }, {
                 "components": [{
                     "internalType": "uint256",
@@ -75,7 +143,7 @@
                     "name": "maxDebt",
                     "type": "uint256"
                 }],
-                "internalType": "struct IHectorBondStakeDepository.Terms",
+                "internalType": "struct Aggregator.BondTerms",
                 "name": "BondTerms",
                 "type": "tuple"
             }, {
@@ -107,10 +175,6 @@
         "type": "function"
     }, {
         "inputs": [{
-            "internalType": "address[]",
-            "name": "_contracts",
-            "type": "address[]"
-        }, {
             "internalType": "address",
             "name": "_depositor",
             "type": "address"
@@ -156,7 +220,7 @@
                 "type": "uint256"
             }],
             "internalType": "struct Aggregator.UserBondData[]",
-            "name": "_data",
+            "name": "",
             "type": "tuple[]"
         }],
         "stateMutability": "view",
@@ -184,6 +248,36 @@
             "type": "address"
         }],
         "name": "pushManagement",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address",
+            "name": "_contract",
+            "type": "address"
+        }],
+        "name": "remove11BondContract",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address",
+            "name": "_contract",
+            "type": "address"
+        }],
+        "name": "remove11v2BondContract",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }, {
+        "inputs": [{
+            "internalType": "address",
+            "name": "_contract",
+            "type": "address"
+        }],
+        "name": "remove44BondContract",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

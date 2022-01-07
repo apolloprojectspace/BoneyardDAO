@@ -93,7 +93,8 @@ export const changeApproval = createAsyncThunk(
 
       await approveTx.wait();
       dispatch(success(messages.tx_successfully_send));
-    } catch (e: any) {``
+    } catch (e: any) {
+      ``
       // dispatch(error((e as IJsonRPCError).message));
       return metamaskErrorWrap(e, dispatch);
     } finally {
