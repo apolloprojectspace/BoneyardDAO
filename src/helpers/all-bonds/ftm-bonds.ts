@@ -12,6 +12,7 @@ export const ftm = new CustomBond({
     bondType: BondType.StableAsset,
     bondToken: "WFTM",
     bondIconSvg: wFTMImg,
+    isOld: true,
     bondContractABI: FtmBondContract,
     reserveContract: ierc20Abi, // The Standard ierc20Abi since they're normal tokens
     networkAddrs: {

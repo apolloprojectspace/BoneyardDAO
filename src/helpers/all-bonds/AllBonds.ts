@@ -3,7 +3,7 @@ import { frax, frax4, frax4_v2, fraxlp, fraxlp4, fraxlp4_v2 } from './frax-bonds
 import { usdc, usdc4_v3, usdclp, usdclp4, usdclp4_v2 } from './usdc-bonds';
 import { gohmlp, gohmlp4, gohmlp4_v2 } from './gOHM-bonds';
 import { mim, mim4_v3 } from './mim-bonds';
-import { ftm } from './ftm-bonds';
+import { ftm, ftmv2 } from './ftm-bonds';
 
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
@@ -32,7 +32,7 @@ export const allBonds = [
   fraxlp,
   fraxlp4,
   fraxlp4_v2,
-  // ftmv2,
+  ftmv2,
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
