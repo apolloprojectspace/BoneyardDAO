@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as aggregatorAbi } from "../abi/aggregatorContract.json";
 import { abi as sHECv2 } from "../abi/sHecv2.json";
 import { abi as wsHEC } from "../abi/wsHec.json";
 import { abi as HectorStakingv2 } from "../abi/HectorStakingv2.json";
@@ -10,6 +9,7 @@ import { setAll } from "../helpers";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
+import { getUserBondDetails, GetUserBondDetails } from 'src/helpers/bond-details.helper';
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -32,11 +32,12 @@ export const getBalances = createAsyncThunk(
   },
 );
 
-interface AggregatorContract {
-  globalBondData: () => any;
-  perUserBondData: (address: string) => any;
-}
-
+export const getUserBondData = createAsyncThunk(
+  "account/getUserBondData",
+  async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
+    return await getUserBondDetails(networkID, provider, address);
+  },
+);
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
@@ -51,10 +52,6 @@ export const loadAccountDetails = createAsyncThunk(
     let depositAmount = 0;
     let warmUpAmount = 0;
     let expiry = 0;
-
-    // const aggregatorContract = new ethers.Contract(addresses[networkID].AGGREGATOR_ADDRESS as string, aggregatorAbi, provider) as unknown as AggregatorContract;
-    // const globalBondData = await aggregatorContract.globalBondData();
-    // console.log(globalBondData);
 
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
     const daiBalance = await daiContract.balanceOf(address);
@@ -79,7 +76,7 @@ export const loadAccountDetails = createAsyncThunk(
     const stakingContract = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStakingv2, provider,);
     const warmupInfo = (await stakingContract.warmupInfo(address));
     depositAmount = warmupInfo.deposit;
-    const balance = (await shecContract.balanceForGons(warmupInfo.gons));
+    const balance = await shecContract.balanceForGons(warmupInfo.gons);
     warmUpAmount = +ethers.utils.formatUnits(balance, "gwei");
     expiry = warmupInfo.expiry;
 
@@ -120,7 +117,8 @@ export interface IUserBondDetails {
 }
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
-  async ({ address, bond, networkID, provider }: ICalcUserBondDetailsAsyncThunk) => {
+  async ({ address, bond, networkID, provider }: ICalcUserBondDetailsAsyncThunk, { getState }) => {
+    const { userBondData } = (getState() as RootState).account;
     if (!address) {
       return {
         bond: "",
@@ -139,15 +137,16 @@ export const calculateUserBondDetails = createAsyncThunk(
     // dispatch(fetchBondInProgress());
 
     // Calculate bond details.
-    const bondContract = bond.getContractForBond(networkID, provider);
+    const bondData = userBondData!.find(userBond => bond.networkAddrs[networkID].bondAddress.toLowerCase() === userBond.Contract.toLowerCase());
+
     const reserveContract = bond.getContractForReserve(networkID, provider);
 
     let interestDue, pendingPayout, bondMaturationBlock;
 
-    const bondDetails = await bondContract.bondInfo(address);
-    interestDue = bondDetails.payout / Math.pow(10, 9);
-    bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-    pendingPayout = await bondContract.pendingPayoutFor(address);
+    const bondDetails = bondData!.Info;
+    interestDue = +bondDetails.Payout / Math.pow(10, 9);
+    bondMaturationBlock = +bondDetails.Vesting + +bondDetails.LastBlock;
+    pendingPayout = bondData!.PendingPayout;
 
     let allowance,
       balance = 0;
@@ -177,8 +176,9 @@ export const calculateUserBondDetails = createAsyncThunk(
   },
 );
 
-interface IAccountSlice {
+export interface IAccountSlice {
   bonds: { [key: string]: IUserBondDetails };
+  userBondData: GetUserBondDetails[];
   balances: {
     hec: string;
     shec: string;
@@ -196,6 +196,7 @@ interface IAccountSlice {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
+  userBondData: [],
   balances: { hec: "", shec: "", dai: "", oldshec: "", wshec: "", wshecAsShec: "" },
   wrapping: { shecWrap: 0, wshecUnwrap: 0 },
 };
@@ -244,6 +245,18 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
+      })
+      .addCase(getUserBondData.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getUserBondData.fulfilled, (state, action) => {
+        if (!action.payload) return;
+        state.userBondData = action.payload;
+        state.loading = false;
+      })
+      .addCase(getUserBondData.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error);
       });
   },
 });

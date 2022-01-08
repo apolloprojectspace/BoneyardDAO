@@ -23,7 +23,6 @@ export const allBonds = [
   gohmlp,
   gohmlp4,
   gohmlp4_v2,
-  ftm,
   mim,
   mim4_v3,
   frax,

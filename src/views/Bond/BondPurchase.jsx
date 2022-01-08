@@ -75,6 +75,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
             address: recipientAddress || address,
           }),
         );
+        clearInput();
         dispatch(calcBondDetails({ bond, value: quantity, provider, networkID: chainID }));
       }
     } else {
@@ -144,7 +145,13 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   const isAllowanceDataLoading = bond.allowance == null;
 
   let balance = trim(bond.balance, 4);
-  if (bond.name == "usdclp" || bond.name == "usdc_lp_4" || bond.name == "gohmlp" || bond.name == "gohmlp4" || bond.name == "gohmlp4_v2") {
+  if (
+    bond.name == "usdclp" ||
+    bond.name == "usdc_lp_4" ||
+    bond.name == "gohmlp" ||
+    bond.name == "gohmlp4" ||
+    bond.name == "gohmlp4_v2"
+  ) {
     balance = new Intl.NumberFormat("en-US", { notation: "scientific" }).format(bond.balance);
   }
   let reward;

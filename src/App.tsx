@@ -12,9 +12,9 @@ import { useAddress, useWeb3Context } from "./hooks/web3Context";
 import { storeQueryParameters } from "./helpers/QueryParameterHelper";
 import { shouldTriggerSafetyCheck } from "./helpers";
 
-import { calcBondDetails } from "./slices/BondSlice";
+import { calcBondDetails, getGlobalBondData } from "./slices/BondSlice";
 import { loadAppDetails } from "./slices/AppSlice";
-import { loadAccountDetails, calculateUserBondDetails } from "./slices/AccountSlice";
+import { loadAccountDetails, calculateUserBondDetails, getUserBondData } from "./slices/AccountSlice";
 import { info } from "./slices/MessagesSlice";
 
 import { Stake, ChooseBond, Bond, TreasuryDashboard } from "./views";
@@ -31,9 +31,7 @@ import { girth as gTheme } from "./themes/girth.js";
 import "./style.scss";
 import Wrap from "./views/Wrap/Wrap";
 import Calculator from "./views/Calculator/index";
-import { mim4, mim4_v2 } from "./helpers/all-bonds/mim-bonds";
-import { dailp4, dai4, dai4_v2 } from "./helpers/all-bonds/dai-bonds";
-import { usdc4, usdc4_v2 } from "./helpers/all-bonds/usdc-bonds";
+import { RootState } from "./store";
 
 const drawerWidth = 300;
 const transitionDuration = 969;
@@ -88,7 +86,6 @@ function App() {
   const [walletChecked, setWalletChecked] = useState(false);
 
   let { bonds } = useBonds();
-  bonds = [...bonds, ...[dailp4, usdc4, mim4, dai4, usdc4_v2, mim4_v2, dai4_v2]];
   async function loadDetails(whichDetails: string) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -109,24 +106,30 @@ function App() {
   }
 
   const loadApp = useCallback(
-    loadProvider => {
+    async loadProvider => {
       dispatch(loadAppDetails({ networkID: chainID, provider: loadProvider }));
-      bonds.map(bond => {
-        dispatch(calcBondDetails({ bond, value: "", provider: loadProvider, networkID: chainID }));
-      });
+      populateGlobalBondInfo();
     },
     [connected],
   );
 
   const loadAccount = useCallback(
-    loadProvider => {
+    async loadProvider => {
       dispatch(loadAccountDetails({ networkID: chainID, address, provider: loadProvider }));
+      await dispatch(getUserBondData({ networkID: chainID, provider, address }));
       bonds.map(bond => {
         dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
       });
     },
     [connected],
   );
+
+  const populateGlobalBondInfo = useCallback(async () => {
+    await dispatch(getGlobalBondData({ networkID: chainID, provider }));
+    bonds.map(bond => {
+      dispatch(calcBondDetails({ bond, value: "", provider, networkID: chainID }));
+    });
+  }, []);
 
   // The next 3 useEffects handle initializing API Loads AFTER wallet is checked
   //
@@ -187,10 +190,8 @@ function App() {
   useEffect(() => {
     const updateAppDetailsInterval = setInterval(() => {
       dispatch(loadAppDetails({ networkID: chainID, provider }));
-      bonds.map(bond => {
-        dispatch(calcBondDetails({ bond, value: "", provider, networkID: chainID }));
-      });
-    }, 1000 * 30);
+      populateGlobalBondInfo();
+    }, 1000 * 60);
     return () => {
       clearInterval(updateAppDetailsInterval);
     };
@@ -198,8 +199,9 @@ function App() {
 
   useEffect(() => {
     if (walletChecked) {
-      const updateAccountDetailInterval = setInterval(() => {
+      const updateAccountDetailInterval = setInterval(async () => {
         dispatch(loadAccountDetails({ networkID: chainID, address, provider: provider }));
+        await dispatch(getUserBondData({ networkID: chainID, provider, address }));
         bonds.map(bond => {
           dispatch(calculateUserBondDetails({ address, bond, provider, networkID: chainID }));
         });

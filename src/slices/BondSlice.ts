@@ -1,5 +1,4 @@
 import { ethers, BigNumber } from "ethers";
-import { useSelector } from "react-redux";
 import { contractForRedeemHelper } from "../helpers";
 import { calculateUserBondDetails, loadAccountDetails } from "./AccountSlice";
 import { findOrLoadMarketPrice } from "./AppSlice";
@@ -15,10 +14,19 @@ import {
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
+  IBaseAsyncThunk,
 } from "./interfaces";
 import { messages } from "src/constants";
 import { sleep } from "src/helpers/Sleep";
 import { metamaskErrorWrap } from "src/helpers/MetamaskErrorWrap";
+import { getAllBondDetails, GlobalBondData } from 'src/helpers/bond-details.helper';
+
+export const getGlobalBondData = createAsyncThunk(
+  'bonding/getGlobalBondData',
+  async ({ networkID, provider }: IBaseAsyncThunk) => {
+    return await getAllBondDetails(networkID, provider);
+  }
+);
 
 export const changeApproval = createAsyncThunk(
   "bonding/changeApproval",
@@ -78,18 +86,20 @@ export interface IBondDetails {
 }
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
-  async ({ bond, value, provider, networkID }: ICalcBondDetailsAsyncThunk, { dispatch }): Promise<IBondDetails> => {
+  async ({ bond, value, provider, networkID }: ICalcBondDetailsAsyncThunk, { dispatch, getState }): Promise<IBondDetails> => {
+    const { globalBondData } = (getState() as RootState).bonding;
     if (!value) {
       value = "0";
     }
     const amountInWei = ethers.utils.parseEther(value);
-
     // const vestingTerm = VESTING_TERM; // hardcoded for now
     let bondPrice = 0,
       bondDiscount = 0,
       valuation = 0,
       bondQuote = 0;
-    const bondContract = bond.getContractForBond(networkID, provider);
+
+    const bondData = globalBondData!.find(globalBond => bond.networkAddrs[networkID].bondAddress.toLowerCase() === globalBond.Contract.toLowerCase());
+
     // const bondCalcContract = getBondCalculator(networkID, provider);
     let bondCalcContract;
     if (bond.name == "dailp_v1") {
@@ -101,11 +111,12 @@ export const calcBondDetails = createAsyncThunk(
       bondCalcContract = getgOHMBondCalculator(networkID, provider);
     }
 
-    const terms = await bondContract.terms();
-    const maxBondPrice = await bondContract.maxPayout();
-    const debtRatio = (await bondContract.standardizedDebtRatio()) / Math.pow(10, 9);
-    const totalDebt = await bondContract.totalDebt();
+    const terms = bondData!.BondTerms;
+    const maxBondPrice = +bondData!.MaxPayout;
+    const debtRatio = +bondData!.StandardizedDebtRatio / Math.pow(10, 9);
+    const totalDebt = bondData!.TotalDebt;
     const maxDebt = terms.maxDebt;
+    const vestingTerm = Number(terms.vestingTerm);
     let isSoldOut = false;
     if (Number(totalDebt) >= Number(maxDebt)) {
       isSoldOut = true;
@@ -123,11 +134,13 @@ export const calcBondDetails = createAsyncThunk(
     }
 
     try {
-      bondPrice = await bondContract.bondPriceInUSD();
+      bondPrice = +bondData!.BondPriceInUSD;
       bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
     } catch (e) {
       console.log("error getting bondPriceInUSD", e);
     }
+
+    const bondContract = bond.getContractForBond(networkID, provider);
 
     if (Number(value) === 0) {
       // if inputValue is 0 avoid the bondQuote calls
@@ -182,7 +195,7 @@ export const calcBondDetails = createAsyncThunk(
       debtRatio,
       bondQuote,
       purchased,
-      vestingTerm: Number(terms.vestingTerm),
+      vestingTerm,
       maxBondPrice: maxBondPrice / Math.pow(10, 9),
       bondPrice: bondPrice,
       marketPrice: marketPrice,
@@ -336,6 +349,7 @@ export const redeemAllBonds = createAsyncThunk(
 // Note(zx): this is a barebones interface for the state. Update to be more accurate
 interface IBondSlice {
   status: string;
+  globalBondData: GlobalBondData[];
   [key: string]: any;
 }
 
@@ -348,6 +362,7 @@ const setBondState = (state: IBondSlice, payload: any) => {
 
 const initialState: IBondSlice = {
   status: "idle",
+  globalBondData: []
 };
 
 const bondingSlice = createSlice({
@@ -358,7 +373,6 @@ const bondingSlice = createSlice({
       state[action.payload.bond] = action.payload;
     },
   },
-
   extraReducers: builder => {
     builder
       .addCase(calcBondDetails.pending, state => {
@@ -369,6 +383,17 @@ const bondingSlice = createSlice({
         state.loading = false;
       })
       .addCase(calcBondDetails.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(getGlobalBondData.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getGlobalBondData.fulfilled, (state, action) => {
+        state.globalBondData = action.payload
+        state.loading = false;
+      })
+      .addCase(getGlobalBondData.rejected, (state, { error }) => {
         state.loading = false;
         console.error(error.message);
       });

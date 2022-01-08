@@ -92,9 +92,11 @@ export abstract class Bond {
   getAddressForBond(networkID: NetworkID) {
     return this.networkAddrs[networkID].bondAddress;
   }
-  getContractForBond(networkID: NetworkID, provider: StaticJsonRpcProvider | JsonRpcSigner) {
-    const bondAddress = this.getAddressForBond(networkID);
-    return new ethers.Contract(bondAddress, this.bondContractABI, provider);
+  getContractForBond(networkID: NetworkID, provider: StaticJsonRpcProvider | JsonRpcSigner, contract?: string) {
+    if (!contract) {
+      contract = this.getAddressForBond(networkID);
+    }
+    return new ethers.Contract(contract, this.bondContractABI, provider);
   }
 
   getAddressForReserve(networkID: NetworkID) {
@@ -165,7 +167,7 @@ export class LPBond extends Bond {
     if (this.additionValue) {
       tokenAmount = tokenAmount.add(BigInt(this.additionValue));
     }
-    
+
     const valuation = await bondCalculator.valuation(tokenAddress, tokenAmount);
     const markdown = await bondCalculator.markdown(tokenAddress);
     let tokenUSD;
@@ -176,7 +178,7 @@ export class LPBond extends Bond {
 
 // Generic BondClass we should be using everywhere
 // Assumes the token being deposited follows the standard ERC20 spec
-export interface StableBondOpts extends BondOpts {}
+export interface StableBondOpts extends BondOpts { }
 export class StableBond extends Bond {
   readonly isLP = false;
   readonly reserveContract: ethers.ContractInterface;

@@ -38,7 +38,8 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 
 // Account Slice
 
-export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
+export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {
+}
 
 // Bond Slice
 
