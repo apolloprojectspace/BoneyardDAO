@@ -4,7 +4,7 @@
   justify-self: center;
   row-gap: 10px;
   grid: 1fr / minmax(0, 1fr);
-  .title {
+  .header {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -15,7 +15,7 @@
     }
     svg {
       overflow: visible;
-      align-self: center;
+      align-self: flex-start;
       margin: 0;
     }
   }

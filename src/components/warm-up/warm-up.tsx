@@ -4,6 +4,7 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { trim } from "src/helpers";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import "./warm-up.scss";
+import RebaseTimer from "../RebaseTimer/RebaseTimer";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -36,8 +37,12 @@ export default function WarmUp({
   return (
     <div className={"warm-up MuiPaper-root hec-card "}>
       <>
-        <div className="card-header title">
-          <Typography variant="h5">Warm Up Details</Typography>
+        <div className="card-header header">
+          <div className="title">
+            <Typography variant="h5">Warm Up Details</Typography>
+            <RebaseTimer />
+          </div>
+
           <Tooltip
             arrow
             title="Choosing to Forfeit will return your original HEC amount without any of the accumulated rewards for the first 3 rebases."
