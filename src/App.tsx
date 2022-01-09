@@ -223,7 +223,7 @@ function App() {
           mobile: isSmallScreen,
         })}
       >
-        <Banner></Banner>
+        <Banner isSmallScreen={isSmallScreen}></Banner>
         <Messages />
         <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
         <nav className={classes.drawer}>
