@@ -258,7 +258,7 @@ function App() {
               {bonds.map(bond => {
                 return (
                   <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                    <Bond bond={bond} />
+                    <>{!bond.isOld && <Bond bond={bond} />}</>
                   </Route>
                 );
               })}
