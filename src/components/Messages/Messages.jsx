@@ -55,28 +55,26 @@ function Messages() {
     };
   };
   return (
-    <div>
-      <div>
-        {messages.items.map((message, index) => {
-          return (
-            <Snackbar open={message.open} key={index} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert
-                variant="filled"
-                icon={false}
-                severity={message.severity}
-                onClose={handleClose(message)}
-                // NOTE (appleseed): mui includes overflow-wrap: "break-word", but word-break: "break-word" is needed for webKit browsers
-                style={{ wordBreak: "break-word" }}
-              >
-                <AlertTitle>{message.title}</AlertTitle>
-                {message.text}
-                <Linear message={message} />
-              </Alert>
-            </Snackbar>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {messages.items.map((message, index) => {
+        return (
+          <Snackbar open={message.open} key={index} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+            <Alert
+              variant="filled"
+              icon={false}
+              severity={message.severity}
+              onClose={handleClose(message)}
+              // NOTE (appleseed): mui includes overflow-wrap: "break-word", but word-break: "break-word" is needed for webKit browsers
+              style={{ wordBreak: "break-word" }}
+            >
+              <AlertTitle>{message.title}</AlertTitle>
+              {message.text}
+              <Linear message={message} />
+            </Alert>
+          </Snackbar>
+        );
+      })}
+    </>
   );
 }
 // Invoke repetedly obsolete messages deletion (should be in slice file but I cannot find a way to access the store from there)
