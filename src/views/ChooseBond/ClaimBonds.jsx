@@ -46,11 +46,7 @@ function ClaimBonds({ activeBonds }) {
   };
 
   const onRedeemAll = async ({ autostake }) => {
-    console.log("redeeming all bonds");
-
     await dispatch(redeemAllBonds({ address, bonds, networkID: chainID, provider, autostake }));
-
-    console.log("redeem all complete");
   };
 
   useEffect(() => {

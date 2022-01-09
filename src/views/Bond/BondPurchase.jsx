@@ -113,7 +113,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
     if (maxQ < 0) {
       maxQ = 0;
     }
-    setQuantity(maxQ);
+    setQuantity(trim(maxQ, 4));
   };
 
   const bondDetailsDebounce = useDebounce(quantity, 10);
