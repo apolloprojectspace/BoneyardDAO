@@ -92,7 +92,6 @@ export const calcBondDetails = createAsyncThunk(
       value = "0";
     }
     const amountInWei = ethers.utils.parseEther(value);
-    // const vestingTerm = VESTING_TERM; // hardcoded for now
     let bondPrice = 0,
       bondDiscount = 0,
       valuation = 0,
@@ -140,12 +139,12 @@ export const calcBondDetails = createAsyncThunk(
       console.log("error getting bondPriceInUSD", e);
     }
 
-    const bondContract = bond.getContractForBond(networkID, provider);
 
     if (Number(value) === 0) {
       // if inputValue is 0 avoid the bondQuote calls
       bondQuote = 0;
     } else if (bond.isLP) {
+      const bondContract = bond.getContractForBond(networkID, provider);
       valuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei);
       bondQuote = await bondContract.payoutFor(valuation);
       if (!amountInWei.isZero() && bondQuote < 100000) {
@@ -157,6 +156,7 @@ export const calcBondDetails = createAsyncThunk(
       }
     } else {
       // RFV = DAI
+      const bondContract = bond.getContractForBond(networkID, provider);
       bondQuote = await bondContract.payoutFor(amountInWei);
 
       if (!amountInWei.isZero() && bondQuote < 100000000000000) {
