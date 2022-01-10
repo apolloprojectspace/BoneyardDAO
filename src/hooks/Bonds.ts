@@ -43,7 +43,7 @@ function useBonds() {
         }
         return bond;
       });
-
+    bondDetails = bondDetails.filter(bond => !bond.isOld)
     const mostProfitableBonds = bondDetails.concat().sort((a, b) => {
       return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
     });
