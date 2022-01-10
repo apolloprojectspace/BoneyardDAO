@@ -138,7 +138,9 @@ export const calculateUserBondDetails = createAsyncThunk(
 
     // Calculate bond details.
     const bondData = userBondData!.find(userBond => bond.networkAddrs[networkID].bondAddress.toLowerCase() === userBond.Contract.toLowerCase());
-
+    if (!bondData) {
+      return;
+    }
     const reserveContract = bond.getContractForReserve(networkID, provider);
 
     let interestDue, pendingPayout, bondMaturationBlock;
