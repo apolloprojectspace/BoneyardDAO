@@ -98,7 +98,7 @@ export const loadAccountDetails = createAsyncThunk(
         hecUnwrap: +unwrapAllowance,
       },
       warmup: {
-        depositAmount: ethers.utils.formatUnits(depositAmount, "gwei"),
+        depositAmount: +ethers.utils.formatUnits(depositAmount, "gwei"),
         warmUpAmount,
         expiryBlock: expiry,
       },

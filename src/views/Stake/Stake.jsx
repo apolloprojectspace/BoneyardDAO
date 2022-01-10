@@ -115,8 +115,7 @@ function Stake() {
     [warmUpAmount]
       .filter(Boolean)
       .map(amount => Number(amount))
-      .reduce((a, b) => a + b, 0)
-      .toFixed(4),
+      .reduce((a, b) => a + b, 0),
   );
   const setMax = () => {
     if (view === 0) {
