@@ -139,7 +139,6 @@ export const calculateUserBondDetails = createAsyncThunk(
     // Calculate bond details.
     const bondData = userBondData!.find(userBond => bond.networkAddrs[networkID].bondAddress.toLowerCase() === userBond.Contract.toLowerCase());
     if (!bondData) {
-      console.error(`${bond.name} not found in Aggregator`);
       return;
     }
     const reserveContract = bond.getContractForReserve(networkID, provider);
