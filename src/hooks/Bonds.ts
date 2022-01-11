@@ -48,7 +48,7 @@ function useBonds() {
       return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
     });
 
-    setBonds(mostProfitableBonds);
+    setBonds([...mostProfitableBonds, ...allBonds.filter(bond => bond.isOld)]);
   }, [bondState, accountBondsState, bondLoading]);
 
   // Debug Log:
