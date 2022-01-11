@@ -1,22 +1,17 @@
-import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { shorten, trim, prettyVestingPeriod } from "../../helpers";
 import { redeemBond } from "../../slices/BondSlice";
 import { info, error } from "../../slices/MessagesSlice";
 import BondLogo from "../../components/BondLogo";
-import { Box, Button, Link, Paper, Typography, TableRow, TableCell, SvgIcon, Slide } from "@material-ui/core";
+import { Box, Button, Paper, Typography, TableRow, TableCell } from "@material-ui/core";
 import "./choosebond.scss";
 import { Skeleton } from "@material-ui/lab";
 import { useWeb3Context, useBonds } from "src/hooks";
 import { isPendingTxn, txnButtonTextGeneralPending } from "src/slices/PendingTxnsSlice";
-import { usdc4, usdc4_v2 } from "src/helpers/all-bonds/usdc-bonds";
-import { dailp4, dai4_v2, dai4 } from "src/helpers/all-bonds/dai-bonds";
-import { mim4, mim4_v2 } from "src/helpers/all-bonds/mim-bonds";
 
 export function ClaimBondTableData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
-  bonds = bonds.concat([dailp4, mim4, usdc4, dai4, mim4_v2, usdc4_v2, dai4_v2]);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];
@@ -94,7 +89,6 @@ export function ClaimBondTableData({ userBond }) {
 export function ClaimBondCardData({ userBond }) {
   const dispatch = useDispatch();
   let { bonds } = useBonds();
-  bonds = bonds.concat([dailp4, mim4, usdc4, dai4, mim4_v2, usdc4_v2, dai4_v2]);
   const { address, chainID, provider } = useWeb3Context();
 
   const bond = userBond[1];

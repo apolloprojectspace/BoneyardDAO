@@ -6,11 +6,13 @@ import { useWeb3Context } from "src/hooks/web3Context";
 import { trim, secondsUntilBlock, prettifySeconds, prettyVestingPeriod } from "../../helpers";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
+import { useHistory } from "react-router-dom";
 
 function BondRedeem({ bond }) {
   // const { bond: bondName } = bond;
   const dispatch = useDispatch();
   const { provider, address, chainID } = useWeb3Context();
+  const history = useHistory();
 
   const isBondLoading = useSelector(state => state.bonding.loading ?? true);
 
@@ -28,7 +30,10 @@ function BondRedeem({ bond }) {
   });
 
   async function onRedeem({ autostake }) {
-    await dispatch(redeemBond({ address, bond, networkID: chainID, provider, autostake }));
+    const res = await dispatch(redeemBond({ address, bond, networkID: chainID, provider, autostake }));
+    if (!res.payload) {
+      history.push("/bonds");
+    }
   }
 
   const vestingTime = () => {

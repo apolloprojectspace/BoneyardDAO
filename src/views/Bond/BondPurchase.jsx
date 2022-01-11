@@ -17,11 +17,13 @@ import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
 import useDebounce from "../../hooks/Debounce";
 import { error } from "../../slices/MessagesSlice";
+import { useHistory } from "react-router-dom";
 
 function BondPurchase({ bond, slippage, recipientAddress }) {
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch();
   const { provider, address, chainID } = useWeb3Context();
+  const history = useHistory();
 
   const [quantity, setQuantity] = useState("");
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
@@ -48,6 +50,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   });
   const stakingRebasePercentage = stakingRebase * 1200;
   let discount = bond.bondDiscount * 100;
+
   async function onBond() {
     if (quantity === "") {
       dispatch(error("Please enter a value!"));
@@ -65,34 +68,30 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
         );
       }
       if (shouldProceed) {
-        await dispatch(
-          bondAsset({
-            value: quantity,
-            slippage,
-            bond,
-            networkID: chainID,
-            provider,
-            address: recipientAddress || address,
-          }),
-        );
-        clearInput();
-        dispatch(calcBondDetails({ bond, value: quantity, provider, networkID: chainID }));
+        dispatchBondProcess();
       }
     } else {
-      await dispatch(
-        bondAsset({
-          value: quantity,
-          slippage,
-          bond,
-          networkID: chainID,
-          provider,
-          address: recipientAddress || address,
-        }),
-      );
-      clearInput();
-      dispatch(calcBondDetails({ bond, value: quantity, provider, networkID: chainID }));
+      dispatchBondProcess();
     }
   }
+
+  const dispatchBondProcess = async () => {
+    const res = await dispatch(
+      bondAsset({
+        value: quantity,
+        slippage,
+        bond,
+        networkID: chainID,
+        provider,
+        address: recipientAddress || address,
+      }),
+    );
+    clearInput();
+    dispatch(calcBondDetails({ bond, value: quantity, provider, networkID: chainID }));
+    if (!res.payload) {
+      history.push("/bonds");
+    }
+  };
 
   const clearInput = () => {
     setQuantity(0);
@@ -136,7 +135,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
     return () => clearInterval(interval);
   }, [secondsToRefresh, quantity]);
 
-  const onSeekApproval = async () => {
+  const onSeekApproval = () => {
     dispatch(changeApproval({ address, bond, provider, networkID: chainID }));
   };
 

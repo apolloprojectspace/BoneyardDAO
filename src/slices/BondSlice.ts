@@ -1,6 +1,6 @@
 import { ethers, BigNumber } from "ethers";
 import { contractForRedeemHelper } from "../helpers";
-import { calculateUserBondDetails, loadAccountDetails } from "./AccountSlice";
+import { calculateUserBondDetails, getUserBondData, loadAccountDetails } from "./AccountSlice";
 import { findOrLoadMarketPrice } from "./AppSlice";
 import { error, info, success } from "./MessagesSlice";
 import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
@@ -66,6 +66,8 @@ export const changeApproval = createAsyncThunk(
     } finally {
       if (approveTx) {
         await dispatch(clearPendingTxn(approveTx.hash));
+        await dispatch(getUserBondData({ networkID, provider, address }));
+        await sleep(10);
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
       }
     }
@@ -246,6 +248,7 @@ export const bondAsset = createAsyncThunk(
       // TODO: it may make more sense to only have it in the finally.
       // UX preference (show pending after txn complete or after balance updated)
       await sleep(10);
+      await dispatch(getUserBondData({ networkID, provider, address }));
       await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
       dispatch(info(messages.your_balance_updated));
     } catch (e: any) {
@@ -292,6 +295,7 @@ export const redeemBond = createAsyncThunk(
       await sleep(10);
       dispatch(info(messages.your_balance_update_soon))
       await sleep(10);
+      await dispatch(getUserBondData({ networkID, provider, address }));
       await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
       await dispatch(loadAccountDetails({ address, networkID, provider }));
       dispatch(info(messages.your_balance_updated));
