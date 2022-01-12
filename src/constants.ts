@@ -1,4 +1,4 @@
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/wkich/hector-subgraph";
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/id/QmdW8CvS1zdKzSvb2xPWsUTWTpgVThRz6SC66wRneZLGWx";
 export const EPOCH_INTERVAL = 28800;
 
 // NOTE could get this from an outside source since it changes slightly over time
