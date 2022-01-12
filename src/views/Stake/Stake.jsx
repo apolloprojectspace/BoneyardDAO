@@ -147,6 +147,10 @@ function Stake() {
       return dispatch(error("Please enter a value!"));
     }
 
+    if (value === "0") {
+      return dispatch(error("Please enter a value greater than 0!"));
+    }
+
     // 1st catch if quantity > balance
     let gweiValue = ethers.utils.parseUnits(value, "gwei");
     if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(hecBalance, "gwei"))) {

@@ -74,9 +74,9 @@ export const loadAccountDetails = createAsyncThunk(
     const wshecBalance = await wshecContract.balanceOf(address);
 
     const stakingContract = new ethers.Contract(addresses[networkID].STAKING_ADDRESS as string, HectorStakingv2, provider,);
-    const warmupInfo = (await stakingContract.warmupInfo(address));
-    depositAmount = warmupInfo.deposit;
+    const warmupInfo = await stakingContract.warmupInfo(address);
     const balance = await shecContract.balanceForGons(warmupInfo.gons);
+    depositAmount = warmupInfo.deposit;
     warmUpAmount = +ethers.utils.formatUnits(balance, "gwei");
     expiry = warmupInfo.expiry;
 
