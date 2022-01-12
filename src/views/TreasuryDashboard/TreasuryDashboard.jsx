@@ -17,10 +17,9 @@ import { useTheme } from "@material-ui/core/styles";
 import "./treasury-dashboard.scss";
 import apollo from "../../lib/apolloClient";
 import InfoTooltip from "src/components/InfoTooltip/InfoTooltip.jsx";
-import { useDispatch } from "react-redux";
 
 function TreasuryDashboard() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [apy, setApy] = useState([]);
   const [runway, setRunway] = useState(null);
   const [staked, setStaked] = useState(null);
@@ -182,7 +181,7 @@ function TreasuryDashboard() {
                   dataKey={["totalValueLocked"]}
                   stopColor={[["#768299", "#98B3E9"]]}
                   headerText="Total Value Deposited"
-                  headerSubText={`${data[0] && formatCurrency(data[0].totalValueLocked)}`}
+                  headerSubText={`${data && formatCurrency(data[0].totalValueLocked)}`}
                   bulletpointColors={bulletpoints.tvl}
                   itemNames={tooltipItems.tvl}
                   itemType={itemType.dollar}
@@ -216,7 +215,7 @@ function TreasuryDashboard() {
                     ["#DBE722", "#9D9D18"],
                   ]}
                   headerText="Market Value of Treasury Assets"
-                  headerSubText={`${data[0] && formatCurrency(data[0].treasuryMarketValue)}`}
+                  headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
                   bulletpointColors={bulletpoints.coin}
                   itemNames={tooltipItems.coin}
                   itemType={itemType.dollar}
@@ -248,7 +247,7 @@ function TreasuryDashboard() {
                     ["#22d5e7", "#18919d"],
                   ]}
                   headerText="Risk Free Value of Treasury Assets"
-                  headerSubText={`${data[0] && formatCurrency(data[0].treasuryRiskFreeValue)}`}
+                  headerSubText={`${data && formatCurrency(data[0].treasuryRiskFreeValue)}`}
                   bulletpointColors={bulletpoints.coin}
                   itemNames={tooltipItems.coin}
                   itemType={itemType.dollar}
@@ -266,7 +265,7 @@ function TreasuryDashboard() {
                   dataKey={["treasuryHecDaiPOL"]}
                   stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
                   headerText="Protocol Owned Liquidity HEC-DAI"
-                  headerSubText={`${data[0] && trim(data[0].treasuryHecDaiPOL, 2)}% `}
+                  headerSubText={`${data && trim(data[0].treasuryHecDaiPOL, 2)}% `}
                   dataFormat="percent"
                   bulletpointColors={bulletpoints.pol}
                   itemNames={tooltipItems.pol}
@@ -305,7 +304,7 @@ function TreasuryDashboard() {
                   color={theme.palette.text.primary}
                   stroke={[theme.palette.text.primary]}
                   headerText="Runway Available"
-                  headerSubText={`${data[0] && trim(data[0].runwayCurrent, 1)} Days`}
+                  headerSubText={`${data && trim(data[0].runwayCurrent, 1)} Days`}
                   dataFormat="days"
                   bulletpointColors={bulletpoints.runway}
                   itemNames={tooltipItems.runway}
