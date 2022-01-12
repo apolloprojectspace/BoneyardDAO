@@ -24,9 +24,13 @@ body {
 .app {
   height: 100vh;
   width: 100vw;
-  display: flex;
-  flex-flow: column;
-  flex-direction: column;
+  display: grid;
+  grid-template:
+    "banner banner"
+    "nav header"
+    "nav content";
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: max-content 50px 1fr;
   z-index: 1;
   background-size: cover;
   font-family: "Square";

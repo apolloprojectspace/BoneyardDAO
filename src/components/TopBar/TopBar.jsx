@@ -9,15 +9,25 @@ import "./topbar.scss";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    [theme.breakpoints.up("sm")]: {
-      width: "100%",
-      padding: "10px",
-    },
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
+    gridArea: "header",
     background: "transparent",
     backdropFilter: "none",
     zIndex: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    [theme.breakpoints.down(400)]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    [theme.breakpoints.up(100)]: {
+      minHeight: "initial",
+    },
+  },
+  topBar: {
+    justifyItems: "end",
+    [theme.breakpoints.down("981")]: {
+      justifyItems: "initial",
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -32,8 +42,8 @@ function TopBar({ theme, toggleTheme, handleDrawerToggle }) {
   const isVerySmallScreen = useMediaQuery("(max-width: 355px)");
 
   return (
-    <AppBar position="sticky" className={classes.appBar} elevation={0}>
-      <Toolbar disableGutters className="dapp-topbar">
+    <AppBar position="sticky" className={classes.appBar + " header"} elevation={0}>
+      <Toolbar className={classes.topBar + " dapp-topbar"} disableGutters>
         <Button
           id="hamburger"
           aria-label="open drawer"

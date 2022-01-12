@@ -1,7 +1,15 @@
+.header > * {
+  min-height: initial !important;
+}
+
 .dapp-topbar {
   width: 100%;
   align-items: center;
+  display: grid !important;
+  grid-auto-flow: column;
+  grid: 1fr/ 1fr max-content max-content max-content;
   button {
+    width: max-content;
     white-space: nowrap !important;
     overflow: hidden !important;
     margin: 6px !important;

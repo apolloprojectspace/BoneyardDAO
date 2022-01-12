@@ -39,13 +39,15 @@ const transitionDuration = 969;
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    [theme.breakpoints.up("md")]: {
+    gridArea: "nav",
+    [theme.breakpoints.up(981)]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   content: {
     flexGrow: 1,
+    gridArea: "content",
     padding: theme.spacing(1),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -53,7 +55,6 @@ const useStyles = makeStyles(theme => ({
     }),
     height: "100%",
     overflow: "auto",
-    marginLeft: drawerWidth,
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -226,6 +227,7 @@ function App() {
       >
         <>{false && <Banner isSmallScreen={isSmallScreen}></Banner>}</>
         <Messages />
+        {/* header */}
         <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
         <nav className={classes.drawer}>
           {isSmallerScreen ? (
