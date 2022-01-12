@@ -1,11 +1,11 @@
 import { AppBar, Toolbar, Box, Button, SvgIcon } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ReactComponent as MenuIcon } from "../../assets/icons/hamburger.svg";
 import HecMenu from "./HecMenu.jsx";
 import ThemeSwitcher from "./ThemeSwitch.jsx";
 import ConnectMenu from "./ConnectMenu.jsx";
 import "./topbar.scss";
+import { CircularProgress, useMediaQuery } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function TopBar({ theme, toggleTheme, handleDrawerToggle }) {
+function TopBar({ theme, isAppLoading, toggleTheme, handleDrawerToggle }) {
   const classes = useStyles();
   const isVerySmallScreen = useMediaQuery("(max-width: 355px)");
 
@@ -56,6 +56,7 @@ function TopBar({ theme, toggleTheme, handleDrawerToggle }) {
         >
           <SvgIcon component={MenuIcon} />
         </Button>
+        <>{isAppLoading && <CircularProgress className={theme.color} />}</>
 
         <Box display="flex">
           {!isVerySmallScreen && <HecMenu />}

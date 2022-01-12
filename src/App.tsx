@@ -74,6 +74,9 @@ function App() {
   // useSegmentAnalytics();
   const dispatch = useDispatch();
   const [theme, toggleTheme, mounted] = useTheme();
+  const isAppLoading = useSelector(
+    (state: RootState) => state.bonding.loading || state.account.loading || state.app.loading || state.stake.loading,
+  );
   const location = useLocation();
   const currentPath = location.pathname + location.search + location.hash;
   const classes = useStyles();
@@ -218,7 +221,6 @@ function App() {
   return (
     <ThemeProvider theme={themeMode}>
       <CssBaseline />
-      {/* {isAppLoading && <LoadingSplash />} */}
       <div
         className={classNames("app", theme, {
           tablet: isSmallerScreen && !isSmallScreen,
@@ -228,7 +230,12 @@ function App() {
         <>{false && <Banner isSmallScreen={isSmallScreen}></Banner>}</>
         <Messages />
         {/* header */}
-        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+        <TopBar
+          theme={theme}
+          isAppLoading={isAppLoading}
+          toggleTheme={toggleTheme}
+          handleDrawerToggle={handleDrawerToggle}
+        />
         <nav className={classes.drawer}>
           {isSmallerScreen ? (
             <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />

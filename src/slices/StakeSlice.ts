@@ -4,12 +4,13 @@ import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as HectorStaking } from "../abi/HectorStakingv2.json";
 import { abi as StakingHelper } from "../abi/StakingHelper.json";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, loadAccountDetails } from "./AccountSlice";
-import { error, info, success } from "../slices/MessagesSlice";
+import { error, info, success } from "./MessagesSlice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
 import { metamaskErrorWrap } from "src/helpers/MetamaskErrorWrap";
 import { sleep } from "../helpers/Sleep"
+import { setAll } from 'src/helpers';
 
 interface IUAData {
   address: string;
@@ -247,9 +248,75 @@ export const changeClaim = createAsyncThunk(
     }
     await sleep(7);
     dispatch(info(messages.your_balance_update_soon));
-    await sleep(7);
+    await sleep(15);
     await dispatch(loadAccountDetails({ address, networkID, provider }));
     dispatch(info(messages.your_balance_updated));
     return;
   },
 );
+
+export interface IStakeSlice {
+  loading: boolean;
+}
+
+const initialState: IStakeSlice = {
+  loading: false
+}
+
+const stakeSlice = createSlice({
+  name: 'stake',
+  initialState,
+  reducers: {
+    fetchStakeSuccess(state, action) {
+      setAll(state, action.payload);
+    },
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(changeStake.pending, state => {
+        state.loading = true;
+      })
+      .addCase(changeStake.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(changeStake.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(changeApproval.pending, state => {
+        state.loading = true;
+      })
+      .addCase(changeApproval.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(changeApproval.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(changeForfeit.pending, state => {
+        state.loading = true;
+      })
+      .addCase(changeForfeit.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(changeForfeit.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(changeClaim.pending, state => {
+        state.loading = true;
+      })
+      .addCase(changeClaim.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(changeClaim.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+  }
+});
+
+export default stakeSlice.reducer;
+
+export const { fetchStakeSuccess } = stakeSlice.actions;
+

@@ -18,7 +18,7 @@ import {
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
 import TabPanel from "../../components/TabPanel";
 import { trim } from "../../helpers";
-import { changeApproval, changeStake, changeForfeit, changeClaim } from "../../slices/StakeThunk";
+import { changeApproval, changeStake, changeForfeit, changeClaim } from "../../slices/StakeSlice";
 import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";

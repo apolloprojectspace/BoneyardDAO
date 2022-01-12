@@ -100,7 +100,7 @@ function ChooseBond() {
               <Grid item xs={12} sm={4} md={4} lg={4}>
                 <Box textAlign={`${isVerySmallScreen ? "left" : "center"}`}>
                   <Typography variant="h5" color="textSecondary">
-                    Investments
+                    Staked on CRV
                   </Typography>
                   <Typography variant="h4">
                     {isAppLoading ? (
