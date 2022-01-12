@@ -49,18 +49,7 @@ function ChooseBond() {
       return state.app.investments;
     }) ?? 0;
 
-  const treasuryBalance =
-    useSelector(state => {
-      if (state.bonding.loading == false) {
-        let tokenBalances = 0;
-        for (const bond in allBondsMap) {
-          if (state.bonding[bond] && !allBondsMap[bond].isOld) {
-            tokenBalances += state.bonding[bond].purchased;
-          }
-        }
-        return tokenBalances;
-      }
-    }) ?? 0;
+  const treasuryBalance = useSelector(state => state.app.treasuryMarketValue) ?? 0;
 
   return (
     <>
