@@ -53,7 +53,7 @@ export default function WarmUp({
         </div>
         <div className={"details "}>
           <div className={"initial-amount"}>
-            <div className="MuiTypography-body1">Inital Amount</div>
+            <div className="MuiTypography-body1">Initial Amount</div>
             <div className="MuiTypography-body1">{trim(depositAmount, 4)}</div>
           </div>
           <div className={"rewards-gained"}>
