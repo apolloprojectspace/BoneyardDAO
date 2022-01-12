@@ -333,15 +333,16 @@ export const redeemAllBonds = createAsyncThunk(
       );
 
       await redeemAllTx.wait();
-
+      await dispatch(getUserBondData({ networkID, provider, address }));
       await Promise.all(
         bonds && bonds.map(bond => dispatch(calculateUserBondDetails({ address, bond, networkID, provider }))),
       );
-
+      sleep(10);
       dispatch(loadAccountDetails({ address, networkID, provider }));
     } catch (e: unknown) {
       dispatch(error((e as IJsonRPCError).message));
     } finally {
+      sleep(7);
       if (redeemAllTx) {
         dispatch(clearPendingTxn(redeemAllTx.hash));
         dispatch(loadAccountDetails({ networkID, address, provider }));
@@ -400,7 +401,37 @@ const bondingSlice = createSlice({
       .addCase(getGlobalBondData.rejected, (state, { error }) => {
         state.loading = false;
         console.error(error.message);
-      });
+      })
+      .addCase(redeemAllBonds.pending, state => {
+        state.loading = true;
+      })
+      .addCase(redeemAllBonds.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(redeemAllBonds.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(redeemBond.pending, state => {
+        state.loading = true;
+      })
+      .addCase(redeemBond.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(redeemBond.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
+      .addCase(bondAsset.pending, state => {
+        state.loading = true;
+      })
+      .addCase(bondAsset.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(bondAsset.rejected, (state, { error }) => {
+        state.loading = false;
+        console.error(error.message);
+      })
   },
 });
 
