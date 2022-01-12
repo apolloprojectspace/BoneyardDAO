@@ -214,6 +214,7 @@ function TreasuryDashboard() {
                     "treasuryFRAXMarketValue",
                     "treasuryGOHMMarketValue",
                     "treasuryWFTMMarketValue",
+                    "treasuryBOOMarketValue"
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
@@ -222,6 +223,7 @@ function TreasuryDashboard() {
                     ["#c6c6c6", "#545454"],
                     ["#ffffff", "#d5d5d5"],
                     ["#22d5e7", "#18919d"],
+                    ["#DBE722", "#9D9D18"],
                   ]}
                   headerText="Market Value of Treasury Assets"
                   headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}

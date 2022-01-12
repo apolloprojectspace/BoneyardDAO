@@ -27,6 +27,8 @@ query {
     treasuryFRAXMarketValue
     treasuryGOHMRiskFreeValue
     treasuryGOHMMarketValue
+    treasuryBOOMarketValue
+    treasuryBOORiskFreeValue
     currentAPY
     runwayCurrent
     treasuryHecDaiPOL
@@ -94,6 +96,11 @@ export const bulletpoints = {
       top: -12,
       background: "linear-gradient(180deg, #22d5e7 -10%, #18919d 100%)",
     },
+    {
+      right: 29,
+      top: -12,
+      background: "linear-gradient(180deg, #DBE722 -10%, #9D9D18 100%)",
+    },
   ],
   holder: [
     {
@@ -156,7 +163,7 @@ export const bulletpoints = {
 
 export const tooltipItems = {
   tvl: ["Total Value Deposited"],
-  coin: ["DAI", "USDC", "MiM", "FRAX", "gOHM", "WFTM"],
+  coin: ["DAI", "USDC", "MiM", "FRAX", "gOHM", "WFTM", "BOO"],
   apy: ["APY"],
   runway: ["Days"],
   pol: ["SLP Treasury", "Market SLP"],
