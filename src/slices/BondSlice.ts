@@ -246,18 +246,17 @@ export const bondAsset = createAsyncThunk(
       dispatch(success(messages.tx_successfully_send));
       await sleep(10);
       dispatch(info(messages.your_balance_update_soon));
-      // TODO: it may make more sense to only have it in the finally.
-      // UX preference (show pending after txn complete or after balance updated)
       await sleep(10);
       await dispatch(getUserBondData({ networkID, provider, address }));
-      await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
-      dispatch(info(messages.your_balance_updated));
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (bondTx) {
         // segmentUA(uaData);
+        await sleep(5);
         dispatch(clearPendingTxn(bondTx.hash));
+        await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
+        dispatch(info(messages.your_balance_updated));
       }
     }
   },
