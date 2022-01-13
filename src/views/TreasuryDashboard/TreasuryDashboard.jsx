@@ -214,7 +214,7 @@ function TreasuryDashboard() {
                     "treasuryFRAXMarketValue",
                     "treasuryGOHMMarketValue",
                     "treasuryWFTMMarketValue",
-                    "treasuryBOOMarketValue"
+                    "treasuryBOORiskFreeValue" // FIXME: Swap with treasuryBOOMarketValue
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
@@ -249,7 +249,7 @@ function TreasuryDashboard() {
                     "treasuryFRAXRiskFreeValue",
                     "treasuryGOHMRiskFreeValue",
                     "treasuryWFTMRiskFreeValue",
-                    "treasuryBOORiskFreeValue"
+                    "treasuryBOOMarketValue" // FIXME: Swap with treasuryBOORiskFreeValue
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
