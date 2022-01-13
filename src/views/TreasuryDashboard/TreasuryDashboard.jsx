@@ -203,7 +203,8 @@ function TreasuryDashboard() {
                     "treasuryFRAXMarketValue",
                     "treasuryGOHMMarketValue",
                     "treasuryWFTMMarketValue",
-                    "treasuryBOORiskFreeValue" // FIXME: Swap with treasuryBOOMarketValue
+                    "treasuryBOOMarketValue",
+                    "treasuryCRVMarketValue"
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
@@ -213,6 +214,7 @@ function TreasuryDashboard() {
                     ["#ffffff", "#d5d5d5"],
                     ["#22d5e7", "#18919d"],
                     ["#DBE722", "#9D9D18"],
+                    ["#E73722", "#9D3018"]
                   ]}
                   headerText="Market Value of Treasury Assets"
                   headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
@@ -238,7 +240,8 @@ function TreasuryDashboard() {
                     "treasuryFRAXRiskFreeValue",
                     "treasuryGOHMRiskFreeValue",
                     "treasuryWFTMRiskFreeValue",
-                    "treasuryBOOMarketValue" // FIXME: Swap with treasuryBOORiskFreeValue
+                    "treasuryBOORiskFreeValue",
+                    "treasuryCRVRiskFreeValue",
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
@@ -248,6 +251,7 @@ function TreasuryDashboard() {
                     ["#ffffff", "#d5d5d5"],
                     ["#22d5e7", "#18919d"],
                     ["#DBE722", "#9D9D18"],
+                    ["#E73722", "#9D3018"]
                   ]}
                   headerText="Risk Free Value of Treasury Assets"
                   headerSubText={`${data && formatCurrency(data[0].treasuryRiskFreeValue)}`}
