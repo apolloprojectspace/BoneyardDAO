@@ -21,6 +21,7 @@ query {
     treasuryUsdcMarketValue
     treasuryUsdcRiskFreeValue
     treasuryWFTMMarketValue
+    treasuryWFTMRiskFreeValue
     treasuryMIMRiskFreeValue
     treasuryMIMMarketValue
     treasuryFRAXRiskFreeValue
