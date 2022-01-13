@@ -91,6 +91,7 @@ function App() {
   const [walletChecked, setWalletChecked] = useState(false);
 
   let { bonds } = useBonds();
+
   async function loadDetails(whichDetails: string) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -137,6 +138,15 @@ function App() {
     });
   }, []);
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleSidebarClose = () => {
+    setIsSidebarExpanded(false);
+  };
+  let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
+
   // The next 3 useEffects handle initializing API Loads AFTER wallet is checked
   //
   // this useEffect checks Wallet Connection & then sets State for reload...
@@ -175,15 +185,6 @@ function App() {
       loadDetails("account");
     }
   }, [connected]);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleSidebarClose = () => {
-    setIsSidebarExpanded(false);
-  };
-  let themeMode = theme === "light" ? lightTheme : theme === "dark" ? darkTheme : gTheme;
 
   useEffect(() => {
     themeMode = theme === "light" ? lightTheme : darkTheme;

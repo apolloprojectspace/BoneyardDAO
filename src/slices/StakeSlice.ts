@@ -239,18 +239,18 @@ export const changeClaim = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: claimTx.hash, text, type: pendingTxnType }));
       await claimTx.wait();
       dispatch(success(messages.tx_successfully_send));
+      await sleep(7);
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (claimTx) {
         dispatch(clearPendingTxn(claimTx.hash));
+        dispatch(info(messages.your_balance_update_soon));
+        await sleep(10);
+        await dispatch(loadAccountDetails({ address, networkID, provider }));
+        dispatch(info(messages.your_balance_updated));
       }
     }
-    await sleep(7);
-    dispatch(info(messages.your_balance_update_soon));
-    await sleep(15);
-    await dispatch(loadAccountDetails({ address, networkID, provider }));
-    dispatch(info(messages.your_balance_updated));
     return;
   },
 );
