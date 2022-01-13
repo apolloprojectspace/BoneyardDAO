@@ -9,10 +9,7 @@ import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit"
 import { RootState } from "src/store";
 import { IBaseAsyncThunk } from "./interfaces";
 
-const initialState = {
-  loading: false,
-  loadingMarketPrice: false,
-};
+
 const circulatingSupply = {
   inputs: [],
   name: "circulatingSupply",
@@ -82,6 +79,7 @@ export const loadAppDetails = createAsyncThunk(
       provider,
     );
     const old_circ = await oldsHecContract.circulatingSupply();
+    const treasuryMarketValue = graphData.data.protocolMetrics[0].treasuryMarketValue;
     const stakingTVL = parseFloat(graphData.data.protocolMetrics[0].totalValueLocked);
     const circ = await sHecMainContract.circulatingSupply();
     const circSupply = parseFloat(graphData.data.protocolMetrics[0].hecCirculatingSupply);
@@ -95,6 +93,7 @@ export const loadAppDetails = createAsyncThunk(
       console.error("failed to connect to provider, please connect your wallet");
       return {
         stakingTVL,
+        treasuryMarketValue,
         marketPrice,
         marketCap,
         circSupply,
@@ -125,6 +124,7 @@ export const loadAppDetails = createAsyncThunk(
       old_fiveDayRate,
       stakingAPY,
       stakingTVL,
+      treasuryMarketValue,
       stakingRebase,
       old_stakingRebase,
       marketCap,
@@ -210,6 +210,18 @@ interface IAppData {
   readonly endBlock?: number;
   readonly investments?: number;
   readonly epochNumber?: number;
+}
+
+const initialState: IAppSlice = {
+  loading: false,
+  loadingMarketPrice: false,
+  treasuryMarketValue: 0
+};
+
+interface IAppSlice {
+  loading: boolean;
+  loadingMarketPrice: boolean;
+  treasuryMarketValue: number;
 }
 
 const appSlice = createSlice({

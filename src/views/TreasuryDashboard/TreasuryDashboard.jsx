@@ -17,7 +17,6 @@ import { useTheme } from "@material-ui/core/styles";
 import "./treasury-dashboard.scss";
 import apollo from "../../lib/apolloClient";
 import InfoTooltip from "src/components/InfoTooltip/InfoTooltip.jsx";
-import { allBondsMap } from "src/helpers/all-bonds/AllBonds";
 
 function TreasuryDashboard() {
   const [data, setData] = useState(null);
@@ -46,17 +45,7 @@ function TreasuryDashboard() {
   const rebase = useSelector(state => {
     return state.app.stakingRebase;
   });
-  const backingPerHec = useSelector(state => {
-    if (state.bonding.loading === false) {
-      let tokenBalances = state.app.investments ?? 0;
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond] && !allBondsMap[bond].isOld) {
-          tokenBalances += state.bonding[bond].purchased;
-        }
-      }
-      return tokenBalances / state.app.circSupply;
-    }
-  });
+  const backingPerHec = useSelector(state => state.app.treasuryMarketValue / circSupply);
 
   const wsHecPrice = useSelector(state => {
     return state.app.marketPrice * state.app.currentIndex;
