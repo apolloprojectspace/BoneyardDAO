@@ -99,7 +99,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
 
   const hasAllowance = useCallback(() => {
     return bond.allowance > 0;
-  }, [bond.allowance]);
+  }, [bond]);
 
   const setMax = () => {
     let maxQ;
