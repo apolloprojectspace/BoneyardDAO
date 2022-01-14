@@ -66,8 +66,9 @@ export const changeApproval = createAsyncThunk(
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (approveTx) {
-        await dispatch(getUserBondData({ networkID, provider, address }));
+        dispatch(info(messages.account_update));
         await sleep(10);
+        await dispatch(getUserBondData({ networkID, provider, address }));
         await dispatch(clearPendingTxn(approveTx.hash));
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
       }

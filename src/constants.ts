@@ -60,5 +60,5 @@ export const messages = {
   slippage_too_small: "Slippage too small",
   slippage_too_big: "Slippage too big",
   your_balance_update_soon: "Your balance will update soon",
-  account_update: "Your Account will update soon"
+  account_update: "Your account will update soon"
 };
