@@ -245,15 +245,13 @@ export const bondAsset = createAsyncThunk(
       await bondTx.wait();
       dispatch(success(messages.tx_successfully_send));
       await sleep(10);
-      dispatch(info(messages.your_balance_update_soon));
-      await sleep(10);
-      await dispatch(getUserBondData({ networkID, provider, address }));
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (bondTx) {
-        // segmentUA(uaData);
-        await sleep(5);
+        dispatch(info(messages.your_balance_update_soon));
+        await sleep(15);
+        await dispatch(getUserBondData({ networkID, provider, address }));
         dispatch(clearPendingTxn(bondTx.hash));
         await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
         dispatch(info(messages.your_balance_updated));
@@ -294,19 +292,16 @@ export const redeemBond = createAsyncThunk(
       dispatch(success(messages.tx_successfully_send));
       await sleep(10);
       dispatch(info(messages.your_balance_update_soon));
-      await dispatch(getUserBondData({ networkID, provider, address }));
-      await sleep(5);
-      await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
-      await sleep(5);
-      await dispatch(loadAccountDetails({ address, networkID, provider }));
-      dispatch(info(messages.your_balance_updated));
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (redeemTx) {
-        // segmentUA(uaData);
+        await sleep(15);
+        await dispatch(getUserBondData({ networkID, provider, address }));
+        await dispatch(calculateUserBondDetails({ address, bond, networkID, provider }));
+        await dispatch(loadAccountDetails({ address, networkID, provider }));
+        dispatch(info(messages.your_balance_updated));
         dispatch(clearPendingTxn(redeemTx.hash));
-        dispatch(loadAccountDetails({ networkID, address, provider }));
       }
     }
   },
@@ -335,20 +330,19 @@ export const redeemAllBonds = createAsyncThunk(
 
       await redeemAllTx.wait();
       dispatch(success(messages.tx_successfully_send));
-      await sleep(7);
+      await sleep(10);
       dispatch(info(messages.your_balance_update_soon))
-      await sleep(7);
-      await dispatch(getUserBondData({ networkID, provider, address }));
-      await Promise.all(
-        bonds && bonds.map(bond => dispatch(calculateUserBondDetails({ address, bond, networkID, provider }))),
-      );
     } catch (e: unknown) {
       dispatch(error((e as IJsonRPCError).message));
     } finally {
       if (redeemAllTx) {
-        await sleep(7);
+        await sleep(15);
+        await dispatch(getUserBondData({ networkID, provider, address }));
+        await Promise.all(
+          bonds && bonds.map(bond => dispatch(calculateUserBondDetails({ address, bond, networkID, provider }))),
+        );
+        await dispatch(loadAccountDetails({ networkID, address, provider }));
         dispatch(clearPendingTxn(redeemAllTx.hash));
-        dispatch(loadAccountDetails({ networkID, address, provider }));
         dispatch(info(messages.your_balance_updated));
       }
     }

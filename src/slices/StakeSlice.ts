@@ -94,32 +94,33 @@ export const changeApproval = createAsyncThunk(
 
       await approveTx.wait();
       dispatch(success(messages.tx_successfully_send));
+      await sleep(10);
     } catch (e: any) {
       ``
       // dispatch(error((e as IJsonRPCError).message));
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (approveTx) {
+        dispatch(info(messages.account_update));
+        await sleep(10);
+
+        // go get fresh allowances
+        stakeAllowance = await hecContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
+        unstakeAllowance = await shecContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
+        oldunstakeAllowance = await shecContract.allowance(address, addresses[networkID].OLD_STAKING_ADDRESS);
+
         dispatch(clearPendingTxn(approveTx.hash));
+        return dispatch(
+          fetchAccountSuccess({
+            staking: {
+              hecStake: +stakeAllowance,
+              hecUnstake: +unstakeAllowance,
+              oldhecUnstake: +oldunstakeAllowance,
+            },
+          }),
+        );
       }
     }
-
-    await sleep(2);
-
-    // go get fresh allowances
-    stakeAllowance = await hecContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
-    unstakeAllowance = await shecContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
-    oldunstakeAllowance = await shecContract.allowance(address, addresses[networkID].OLD_STAKING_ADDRESS);
-
-    return dispatch(
-      fetchAccountSuccess({
-        staking: {
-          hecStake: +stakeAllowance,
-          hecUnstake: +unstakeAllowance,
-          oldhecUnstake: +oldunstakeAllowance,
-        },
-      }),
-    );
   },
 );
 
@@ -168,20 +169,19 @@ export const changeStake = createAsyncThunk(
       callback?.();
       await stakeTx.wait();
       dispatch(success(messages.tx_successfully_send));
+      await sleep(10);
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (stakeTx) {
-
+        dispatch(info(messages.your_balance_update_soon));
+        await sleep(10);
+        await dispatch(loadAccountDetails({ address, networkID, provider }));
         dispatch(clearPendingTxn(stakeTx.hash));
+        dispatch(info(messages.your_balance_updated));
+        return;
       }
     }
-    await sleep(7);
-    dispatch(info(messages.your_balance_update_soon));
-    await sleep(15);
-    await dispatch(loadAccountDetails({ address, networkID, provider }));
-    dispatch(info(messages.your_balance_updated));
-    return;
   },
 );
 
@@ -204,19 +204,19 @@ export const changeForfeit = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: forfeitTx.hash, text, type: pendingTxnType }));
       await forfeitTx.wait();
       dispatch(success(messages.tx_successfully_send));
+      await sleep(10);
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (forfeitTx) {
+        dispatch(info(messages.your_balance_update_soon));
+        await sleep(10);
+        await dispatch(loadAccountDetails({ address, networkID, provider }));
         dispatch(clearPendingTxn(forfeitTx.hash));
+        dispatch(info(messages.your_balance_updated));
+        return;
       }
     }
-    await sleep(7);
-    dispatch(info(messages.your_balance_update_soon));
-    await sleep(15);
-    await dispatch(loadAccountDetails({ address, networkID, provider }));
-    dispatch(info(messages.your_balance_updated));
-    return;
   },
 );
 
@@ -244,14 +244,14 @@ export const changeClaim = createAsyncThunk(
       return metamaskErrorWrap(e, dispatch);
     } finally {
       if (claimTx) {
-        dispatch(clearPendingTxn(claimTx.hash));
         dispatch(info(messages.your_balance_update_soon));
-        await sleep(10);
+        await sleep(15);
         await dispatch(loadAccountDetails({ address, networkID, provider }));
+        dispatch(clearPendingTxn(claimTx.hash));
         dispatch(info(messages.your_balance_updated));
+        return;
       }
     }
-    return;
   },
 );
 
