@@ -239,7 +239,7 @@ export const changeClaim = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: claimTx.hash, text, type: pendingTxnType }));
       await claimTx.wait();
       dispatch(success(messages.tx_successfully_send));
-      await sleep(7);
+      await sleep(10);
     } catch (e: any) {
       return metamaskErrorWrap(e, dispatch);
     } finally {

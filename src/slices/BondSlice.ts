@@ -339,7 +339,6 @@ export const redeemAllBonds = createAsyncThunk(
       dispatch(info(messages.your_balance_update_soon))
       await sleep(7);
       await dispatch(getUserBondData({ networkID, provider, address }));
-      sleep(3);
       await Promise.all(
         bonds && bonds.map(bond => dispatch(calculateUserBondDetails({ address, bond, networkID, provider }))),
       );
@@ -347,7 +346,7 @@ export const redeemAllBonds = createAsyncThunk(
       dispatch(error((e as IJsonRPCError).message));
     } finally {
       if (redeemAllTx) {
-        sleep(7);
+        await sleep(7);
         dispatch(clearPendingTxn(redeemAllTx.hash));
         dispatch(loadAccountDetails({ networkID, address, provider }));
         dispatch(info(messages.your_balance_updated));
