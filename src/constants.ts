@@ -1,4 +1,4 @@
-export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/hectordao-hec/hector-dao-alt";
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/hectordao-hec/hector-dao";
 export const EPOCH_INTERVAL = 28800;
 
 // NOTE could get this from an outside source since it changes slightly over time
