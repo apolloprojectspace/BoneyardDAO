@@ -228,7 +228,7 @@ function App() {
           mobile: isSmallScreen,
         })}
       >
-        <>{false && <Banner isSmallScreen={isSmallScreen}></Banner>}</>
+        <>{true && <Banner isSmallerScreen={isSmallerScreen} isSmallScreen={isSmallScreen}></Banner>}</>
         <Messages />
         {/* header */}
         <TopBar

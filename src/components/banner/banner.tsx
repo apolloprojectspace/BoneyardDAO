@@ -3,11 +3,17 @@ import "./banner.scss";
 
 interface Props {
   isSmallScreen: boolean;
+  isSmallerScreen: boolean;
 }
 
-export function Banner({ isSmallScreen }: Props) {
+export function Banner({ isSmallScreen, isSmallerScreen }: Props) {
   return (
-    <Alert style={isSmallScreen ? {} : { marginLeft: "300px" }} className="banner" variant="filled" severity="warning">
+    <Alert
+      style={isSmallScreen || isSmallerScreen ? {} : { marginLeft: "300px" }}
+      className="banner"
+      variant="filled"
+      severity="warning"
+    >
       We are currently experiencing network issues, this will be fixed shortly.
     </Alert>
   );
