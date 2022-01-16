@@ -78,9 +78,7 @@ const commonSettings = {
         "&.hec-card": {
           padding: "20px 30px 30px 30px",
           borderRadius: "10px",
-          maxWidth: "833px",
           width: "97%",
-          marginBottom: "1.8rem",
           borderRadius: "10px",
           overflow: "hidden",
         },

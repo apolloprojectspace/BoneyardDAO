@@ -1,6 +1,8 @@
 .stake {
   display: grid;
   grid: 1fr max-content / 1fr;
+  justify-content: center;
+  row-gap: 30px;
 }
 
 #stake-view {
@@ -9,6 +11,10 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+
+  .hec-card {
+    max-width: 830px;
+  }
 
   .rebase-timer {
     margin: 0 !important;

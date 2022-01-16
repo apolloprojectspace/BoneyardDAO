@@ -4,6 +4,12 @@
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
+  margin-bottom: 30px;
+  row-gap: 30px;
+
+  .hec-card {
+    max-width: 830px;
+  }
   .hec-card .bond-hero h4 {
     font-weight: 600 !important;
 

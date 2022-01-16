@@ -3,6 +3,7 @@
   place-items: center;
   justify-self: center;
   row-gap: 10px;
+  max-width: 830px;
   grid: 1fr / minmax(0, 1fr);
   .header {
     display: flex;
