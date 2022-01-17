@@ -175,7 +175,7 @@ function Stake() {
 
   const hasAllowance = useCallback(
     token => {
-      if (token === "hec") return stakeAllowance > 0;
+      if (token === "hec") return stakeAllowance > 0 && stakeAllowance > hecBalance;
       if (token === "shec") return unstakeAllowance > 0;
       if (token === "oldshec") return oldunstakeAllowance > 0;
       return 0;
