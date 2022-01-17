@@ -14,7 +14,7 @@ export function Banner({ isSmallScreen, isSmallerScreen }: Props) {
       variant="filled"
       severity="warning"
     >
-      We are currently experiencing network issues, this will be fixed shortly.
+      Experiencing network problems due to FTM congestion.
     </Alert>
   );
 }
