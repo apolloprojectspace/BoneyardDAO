@@ -1,6 +1,8 @@
 import "./pool-farming.scss";
 import { useEffect, useState } from "react";
 import { abi as farmingAggregatorAbi } from "../../abi/farmingAggregatorContract.json";
+import { abi as hugsPoolAbi } from "../../abi/farmingHugsPoolContract.json";
+import { abi as stakingRewardsAbi } from "../../abi/farmingStakingRewardsContract.json";
 import { BigNumber, ethers, utils } from "ethers";
 import { addresses } from "src/constants";
 import { JsonRpcProvider } from "@ethersproject/providers";
@@ -11,6 +13,20 @@ interface FarmingProps {
   provider: JsonRpcProvider;
   address: string;
 }
+
+interface HugsPoolInfo {
+  balance: BigNumber;
+  allowance: BigNumber;
+  virtualPrice: BigNumber;
+}
+
+interface HugsPoolContract {
+  balanceOf: (address: string) => BigNumber;
+  allowance: (address1: string, address2: string) => BigNumber;
+  approve: (spender: string, value: BigNumber) => void;
+  get_virtual_price: () => BigNumber;
+}
+
 
 interface StakingInfo {
   _apr: BigNumber;
@@ -26,9 +42,24 @@ interface StakingInfo {
 }
 
 export default function PoolFarming({ chainID, provider, address }: FarmingProps) {
+  const [hugsPoolInfo, sethugsPoolInfo] = useState<HugsPoolInfo>();
   const [stakingInfo, setStakingInfo] = useState<StakingInfo>();
   const [quantity, setQuantity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  async function getHugsPoolInfo() {
+    const hugsPoolContract = new ethers.Contract(
+      addresses[chainID].HUGS_POOL_ADDRESS as string,
+      hugsPoolAbi,
+      provider,
+    ) as unknown as HugsPoolContract;
+    let balance = await hugsPoolContract.balanceOf(address);
+    let allowance = await hugsPoolContract.allowance(address, addresses[chainID].FARMINNG_STAKING_REWARDS_ADDRESS as string);
+    let virtualPrice = await hugsPoolContract.get_virtual_price();
+    sethugsPoolInfo({balance, allowance, virtualPrice});
+  }
+
+  console.log(hugsPoolInfo)
 
   async function getStakingInfo() {
     setIsLoading(true);
@@ -44,9 +75,10 @@ export default function PoolFarming({ chainID, provider, address }: FarmingProps
   useEffect(() => {
     if (chainID && provider && address) {
       getStakingInfo();
+      getHugsPoolInfo();
     }
   }, [chainID, provider, address]);
-  console.log(stakingInfo);
+  // console.log(stakingInfo);
   return (
     <>
       {stakingInfo && (
