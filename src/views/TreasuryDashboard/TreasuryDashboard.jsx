@@ -7,7 +7,6 @@ import { trim, formatCurrency } from "../../helpers";
 import {
   treasuryDataQuery,
   rebasesV1DataQuery,
-  rebasesV2DataQuery,
   bulletpoints,
   tooltipItems,
   tooltipInfoMessages,
@@ -205,7 +204,7 @@ function TreasuryDashboard() {
                     "treasuryWFTMMarketValue",
                     "treasuryBOOMarketValue",
                     "treasuryCRVMarketValue",
-                    "treasuryWETHMarketValue"
+                    "treasuryWETHMarketValue",
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
@@ -244,7 +243,7 @@ function TreasuryDashboard() {
                     "treasuryWFTMRiskFreeValue",
                     "treasuryBOORiskFreeValue",
                     "treasuryCRVRiskFreeValue",
-                    "treasuryWETHRiskFreeValue"
+                    "treasuryWETHRiskFreeValue",
                   ]}
                   stopColor={[
                     ["#F5AC37", "#EA9276"],
