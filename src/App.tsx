@@ -277,7 +277,7 @@ function App() {
               <ChooseBond />
             </Route>
             <Route path="/farming">
-              <PoolFarming />
+              <PoolFarming address={address} provider={provider} chainID={chainID} />
             </Route>
 
             <Route component={NotFound} />
