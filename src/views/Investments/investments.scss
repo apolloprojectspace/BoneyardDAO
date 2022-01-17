@@ -7,6 +7,9 @@
   row-gap: 20px;
   .general-investments {
     display: grid;
+    column-gap: 30px;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr;
   }
 
   .detailed-investments {

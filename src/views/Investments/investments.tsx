@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GlobalInfo from "src/components/investments/global-info/global-info";
 import LatestTransactions from "src/components/investments/latest-transactions/latest-transactions";
+import InvestmentsPieChart from "src/components/investments/pie-chart/investments-pie-chart";
 import { loadTreasuryInvestments } from "src/slices/AppSlice";
 import { RootState } from "src/store";
 import "./investments.scss";
@@ -19,6 +20,7 @@ export default function Investments() {
     <div className="investment-dash">
       <div className="general-investments">
         <GlobalInfo isLoading={isLoading} transactions={transactions} />
+        <InvestmentsPieChart />
       </div>
       <div className="detailed-investments">
         {transactions && <LatestTransactions isLoading={isLoading} transactions={transactions} />}
