@@ -83,7 +83,13 @@ export default function PoolFarming({ chainID, provider, address }: FarmingProps
             <div>Optimal DAI: {(+ethers.utils.formatEther(stakingInfo._optimalDaiAmount)).toFixed(2)}</div>
             <div>Optimal USDC: {(+ethers.utils.formatEther(stakingInfo._optimalUsdcAmount)).toFixed(2)}</div>
           </div>
-          <div className="MuiPaper-root hec-card"></div>
+          <div className="MuiPaper-root hec-card">
+            <div>Withdraw to Hugs: {(+ethers.utils.formatEther(stakingInfo._hugsWithdrawAmount)).toFixed(2)}</div>
+            <div>Withdraw to DAI: {(+ethers.utils.formatEther(stakingInfo._daiWithdrawAmount)).toFixed(2)}</div>
+            <div>
+              Withdraw to USDC: {(+ethers.utils.formatUnits(stakingInfo._usdcWithdrawAmount, "mwei")).toFixed(2)}
+            </div>
+          </div>
         </div>
       )}
     </>
