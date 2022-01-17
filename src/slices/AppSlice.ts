@@ -8,7 +8,8 @@ import apollo from "../lib/apolloClient.js";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAsyncThunk } from "./interfaces";
-
+import axios from 'axios';
+import { AllInvestments } from 'src/types/investments.model';
 
 const circulatingSupply = {
   inputs: [],
@@ -193,6 +194,8 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
   return { marketPrice };
 });
 
+export const loadTreasuryInvestments = createAsyncThunk("app/loadTreasuryInvestments", async () => await (await axios.get('https://api.jsonbin.io/b/61e18d66ba87c130e3e84624/6')).data);
+
 interface IAppData {
   readonly circSupply: number;
   readonly currentIndex?: string;
@@ -201,6 +204,8 @@ interface IAppData {
   readonly old_fiveDayRate?: number;
   readonly marketCap: number;
   readonly marketPrice: number;
+  readonly treasuryMarketValue: number;
+  readonly allInvestments: AllInvestments;
   readonly stakingAPY?: number;
   readonly stakingRebase?: number;
   readonly old_stakingRebase?: number;
@@ -215,13 +220,17 @@ interface IAppData {
 const initialState: IAppSlice = {
   loading: false,
   loadingMarketPrice: false,
-  treasuryMarketValue: 0
+  treasuryMarketValue: 0,
+  allInvestments: { transactions: [], assetsUM: undefined },
+  isLoadingInvestments: false
 };
 
 interface IAppSlice {
   loading: boolean;
   loadingMarketPrice: boolean;
+  isLoadingInvestments: boolean;
   treasuryMarketValue: number;
+  allInvestments: AllInvestments
 }
 
 const appSlice = createSlice({
@@ -254,6 +263,17 @@ const appSlice = createSlice({
       })
       .addCase(loadMarketPrice.rejected, (state, { error }) => {
         state.loadingMarketPrice = false;
+        console.error(error.name, error.message, error.stack);
+      })
+      .addCase(loadTreasuryInvestments.pending, (state, action) => {
+        state.isLoadingInvestments = true;
+      })
+      .addCase(loadTreasuryInvestments.fulfilled, (state, action) => {
+        state.isLoadingInvestments = false;
+        state.allInvestments = action.payload;
+      })
+      .addCase(loadTreasuryInvestments.rejected, (state, { error }) => {
+        state.isLoadingInvestments = false;
         console.error(error.name, error.message, error.stack);
       });
   },

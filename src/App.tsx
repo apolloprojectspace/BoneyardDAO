@@ -33,6 +33,7 @@ import Wrap from "./views/Wrap/Wrap";
 import Calculator from "./views/Calculator/index";
 import { RootState } from "./store";
 import { Banner } from "./components/banner/banner";
+import Investments from "./views/Investments/investments";
 
 const drawerWidth = 300;
 const transitionDuration = 969;
@@ -228,7 +229,7 @@ function App() {
           mobile: isSmallScreen,
         })}
       >
-        <>{true && <Banner isSmallerScreen={isSmallerScreen} isSmallScreen={isSmallScreen}></Banner>}</>
+        <>{false && <Banner isSmallerScreen={isSmallerScreen} isSmallScreen={isSmallScreen}></Banner>}</>
         <Messages />
         {/* header */}
         <TopBar
@@ -249,6 +250,9 @@ function App() {
           <Switch>
             <Route exact path="/dashboard">
               <TreasuryDashboard />
+            </Route>
+            <Route exact path="/investments">
+              <Investments />
             </Route>
 
             <Route exact path="/">
