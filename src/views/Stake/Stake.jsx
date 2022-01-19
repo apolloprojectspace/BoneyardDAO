@@ -147,8 +147,8 @@ function Stake() {
       return dispatch(error("Please enter a value!"));
     }
 
-    if (value === "0") {
-      return dispatch(error("Please enter a value greater than 0!"));
+    if (value === "0" || value === "0.0") {
+      return dispatch(error("Please enter a value greater than 0"));
     }
 
     // 1st catch if quantity > balance
