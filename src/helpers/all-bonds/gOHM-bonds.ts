@@ -10,6 +10,7 @@ export const gohmlp = new LPBond({
     bondToken: "gOHM",
     bondIconSvg: HecgOHMImg,
     isTotal: true,
+    isOld: true,
     bondContractABI: MimBondContract,
     reserveContract: ReserveHecDaiContract,
     networkAddrs: {
@@ -56,6 +57,7 @@ export const gohmlp4_v2 = new LPBond({
     bondToken: "gOHM",
     bondIconSvg: HecgOHMImg,
     isFour: true,
+    isOld: true,
     isTotal: true,
     bondContractABI: Dai4V3BondContract,
     reserveContract: ReserveHecDaiContract,
