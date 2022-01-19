@@ -1,7 +1,8 @@
 .pool-farming {
   display: grid;
-  grid-template-rows: 20% 25% 50%; // Define height of row
+  grid-template-rows: 45% 50%; // Define height of row
   grid-template-columns: 80%;
+
   row-gap: 20px;
   height: 100%;
   align-content: center;
@@ -9,5 +10,90 @@
 
   .title {
     font-size: 20px;
+  }
+
+  .data {
+    font-size: 15px;
+  }
+
+  .farming-account {
+    display: grid;
+    grid: 1fr/ 1fr 1fr;
+    column-gap: 30px;
+    .farming {
+      display: grid;
+      grid: 1fr / 1fr;
+      row-gap: 20px;
+      .farming-stats {
+        display: grid;
+        grid: max-content 1fr /1fr;
+        row-gap: 20px;
+        .header {
+          display: grid;
+          grid: 1fr / max-content 1fr;
+          .d-grid {
+            display: grid;
+          }
+          svg {
+            justify-self: right;
+          }
+        }
+        .info {
+          align-items: center;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .seperate {
+        border-left: 2px solid white;
+        height: 95%;
+        margin: 10px;
+        display: grid;
+        align-self: center;
+      }
+    }
+
+    .account {
+      display: grid;
+      align-items: center;
+      grid: max-content 1fr max-content / 1fr;
+      .balance {
+        display: grid;
+        row-gap: 20px;
+      }
+
+      .actions {
+        display: grid;
+        .withdraw-amounts {
+          display: grid;
+          grid-auto-flow: column;
+        }
+      }
+    }
+  }
+
+  .projection {
+    display: grid;
+    grid: 1fr / 1fr 2fr;
+    .investment-plan {
+      display: grid;
+      grid: max-content 1fr 2fr/ 1fr;
+
+      .optimal-amount {
+        display: grid;
+        grid-row: max-content 1fr/ 1fr;
+      }
+      .calculate {
+        display: grid;
+        grid: 1fr/ 3fr 1fr;
+        align-self: center;
+        column-gap: 20px;
+      }
+    }
+  }
+
+  .hec-card {
+    width: 100% !important;
   }
 }

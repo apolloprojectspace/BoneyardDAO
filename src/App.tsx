@@ -277,8 +277,7 @@ function App() {
               <ChooseBond />
             </Route>
             <Route path="/farming">
-              
-              <>{address && <PoolFarming  />}</>
+              <>{connected && <PoolFarming theme={themeMode} />}</>
             </Route>
 
             <Route component={NotFound} />
