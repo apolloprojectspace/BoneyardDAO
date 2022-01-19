@@ -546,3 +546,7 @@
 	color: #FF9900;
 	font-weight: 400 !important;
 }
+
+.app.dark .global-info svg {
+	color: #FF9900;
+}

@@ -34,6 +34,7 @@ import Calculator from "./views/Calculator/index";
 import { RootState } from "./store";
 import { Banner } from "./components/banner/banner";
 import PoolFarming from "./views/PoolFarming/pool-farming";
+import Investments from "./views/Investments/investments";
 
 const drawerWidth = 300;
 const transitionDuration = 969;
@@ -250,6 +251,9 @@ function App() {
           <Switch>
             <Route exact path="/dashboard">
               <TreasuryDashboard />
+            </Route>
+            <Route exact path="/investments">
+              <Investments />
             </Route>
 
             <Route exact path="/">

@@ -1,0 +1,27 @@
+.global-info {
+  display: grid;
+  grid-auto-flow: column;
+  place-items: center;
+
+  .seperate {
+    border-left: 2px solid white;
+    height: 90%;
+  }
+  .treasury {
+    display: grid;
+    row-gap: 20px;
+    justify-items: center;
+    row-gap: 20px;
+    .text {
+      font-size: 16px;
+    }
+    .amount {
+      font-size: 22px;
+    }
+    svg {
+      width: 40px;
+      height: 40px;
+      overflow: inherit;
+    }
+  }
+}

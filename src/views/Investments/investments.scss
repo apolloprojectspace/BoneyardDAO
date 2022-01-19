@@ -1,0 +1,19 @@
+.investment-dash {
+  display: grid;
+  grid: minmax(0, 1fr) minmax(0, 3fr) / minmax(0, 90%);
+  place-content: center;
+  height: 100%;
+  overflow: auto;
+  row-gap: 20px;
+  .general-investments {
+    display: grid;
+    column-gap: 30px;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .detailed-investments {
+    display: grid;
+    padding: 10px;
+  }
+}

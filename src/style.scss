@@ -91,3 +91,21 @@ input[type="number"] {
 a:hover svg {
   color: inherit;
 }
+
+#transaction-popper {
+  max-width: 500px !important;
+  display: grid;
+  .hec-popover {
+    padding: 15px;
+    .title {
+      font-size: 15px;
+    }
+    .transaction-list {
+      display: flex;
+      flex-wrap: wrap;
+      a {
+        padding: 5px;
+      }
+    }
+  }
+}
