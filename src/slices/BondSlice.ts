@@ -234,7 +234,7 @@ export const bondAsset = createAsyncThunk(
       type: "Bond",
       bondName: bond.displayName,
       approved: true,
-      txHash: null,
+      txHash: '',
     };
     try {
       bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress);
@@ -279,7 +279,7 @@ export const redeemBond = createAsyncThunk(
       bondName: bond.displayName,
       autoStake: autostake,
       approved: true,
-      txHash: null,
+      txHash: '',
     };
     try {
       redeemTx = await bondContract.redeem(address, autostake === true);

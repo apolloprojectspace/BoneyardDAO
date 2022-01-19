@@ -56,6 +56,7 @@ export const dark = responsiveFontSizes(
         },
         text: {
           primary: darkTheme.color,
+          gold: darkTheme.gold,
           secondary: darkTheme.gray,
         },
         graphStrokeColor: darkTheme.graphStrokeColor,

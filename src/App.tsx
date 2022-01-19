@@ -33,6 +33,7 @@ import Wrap from "./views/Wrap/Wrap";
 import Calculator from "./views/Calculator/index";
 import { RootState } from "./store";
 import { Banner } from "./components/banner/banner";
+import PoolFarming from "./views/PoolFarming/pool-farming";
 
 const drawerWidth = 300;
 const transitionDuration = 969;
@@ -274,6 +275,9 @@ function App() {
                 );
               })}
               <ChooseBond />
+            </Route>
+            <Route path="/farming">
+              <>{connected && <PoolFarming theme={themeMode} />}</>
             </Route>
 
             <Route component={NotFound} />

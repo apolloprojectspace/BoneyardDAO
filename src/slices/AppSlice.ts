@@ -11,7 +11,6 @@ import { IBaseAsyncThunk } from "./interfaces";
 
 
 const circulatingSupply = {
-  inputs: [],
   name: "circulatingSupply",
   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
   stateMutability: "view",
